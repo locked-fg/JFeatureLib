@@ -16,7 +16,7 @@ public interface Descriptor {
      * @see PlugInFilter
      * @see #supports() 
      */
-    public static enum Supports {
+    public enum Supports {
 
         /** If a mask is set, the features will only be extracted from this area */
         Masking,
@@ -31,8 +31,15 @@ public interface Descriptor {
         /** supports float images */
         DOES_32,
         /** supports RGB images */
-        DOES_RGB
+        DOES_RGB,
+        DOES_ALL
     }
+    /** Convenience field for "support all kinds of images". */
+    public final EnumSet<Supports> DOES_ALL = EnumSet.of(
+            Supports.DOES_16,
+            Supports.DOES_8C,
+            Supports.DOES_8G,
+            Supports.DOES_RGB);
 
     /**
      * Determine the capabilities of this algorithm.

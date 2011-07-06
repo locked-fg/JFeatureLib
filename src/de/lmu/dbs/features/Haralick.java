@@ -60,7 +60,9 @@ public class Haralick implements FeatureDescriptor {
 
     @Override
     public EnumSet<Supports> supports() {
-        return EnumSet.of(Supports.NoChanges);
+        EnumSet set = EnumSet.of(Supports.NoChanges);
+        set.addAll(DOES_ALL);
+        return set;
     }
 
     @Override
