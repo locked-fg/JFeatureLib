@@ -5,10 +5,11 @@ import de.lmu.dbs.ImagePoint;
 import java.util.List;
 
 /**
- *
+ * Interface for all Point detectors
+ * 
  * @author graf
  */
 interface PointDetector extends Descriptor {
 
-    List<ImagePoint> getPoints();
+    List<ImagePoint> getSubPoints();
 }

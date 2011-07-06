@@ -10,8 +10,8 @@ public class DistanceL2 implements Distance {
 
     @Override
     public double distance(ImagePoint a, ImagePoint b) {
-        int x1 = a.getX() - b.getX();
-        int y1 = a.getY() - b.getY();
+        double x1 = a.getX() - b.getX();
+        double y1 = a.getY() - b.getY();
         return Math.sqrt(x1*x1 + y1*y1);
     }
 

@@ -1,5 +1,6 @@
 package de.lmu.dbs;
 
+import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
@@ -8,13 +9,46 @@ import java.util.EnumSet;
  */
 public interface Descriptor {
 
-    enum Supports {
+    /**
+     * Defines the capability of the algorithm.
+     * It is possible that the list will be extended to the complete list of ImageJ's PlugInFilter Flags
+     * 
+     * @see PlugInFilter
+     * @see #supports() 
+     */
+    public static enum Supports {
 
-        Masking, NoChanges
+        /** If a mask is set, the features will only be extracted from this area */
+        Masking,
+        /** Set this, if the ImageProcessor will not be changed. */
+        NoChanges,
+        /** Supports 8bit Grayscale */
+        DOES_8G,
+        /** Supports 8bit indexed color */
+        DOES_8C,
+        /** supports 16-bit images */
+        DOES_16,
+        /** supports float images */
+        DOES_32,
+        /** supports RGB images */
+        DOES_RGB
     }
 
-    EnumSet<Supports> supports();
+    /**
+     * Determine the capabilities of this algorithm.
+     * 
+     * @return 
+     */
+    public EnumSet<Supports> supports();
 
-    void run(ImageProcessor ip);
-
+    /**
+     * Start processing of this algorithm on the given image processor.
+     * Keep in mind that if the imageProcessor is changed, Supports.NoChanges 
+     * must not be set.
+     * 
+     * This is also the case even if only ImageProcessor.snapshot() is used.
+     * 
+     * @param ip 
+     */
+    public void run(ImageProcessor ip);
 }
