@@ -1,0 +1,23 @@
+List of third party libraries including their licence, origin and location of 
+API and sources (if possible).
+
+# example.jar
+  Version: 1
+  Licence: GPL
+  URL:    http://example.com/
+  Source: http://example.com/source
+  API:    http://example.com/api
+
+# ij141.jar
+  Version: 1.41o
+  Licence: Public Domain
+  URL:    http://rsbweb.nih.gov/ij/
+  Source: http://rsbweb.nih.gov/ij/download/src/ij141o-src.zip
+  API:    http://rsbweb.nih.gov/ij/download/docs/api.zip
+
+# Utilities.jar
+  Version: Buildtime: 9 Mai 2011 11\:01\:26 according about.properties
+  Licence: Public Domain
+  URL:     dbs.ifi.lmu.de internal SVN
+  Source:  included in JAR
+  API:     -
