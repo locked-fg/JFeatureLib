@@ -71,6 +71,8 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.ButtonGroup" name="FeatureButtonGroup">
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="FileMenu">
@@ -394,6 +396,9 @@
       <SubComponents>
         <Component class="javax.swing.JRadioButton" name="HistogramFeatureRadioButton">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="FeatureButtonGroup"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Histogram"/>
           </Properties>
         </Component>
@@ -425,6 +430,9 @@
         </Component>
         <Component class="javax.swing.JRadioButton" name="HaralickFeatureRadioButton">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="FeatureButtonGroup"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Haralick"/>
           </Properties>
           <Events>

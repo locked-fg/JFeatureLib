@@ -1,4 +1,4 @@
-package de.lmu.dbs.features;
+package de.lmu.dbs.featuregui;
 
 import ij.ImagePlus;
 import java.awt.Color;
@@ -24,6 +24,8 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import java.util.Date;
+import de.lmu.dbs.features.Haralick;
+import ij.process.ColorProcessor;
 
 /*
  * To change this template, choose Tools | Templates
@@ -59,6 +61,7 @@ public class TestGUI extends javax.swing.JFrame {
         AboutDialog = new javax.swing.JDialog();
         AboutBoxLabel = new javax.swing.JLabel();
         AboutBoxOkButton = new javax.swing.JButton();
+        FeatureButtonGroup = new javax.swing.ButtonGroup();
         PreviewPanel = new javax.swing.JPanel();
         PreviewLabel = new javax.swing.JLabel();
         ImageInfoPanel = new javax.swing.JPanel();
@@ -224,6 +227,7 @@ public class TestGUI extends javax.swing.JFrame {
 
         ToolsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Tools"));
 
+        FeatureButtonGroup.add(HistogramFeatureRadioButton);
         HistogramFeatureRadioButton.setText("Histogram");
 
         DetectFeatureButton.setText("Detect Features");
@@ -249,6 +253,7 @@ public class TestGUI extends javax.swing.JFrame {
             }
         });
 
+        FeatureButtonGroup.add(HaralickFeatureRadioButton);
         HaralickFeatureRadioButton.setText("Haralick");
         HaralickFeatureRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -426,12 +431,17 @@ public class TestGUI extends javax.swing.JFrame {
 
     private void DetectFeatureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DetectFeatureButtonActionPerformed
         if(HistogramFeatureRadioButton.isSelected()){
-            
+            int[] result = imp.getStatistics().histogram;
+            ConsoleTextArea.append("\nHistogram Features:\n");
+            for(int i = 0; i<result.length; i++){
+            ConsoleTextArea.append(result[i]+"\n");
+            }
         }
         
         else if(HaralickFeatureRadioButton.isSelected()){
-            HaralickTest ht = new HaralickTest();
-            double[] result = ht.haralick(imp.getImage());
+            Haralick h = new Haralick();
+            h.run(new ColorProcessor(imp.getImage()));
+            double[] result = h.getFeatures();
             ConsoleTextArea.append("\nHaralick Features:\n");
             for(int i = 0; i<result.length; i++){
                 ConsoleTextArea.append(result[i]+"\n");
@@ -480,6 +490,7 @@ public class TestGUI extends javax.swing.JFrame {
     private javax.swing.JMenu EditMenu;
     private javax.swing.JMenuItem EditMenuCopy;
     private javax.swing.JMenuItem EditMenuPaste;
+    private javax.swing.ButtonGroup FeatureButtonGroup;
     private javax.swing.JMenu FileMenu;
     private javax.swing.JMenuItem FileMenuExit;
     private javax.swing.JMenuItem FileMenuOpen;
