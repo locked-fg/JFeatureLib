@@ -24,8 +24,11 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import de.lmu.dbs.features.FeatureDescriptor;
 import java.util.Date;
 import de.lmu.dbs.features.Haralick;
+import de.lmu.dbs.features.Histogram;
+
 import ij.process.ColorProcessor;
 
 /*
@@ -66,9 +69,8 @@ public class TestGUI extends javax.swing.JFrame {
         PreviewPanel = new javax.swing.JPanel();
         PreviewLabel = new javax.swing.JLabel();
         ImageInfoPanel = new javax.swing.JPanel();
-        FileNameLabel = new javax.swing.JLabel();
-        DimensionsLabel = new javax.swing.JLabel();
         FileNameDisplayLabel = new javax.swing.JLabel();
+        DimensionsLabel = new javax.swing.JLabel();
         XDimLabel = new javax.swing.JLabel();
         YDimLabel = new javax.swing.JLabel();
         DateLabel = new javax.swing.JLabel();
@@ -168,11 +170,9 @@ public class TestGUI extends javax.swing.JFrame {
 
         ImageInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Image Info"));
 
-        FileNameLabel.setText("Filename:");
+        FileNameDisplayLabel.setText("Filename:");
 
         DimensionsLabel.setText("Dimensions:");
-
-        FileNameDisplayLabel.setText("...");
 
         XDimLabel.setText("X:");
 
@@ -202,16 +202,13 @@ public class TestGUI extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(YDimLabel))
                     .addComponent(DimensionsLabel)
-                    .addComponent(FileNameLabel)
+                    .addComponent(FileNameDisplayLabel)
                     .addComponent(ExposureLabel)
                     .addComponent(ApertureLabel)
                     .addComponent(FocalLabel)
                     .addComponent(ISOLabel)
                     .addComponent(CameraLabel)
                     .addComponent(DateLabel)
-                    .addGroup(ImageInfoPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(FileNameDisplayLabel))
                     .addComponent(FilesizeLabel)
                     .addGroup(ImageInfoPanelLayout.createSequentialGroup()
                         .addContainerGap()
@@ -221,10 +218,8 @@ public class TestGUI extends javax.swing.JFrame {
         ImageInfoPanelLayout.setVerticalGroup(
             ImageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ImageInfoPanelLayout.createSequentialGroup()
-                .addComponent(FileNameLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(FileNameDisplayLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(FilesizeLabel)
                 .addGap(11, 11, 11)
                 .addComponent(DimensionsLabel)
@@ -232,7 +227,7 @@ public class TestGUI extends javax.swing.JFrame {
                 .addComponent(XDimLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(YDimLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
                 .addComponent(DateLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CameraLabel)
@@ -477,9 +472,11 @@ public class TestGUI extends javax.swing.JFrame {
 
     private void DetectFeatureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DetectFeatureButtonActionPerformed
         if(HistogramFeatureRadioButton.isSelected()){
-            int[] result = imp.getProcessor().getHistogram();
-            int HistMax = Integer.MIN_VALUE;
+            Histogram h = new Histogram();
+            double[] result = RunFeature(h);
             
+            //Sollte auch noch alles in eine eigene Methode
+            double HistMax = Double.MIN_VALUE;
             ConsoleTextArea.append("\nHistogram Features:\n");
             for(int i = 0; i<result.length; i++){
                 if(HistMax<result[i]){HistMax=result[i];}
@@ -487,15 +484,15 @@ public class TestGUI extends javax.swing.JFrame {
                 
             }
             HistogramGUI histgui = new HistogramGUI(result, HistMax, 1);
-            ToolsDisplayPanel.add(histgui);;
+            ToolsDisplayPanel.add(histgui);
             histgui.paintComponent(ToolsDisplayPanel.getGraphics());
             //histgui.repaint();
         }
         
         else if(HaralickFeatureRadioButton.isSelected()){
             Haralick h = new Haralick();
-            h.run(new ColorProcessor(imp.getImage()));
-            double[] result = h.getFeatures();
+            double[] result = RunFeature(h);
+            //Sollte auch noch alles in eine eigene Methode
             ConsoleTextArea.append("\nHaralick Features:\n");
             for(int i = 0; i<result.length; i++){
                 ConsoleTextArea.append(result[i]+"\n");
@@ -505,8 +502,14 @@ public class TestGUI extends javax.swing.JFrame {
         else{}
     }//GEN-LAST:event_DetectFeatureButtonActionPerformed
 
+    private double[] RunFeature(FeatureDescriptor o){
+        o.run(new ColorProcessor(imp.getImage()));
+        double[] result = o.getFeatures();
+        return result;
+    }
+    
     private void GetEXIFData(File fil){
-          FileNameDisplayLabel.setText(fil.getName());
+          FileNameDisplayLabel.setText("Filename: " + fil.getName());
           FilesizeLabel.setText("Filesize: " + fil.length()/1024 + " kilobyte");
          
           
@@ -584,7 +587,6 @@ public class TestGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem FileMenuExit;
     private javax.swing.JMenuItem FileMenuOpen;
     private javax.swing.JLabel FileNameDisplayLabel;
-    private javax.swing.JLabel FileNameLabel;
     private javax.swing.JLabel FilesizeLabel;
     private javax.swing.JLabel FocalLabel;
     private javax.swing.JRadioButton HaralickFeatureRadioButton;

@@ -247,17 +247,13 @@
                           <Component id="YDimLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="DimensionsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="FileNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="FileNameDisplayLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="ExposureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="ApertureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="FocalLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="ISOLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="CameraLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="DateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="FileNameDisplayLabel" min="-2" max="-2" attributes="0"/>
-                      </Group>
                       <Component id="FilesizeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
@@ -271,10 +267,8 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Component id="FileNameLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="FileNameDisplayLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Component id="FilesizeLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                   <Component id="DimensionsLabel" min="-2" max="-2" attributes="0"/>
@@ -282,7 +276,7 @@
                   <Component id="XDimLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="YDimLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="200" max="32767" attributes="0"/>
+                  <EmptySpace pref="214" max="32767" attributes="0"/>
                   <Component id="DateLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="CameraLabel" min="-2" max="-2" attributes="0"/>
@@ -299,7 +293,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="FileNameLabel">
+        <Component class="javax.swing.JLabel" name="FileNameDisplayLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Filename:"/>
           </Properties>
@@ -307,11 +301,6 @@
         <Component class="javax.swing.JLabel" name="DimensionsLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Dimensions:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="FileNameDisplayLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="..."/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="XDimLabel">

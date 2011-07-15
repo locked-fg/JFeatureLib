@@ -12,16 +12,16 @@ import java.awt.geom.Line2D;
 import java.lang.Math;
 
 /**
- *
+ * Class for painting histograms with lines
  * @author Benedikt
  */
 public class HistogramGUI extends javax.swing.JPanel {
     
-    int[] histogram;
+    double[] histogram;
     int channels;
-    int divide;
+    double divide;
     
-    public HistogramGUI(int[] hist, int max, int numchan)
+    public HistogramGUI(double[] hist, double max, int numchan)
     {
         histogram = hist;
         channels = numchan;
@@ -45,7 +45,7 @@ public class HistogramGUI extends javax.swing.JPanel {
     private void draw1Chan(Graphics2D g2){
         g2.setColor(Color.black);
         for(int i = 0; i < histogram.length; i++){
-            Line2D lin = new Line2D.Float(i, histogram.length, i, histogram.length-histogram[i]/divide);
+            Line2D lin = new Line2D.Double(i, histogram.length, i, histogram.length-histogram[i]/divide);
             g2.draw(lin);
             
         }
