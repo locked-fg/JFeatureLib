@@ -22,6 +22,7 @@ import javax.swing.filechooser.FileFilter;
 import com.drew.metadata.Metadata;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
+import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import java.util.Date;
 import de.lmu.dbs.features.Haralick;
@@ -70,16 +71,23 @@ public class TestGUI extends javax.swing.JFrame {
         FileNameDisplayLabel = new javax.swing.JLabel();
         XDimLabel = new javax.swing.JLabel();
         YDimLabel = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        DateLabel = new javax.swing.JLabel();
+        ExposureLabel = new javax.swing.JLabel();
+        ApertureLabel = new javax.swing.JLabel();
+        FocalLabel = new javax.swing.JLabel();
+        ISOLabel = new javax.swing.JLabel();
+        CameraLabel = new javax.swing.JLabel();
+        FilesizeLabel = new javax.swing.JLabel();
         ConsolePanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         ConsoleTextArea = new javax.swing.JTextArea();
         ToolsPanel = new javax.swing.JPanel();
-        HistogramFeatureRadioButton = new javax.swing.JRadioButton();
         DetectFeatureButton = new javax.swing.JButton();
         CompareSingleButton = new javax.swing.JButton();
         CompareMultiButton = new javax.swing.JButton();
+        HistogramFeatureRadioButton = new javax.swing.JRadioButton();
         HaralickFeatureRadioButton = new javax.swing.JRadioButton();
+        ToolsDisplayPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
         FileMenuOpen = new javax.swing.JMenuItem();
@@ -99,6 +107,7 @@ public class TestGUI extends javax.swing.JFrame {
             }
         });
 
+        AboutDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         AboutDialog.setTitle("About");
         AboutDialog.setMinimumSize(new java.awt.Dimension(200, 150));
         AboutDialog.setResizable(false);
@@ -137,6 +146,7 @@ public class TestGUI extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1024, 768));
 
         PreviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Preview"));
 
@@ -153,7 +163,7 @@ public class TestGUI extends javax.swing.JFrame {
             PreviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PreviewPanelLayout.createSequentialGroup()
                 .addComponent(PreviewLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         ImageInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Image Info"));
@@ -168,22 +178,45 @@ public class TestGUI extends javax.swing.JFrame {
 
         YDimLabel.setText("Y: ");
 
-        jLabel1.setText("jLabel1");
+        DateLabel.setText("Date:");
+
+        ExposureLabel.setText("Exposure:");
+
+        ApertureLabel.setText("Aperture:");
+
+        FocalLabel.setText("Focal Length:");
+
+        ISOLabel.setText("ISO:");
+
+        CameraLabel.setText("Camera:");
+
+        FilesizeLabel.setText("Filesize:");
 
         javax.swing.GroupLayout ImageInfoPanelLayout = new javax.swing.GroupLayout(ImageInfoPanel);
         ImageInfoPanel.setLayout(ImageInfoPanelLayout);
         ImageInfoPanelLayout.setHorizontalGroup(
             ImageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ImageInfoPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(ImageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(FileNameLabel)
-                    .addComponent(FileNameDisplayLabel)
+                    .addGroup(ImageInfoPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(YDimLabel))
                     .addComponent(DimensionsLabel)
-                    .addComponent(XDimLabel)
-                    .addComponent(YDimLabel)
-                    .addComponent(jLabel1))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addComponent(FileNameLabel)
+                    .addComponent(ExposureLabel)
+                    .addComponent(ApertureLabel)
+                    .addComponent(FocalLabel)
+                    .addComponent(ISOLabel)
+                    .addComponent(CameraLabel)
+                    .addComponent(DateLabel)
+                    .addGroup(ImageInfoPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(FileNameDisplayLabel))
+                    .addComponent(FilesizeLabel)
+                    .addGroup(ImageInfoPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(XDimLabel)))
+                .addContainerGap(146, Short.MAX_VALUE))
         );
         ImageInfoPanelLayout.setVerticalGroup(
             ImageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,20 +224,32 @@ public class TestGUI extends javax.swing.JFrame {
                 .addComponent(FileNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(FileNameDisplayLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(FilesizeLabel)
+                .addGap(11, 11, 11)
                 .addComponent(DimensionsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(1, 1, 1)
                 .addComponent(XDimLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(YDimLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addContainerGap(302, Short.MAX_VALUE))
+                .addComponent(YDimLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addComponent(DateLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(CameraLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ExposureLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ApertureLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(FocalLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ISOLabel))
         );
 
         ConsolePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Console Output"));
 
         ConsoleTextArea.setColumns(20);
+        ConsoleTextArea.setEditable(false);
         ConsoleTextArea.setRows(5);
         jScrollPane1.setViewportView(ConsoleTextArea);
 
@@ -214,7 +259,7 @@ public class TestGUI extends javax.swing.JFrame {
             ConsolePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ConsolePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 923, Short.MAX_VALUE)
                 .addContainerGap())
         );
         ConsolePanelLayout.setVerticalGroup(
@@ -222,13 +267,10 @@ public class TestGUI extends javax.swing.JFrame {
             .addGroup(ConsolePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         ToolsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Tools"));
-
-        FeatureButtonGroup.add(HistogramFeatureRadioButton);
-        HistogramFeatureRadioButton.setText("Histogram");
 
         DetectFeatureButton.setText("Detect Features");
         DetectFeatureButton.addActionListener(new java.awt.event.ActionListener() {
@@ -253,6 +295,9 @@ public class TestGUI extends javax.swing.JFrame {
             }
         });
 
+        FeatureButtonGroup.add(HistogramFeatureRadioButton);
+        HistogramFeatureRadioButton.setText("Histogram");
+
         FeatureButtonGroup.add(HaralickFeatureRadioButton);
         HaralickFeatureRadioButton.setText("Haralick");
         HaralickFeatureRadioButton.addActionListener(new java.awt.event.ActionListener() {
@@ -261,6 +306,22 @@ public class TestGUI extends javax.swing.JFrame {
             }
         });
 
+        ToolsDisplayPanel.setMaximumSize(new java.awt.Dimension(256, 256));
+        ToolsDisplayPanel.setMinimumSize(new java.awt.Dimension(256, 256));
+        ToolsDisplayPanel.setOpaque(false);
+        ToolsDisplayPanel.setPreferredSize(new java.awt.Dimension(256, 256));
+
+        javax.swing.GroupLayout ToolsDisplayPanelLayout = new javax.swing.GroupLayout(ToolsDisplayPanel);
+        ToolsDisplayPanel.setLayout(ToolsDisplayPanelLayout);
+        ToolsDisplayPanelLayout.setHorizontalGroup(
+            ToolsDisplayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 256, Short.MAX_VALUE)
+        );
+        ToolsDisplayPanelLayout.setVerticalGroup(
+            ToolsDisplayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 256, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout ToolsPanelLayout = new javax.swing.GroupLayout(ToolsPanel);
         ToolsPanel.setLayout(ToolsPanelLayout);
         ToolsPanelLayout.setHorizontalGroup(
@@ -268,12 +329,13 @@ public class TestGUI extends javax.swing.JFrame {
             .addGroup(ToolsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(HaralickFeatureRadioButton)
-                    .addGroup(ToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(HistogramFeatureRadioButton)
-                        .addComponent(CompareMultiButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(DetectFeatureButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CompareSingleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(ToolsDisplayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(ToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(HaralickFeatureRadioButton, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(HistogramFeatureRadioButton, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(CompareMultiButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(DetectFeatureButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(CompareSingleButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         ToolsPanelLayout.setVerticalGroup(
@@ -282,7 +344,9 @@ public class TestGUI extends javax.swing.JFrame {
                 .addComponent(HistogramFeatureRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(HaralickFeatureRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 285, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(ToolsDisplayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(DetectFeatureButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CompareSingleButton)
@@ -346,7 +410,7 @@ public class TestGUI extends javax.swing.JFrame {
                     .addComponent(ConsolePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(ImageInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(PreviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ToolsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -357,9 +421,9 @@ public class TestGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ToolsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(PreviewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ImageInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ImageInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ToolsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PreviewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ConsolePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -375,32 +439,14 @@ public class TestGUI extends javax.swing.JFrame {
     private void FileMenuOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileMenuOpenActionPerformed
         int returnVal = OpenFileChoser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-        File file = OpenFileChoser.getSelectedFile();
+        file = OpenFileChoser.getSelectedFile();
                  
-          FileNameDisplayLabel.setText(file.getName());
+          GetEXIFData(file);
                     
           Opener opener = new Opener();  
           imp = opener.openImage(file.getAbsolutePath());
-          XDimLabel.setText("X: " + imp.getWidth());
-          YDimLabel.setText("Y: " + imp.getHeight());
           
-          ImagePlus im2 = new ImagePlus("Thumb", imp.getProcessor().resize(400, 400));         
-          PreviewLabel.setIcon(new javax.swing.ImageIcon(im2.getImage()));
-          
-          try{
-          Metadata metadata = ImageMetadataReader.readMetadata(file);
-          Directory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
-          Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-          ConsoleTextArea.setText(date.toString());
-          jLabel1.setText(directory.getString(ExifSubIFDDirectory.TAG_EXPOSURE_TIME));
-          }
-          catch(Exception e){
-                                
-          }
-          
-
-
-          int[] hist = imp.getStatistics().histogram;
+          SetPreview(imp, 400, 400);
           
         }
     }//GEN-LAST:event_FileMenuOpenActionPerformed
@@ -431,11 +477,19 @@ public class TestGUI extends javax.swing.JFrame {
 
     private void DetectFeatureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DetectFeatureButtonActionPerformed
         if(HistogramFeatureRadioButton.isSelected()){
-            int[] result = imp.getStatistics().histogram;
+            int[] result = imp.getProcessor().getHistogram();
+            int HistMax = Integer.MIN_VALUE;
+            
             ConsoleTextArea.append("\nHistogram Features:\n");
             for(int i = 0; i<result.length; i++){
-            ConsoleTextArea.append(result[i]+"\n");
+                if(HistMax<result[i]){HistMax=result[i];}
+                ConsoleTextArea.append(i + ": " + result[i] + "\n");
+                
             }
+            HistogramGUI histgui = new HistogramGUI(result, HistMax, 1);
+            ToolsDisplayPanel.add(histgui);;
+            histgui.paintComponent(ToolsDisplayPanel.getGraphics());
+            //histgui.repaint();
         }
         
         else if(HaralickFeatureRadioButton.isSelected()){
@@ -451,6 +505,36 @@ public class TestGUI extends javax.swing.JFrame {
         else{}
     }//GEN-LAST:event_DetectFeatureButtonActionPerformed
 
+    private void GetEXIFData(File fil){
+          FileNameDisplayLabel.setText(fil.getName());
+          FilesizeLabel.setText("Filesize: " + fil.length()/1024 + " kilobyte");
+         
+          
+        try{
+          Metadata metadata = ImageMetadataReader.readMetadata(fil);
+          Directory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
+          Directory directory2 = metadata.getDirectory(ExifIFD0Directory.class);
+          DateLabel.setText("Date: " + directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL).toString());
+          CameraLabel.setText("Camera: " + directory2.getString(ExifIFD0Directory.TAG_MAKE) + directory2.getString(ExifIFD0Directory.TAG_MODEL));
+          ExposureLabel.setText("Exposure: " + directory.getString(ExifSubIFDDirectory.TAG_EXPOSURE_TIME));
+          ApertureLabel.setText("Aperture: " + directory.getString(ExifSubIFDDirectory.TAG_FNUMBER).toString());
+          FocalLabel.setText("Focal Length: " + directory.getString(ExifSubIFDDirectory.TAG_FOCAL_LENGTH).toString() + "(" + directory.getString(ExifSubIFDDirectory.TAG_35MM_FILM_EQUIV_FOCAL_LENGTH).toString() + ")");
+          ISOLabel.setText("ISO: " + directory.getString(ExifSubIFDDirectory.TAG_ISO_EQUIVALENT).toString());
+          
+          }
+          catch(Exception e){
+                                
+          }
+    }
+    
+    private void SetPreview(ImagePlus imgp, int xDim, int yDim){
+          XDimLabel.setText("X: " + imp.getWidth());
+          YDimLabel.setText("Y: " + imp.getHeight());
+          ImagePlus im2 = new ImagePlus("Thumb", imgp.getProcessor().resize(xDim, yDim));         
+          PreviewLabel.setIcon(new javax.swing.ImageIcon(im2.getImage()));
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -477,37 +561,45 @@ public class TestGUI extends javax.swing.JFrame {
         }
     } 
     private ImagePlus imp;
+    private File file;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AboutBoxLabel;
     private javax.swing.JButton AboutBoxOkButton;
     private javax.swing.JDialog AboutDialog;
+    private javax.swing.JLabel ApertureLabel;
+    private javax.swing.JLabel CameraLabel;
     private javax.swing.JButton CompareMultiButton;
     private javax.swing.JButton CompareSingleButton;
     private javax.swing.JPanel ConsolePanel;
     private javax.swing.JTextArea ConsoleTextArea;
+    private javax.swing.JLabel DateLabel;
     private javax.swing.JButton DetectFeatureButton;
     private javax.swing.JLabel DimensionsLabel;
     private javax.swing.JMenu EditMenu;
     private javax.swing.JMenuItem EditMenuCopy;
     private javax.swing.JMenuItem EditMenuPaste;
+    private javax.swing.JLabel ExposureLabel;
     private javax.swing.ButtonGroup FeatureButtonGroup;
     private javax.swing.JMenu FileMenu;
     private javax.swing.JMenuItem FileMenuExit;
     private javax.swing.JMenuItem FileMenuOpen;
     private javax.swing.JLabel FileNameDisplayLabel;
     private javax.swing.JLabel FileNameLabel;
+    private javax.swing.JLabel FilesizeLabel;
+    private javax.swing.JLabel FocalLabel;
     private javax.swing.JRadioButton HaralickFeatureRadioButton;
     private javax.swing.JMenu HelpMenu;
     private javax.swing.JMenuItem HelpMenuAboutItem;
     private javax.swing.JRadioButton HistogramFeatureRadioButton;
+    private javax.swing.JLabel ISOLabel;
     private javax.swing.JPanel ImageInfoPanel;
     private javax.swing.JFileChooser OpenFileChoser;
     private javax.swing.JLabel PreviewLabel;
     private javax.swing.JPanel PreviewPanel;
+    private javax.swing.JPanel ToolsDisplayPanel;
     private javax.swing.JPanel ToolsPanel;
     private javax.swing.JLabel XDimLabel;
     private javax.swing.JLabel YDimLabel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
