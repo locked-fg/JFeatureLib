@@ -218,7 +218,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="PreviewLabel" min="-2" pref="400" max="-2" attributes="0"/>
-                  <EmptySpace pref="33" max="32767" attributes="0"/>
+                  <EmptySpace pref="40" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -276,7 +276,7 @@
                   <Component id="XDimLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="YDimLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="214" max="32767" attributes="0"/>
+                  <EmptySpace pref="221" max="32767" attributes="0"/>
                   <Component id="DateLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="CameraLabel" min="-2" max="-2" attributes="0"/>
@@ -374,7 +374,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="81" max="-2" attributes="0"/>
-                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -412,17 +412,20 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="ToolsDisplayPanel" alignment="0" min="-2" max="-2" attributes="1"/>
-                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="HaralickFeatureRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="HistogramFeatureRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="CompareMultiButton" alignment="0" max="32767" attributes="1"/>
-                          <Component id="DetectFeatureButton" alignment="0" max="32767" attributes="1"/>
-                          <Component id="CompareSingleButton" alignment="0" max="32767" attributes="1"/>
-                      </Group>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="HaralickFeatureRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="HistogramFeatureRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="CompareMultiButton" alignment="0" max="32767" attributes="1"/>
+                      <Component id="DetectFeatureButton" alignment="0" max="32767" attributes="1"/>
+                      <Component id="CompareSingleButton" alignment="0" max="32767" attributes="1"/>
+                      <Component id="CannyFeatureRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace pref="107" max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="ToolsDisplayPanel" min="-2" max="-2" attributes="1"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -432,9 +435,11 @@
                   <Component id="HistogramFeatureRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="HaralickFeatureRadioButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="CannyFeatureRadioButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="11" max="32767" attributes="0"/>
                   <Component id="ToolsDisplayPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="DetectFeatureButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="CompareSingleButton" min="-2" max="-2" attributes="0"/>
@@ -489,6 +494,17 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HaralickFeatureRadioButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="CannyFeatureRadioButton">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="FeatureButtonGroup"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Canny"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CannyFeatureRadioButtonActionPerformed"/>
           </Events>
         </Component>
         <Container class="javax.swing.JPanel" name="ToolsDisplayPanel">

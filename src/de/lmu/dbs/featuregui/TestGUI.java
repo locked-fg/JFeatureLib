@@ -24,6 +24,7 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import de.lmu.dbs.features.Canny;
 import de.lmu.dbs.features.FeatureDescriptor;
 import java.util.Date;
 import de.lmu.dbs.features.Haralick;
@@ -89,6 +90,7 @@ public class TestGUI extends javax.swing.JFrame {
         CompareMultiButton = new javax.swing.JButton();
         HistogramFeatureRadioButton = new javax.swing.JRadioButton();
         HaralickFeatureRadioButton = new javax.swing.JRadioButton();
+        CannyFeatureRadioButton = new javax.swing.JRadioButton();
         ToolsDisplayPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
@@ -165,7 +167,7 @@ public class TestGUI extends javax.swing.JFrame {
             PreviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PreviewPanelLayout.createSequentialGroup()
                 .addComponent(PreviewLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         ImageInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Image Info"));
@@ -227,7 +229,7 @@ public class TestGUI extends javax.swing.JFrame {
                 .addComponent(XDimLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(YDimLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 221, Short.MAX_VALUE)
                 .addComponent(DateLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CameraLabel)
@@ -262,7 +264,7 @@ public class TestGUI extends javax.swing.JFrame {
             .addGroup(ConsolePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         ToolsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Tools"));
@@ -301,6 +303,14 @@ public class TestGUI extends javax.swing.JFrame {
             }
         });
 
+        FeatureButtonGroup.add(CannyFeatureRadioButton);
+        CannyFeatureRadioButton.setText("Canny");
+        CannyFeatureRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CannyFeatureRadioButtonActionPerformed(evt);
+            }
+        });
+
         ToolsDisplayPanel.setMaximumSize(new java.awt.Dimension(256, 256));
         ToolsDisplayPanel.setMinimumSize(new java.awt.Dimension(256, 256));
         ToolsDisplayPanel.setOpaque(false);
@@ -323,15 +333,18 @@ public class TestGUI extends javax.swing.JFrame {
             ToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ToolsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(ToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ToolsDisplayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(ToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(HaralickFeatureRadioButton, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(HistogramFeatureRadioButton, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(CompareMultiButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(DetectFeatureButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CompareSingleButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(ToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(HaralickFeatureRadioButton, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(HistogramFeatureRadioButton, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(CompareMultiButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(DetectFeatureButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(CompareSingleButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(CannyFeatureRadioButton, javax.swing.GroupLayout.Alignment.LEADING))
+                .addContainerGap(107, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ToolsPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ToolsDisplayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         ToolsPanelLayout.setVerticalGroup(
             ToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -339,9 +352,11 @@ public class TestGUI extends javax.swing.JFrame {
                 .addComponent(HistogramFeatureRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(HaralickFeatureRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(CannyFeatureRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(ToolsDisplayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(DetectFeatureButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CompareSingleButton)
@@ -498,9 +513,18 @@ public class TestGUI extends javax.swing.JFrame {
                 ConsoleTextArea.append(result[i]+"\n");
             }
         }
+                
+        else if(CannyFeatureRadioButton.isSelected()){
+            Canny c = new Canny();
+            double[] result = RunFeature(c);
+        }
             
         else{}
     }//GEN-LAST:event_DetectFeatureButtonActionPerformed
+
+    private void CannyFeatureRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CannyFeatureRadioButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CannyFeatureRadioButtonActionPerformed
 
     private double[] RunFeature(FeatureDescriptor o){
         o.run(new ColorProcessor(imp.getImage()));
@@ -571,6 +595,7 @@ public class TestGUI extends javax.swing.JFrame {
     private javax.swing.JDialog AboutDialog;
     private javax.swing.JLabel ApertureLabel;
     private javax.swing.JLabel CameraLabel;
+    private javax.swing.JRadioButton CannyFeatureRadioButton;
     private javax.swing.JButton CompareMultiButton;
     private javax.swing.JButton CompareSingleButton;
     private javax.swing.JPanel ConsolePanel;
