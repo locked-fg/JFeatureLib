@@ -1,4 +1,4 @@
-package de.lmu.dbs;
+package de.lmu.dbs.jfeaturelib;
 
 /*
  * A pixel representing a location in (x, y) coordinate plane, 

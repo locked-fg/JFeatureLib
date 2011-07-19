@@ -1,4 +1,4 @@
-package de.lmu.dbs;
+package de.lmu.dbs.jfeaturelib;
 
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;

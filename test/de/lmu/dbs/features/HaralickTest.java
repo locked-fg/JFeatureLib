@@ -1,5 +1,6 @@
 package de.lmu.dbs.features;
 
+import de.lmu.dbs.jfeaturelib.features.Haralick;
 import java.awt.Image;
 import ij.process.ColorProcessor;
 import java.net.URL;

@@ -24,11 +24,11 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
-import de.lmu.dbs.features.Canny;
-import de.lmu.dbs.features.FeatureDescriptor;
+import de.lmu.dbs.jfeaturelib.features.Canny;
+import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
 import java.util.Date;
-import de.lmu.dbs.features.Haralick;
-import de.lmu.dbs.features.Histogram;
+import de.lmu.dbs.jfeaturelib.features.Haralick;
+import de.lmu.dbs.jfeaturelib.features.Histogram;
 
 import ij.process.ColorProcessor;
 
