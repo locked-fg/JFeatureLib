@@ -6,7 +6,7 @@ import java.util.EnumSet;
 
 /**
  * Reads the histogram from the Image Processor and returns it as double[]
- * TODO: Class for RGB histograms
+ * @TODO: Class for RGB histograms
  * @author Benedikt
  */
 public class Histogram implements FeatureDescriptor{
