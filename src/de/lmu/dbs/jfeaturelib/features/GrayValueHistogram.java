@@ -7,15 +7,14 @@ import java.util.EnumSet;
 /**
  * Reads the histogram from the Image Processor and returns it as double[]
  * @TODO: Class for RGB histograms
- * @FIXME: please rename class to GrayValueHistogram
  * @author Benedikt
  */
-public class Histogram implements FeatureDescriptor{
+public class GrayValueHistogram implements FeatureDescriptor{
 
     double[] features = new double[256];
     private ByteProcessor image;
     
-    public Histogram(){
+    public GrayValueHistogram(){
         
     }
     
@@ -26,13 +25,10 @@ public class Histogram implements FeatureDescriptor{
     }
 
     @Override
-    public EnumSet<Supports> supports() {
-        // FIXME return enum set
-        throw new UnsupportedOperationException("Not supported yet.");
-        /*
+    public EnumSet<Supports> supports() {        
         EnumSet set = EnumSet.of(Supports.NoChanges);
         set.addAll(DOES_ALL);
-        return set;*/
+        return set;
     }
 
     @Override
