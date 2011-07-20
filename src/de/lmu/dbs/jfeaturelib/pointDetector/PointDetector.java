@@ -13,7 +13,7 @@ import java.util.List;
  * 
  * @author graf
  */
-interface PointDetector extends Descriptor {
+public interface PointDetector extends Descriptor {
 
     List<ImagePoint> getPoints();
 }
