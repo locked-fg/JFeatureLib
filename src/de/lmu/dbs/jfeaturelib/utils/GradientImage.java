@@ -80,12 +80,13 @@ public class GradientImage {
     /**
      * creates and returns the gradient vector at this position
      * 
+     * @TODO do we need a Gradient class?
      * @param x
      * @param y
-     * @return new vector(length, theta), theta in -pi/2 through pi/2
+     * @return double[length, theta]
      */
-    public Vector2f getGradient(int x, int y) {
-        return new Vector2f(getLength(x, y), getTheta(x, y));
+    public double[] getGradient(int x, int y) {
+        return new double[]{getLength(x, y), getTheta(x, y)};
     }
 
     /**
