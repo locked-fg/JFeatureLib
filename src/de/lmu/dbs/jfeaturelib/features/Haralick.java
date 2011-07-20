@@ -1,13 +1,11 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.ifi.dbs.utilities.Arrays2;
-import ij.ImagePlus;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
 
-//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
@@ -215,6 +213,8 @@ public class Haralick implements FeatureDescriptor {
     }
 
 }
+
+//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf */
 class Coocurrence {
