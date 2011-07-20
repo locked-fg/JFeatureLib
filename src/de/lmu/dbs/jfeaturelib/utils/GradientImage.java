@@ -2,7 +2,6 @@ package de.lmu.dbs.jfeaturelib.utils;
 
 import ij.process.ImageProcessor;
 import ij.process.FloatProcessor;
-import javax.vecmath.Vector2f;
 
 /**
  * Class that calculates gradients from a given image.
