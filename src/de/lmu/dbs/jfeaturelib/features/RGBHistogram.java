@@ -43,9 +43,10 @@ public class RGBHistogram implements FeatureDescriptor{
         return set;
     }
 
-    public void run(ColorProcessor ip) {
+    @Override
+    public void run(ImageProcessor ip) {
 
-        this.image = ip;
+        this.image = (ColorProcessor)ip;
         process();
     }
     

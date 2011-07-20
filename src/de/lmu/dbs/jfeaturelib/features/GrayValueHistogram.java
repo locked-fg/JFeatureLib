@@ -2,7 +2,6 @@ package de.lmu.dbs.jfeaturelib.features;
 
 import ij.ImagePlus;
 import ij.process.ByteProcessor;
-import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
@@ -14,7 +13,6 @@ public class GrayValueHistogram implements FeatureDescriptor{
 
     int TONAL_VALUES = 256;
     double[] features = new double[TONAL_VALUES];
-    private ImageProcessor ip;
     private ByteProcessor image;
     
     public GrayValueHistogram(){
@@ -42,9 +40,9 @@ public class GrayValueHistogram implements FeatureDescriptor{
     }
 
     @Override
-    public void run(ColorProcessor cp) {
-        if (!ByteProcessor.class.isAssignableFrom(cp.getClass())) {
-            ip = (ImageProcessor) cp.convertToByte(true);
+    public void run(ImageProcessor ip) {
+        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
+            ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
         process();

@@ -58,5 +58,5 @@ public interface Descriptor {
      * 
      * @param ip 
      */
-    public void run(ColorProcessor cp);
+    public void run(ImageProcessor ip);
 }
