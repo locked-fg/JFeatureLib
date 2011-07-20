@@ -32,8 +32,7 @@ public interface Descriptor {
         /** supports float images */
         DOES_32,
         /** supports RGB images */
-        DOES_RGB,
-        DOES_ALL
+        DOES_RGB
     }
     /** Convenience field for "support all kinds of images". */
     public final EnumSet<Supports> DOES_ALL = EnumSet.of(
