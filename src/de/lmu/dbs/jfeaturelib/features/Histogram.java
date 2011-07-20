@@ -7,6 +7,7 @@ import java.util.EnumSet;
 /**
  * Reads the histogram from the Image Processor and returns it as double[]
  * @TODO: Class for RGB histograms
+ * @FIXME: please rename class to GrayValueHistogram
  * @author Benedikt
  */
 public class Histogram implements FeatureDescriptor{
@@ -26,6 +27,7 @@ public class Histogram implements FeatureDescriptor{
 
     @Override
     public EnumSet<Supports> supports() {
+        // FIXME return enum set
         throw new UnsupportedOperationException("Not supported yet.");
         /*
         EnumSet set = EnumSet.of(Supports.NoChanges);
