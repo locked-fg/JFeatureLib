@@ -9,8 +9,11 @@ package de.lmu.dbs.jfeaturelib;
  */
 public class ImagePoint {
 
-    private final double x;
-    private final double y;
+    public double x;
+    public double y;
+
+    public ImagePoint() {
+    }
 
     // constructs and initializes a point at the specified location in the coordinate plane
     public ImagePoint(double x, double y) {
