@@ -1,6 +1,7 @@
 package de.lmu.dbs.jfeaturelib;
 
 import ij.plugin.filter.PlugInFilter;
+import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
@@ -57,5 +58,5 @@ public interface Descriptor {
      * 
      * @param ip 
      */
-    public void run(ImageProcessor ip);
+    public void run(ColorProcessor cp);
 }

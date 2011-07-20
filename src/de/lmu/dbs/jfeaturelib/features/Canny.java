@@ -4,7 +4,9 @@
  */
 package de.lmu.dbs.jfeaturelib.features;
 
+import ij.ImagePlus;
 import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
@@ -44,6 +46,7 @@ END
 public class Canny implements FeatureDescriptor{
 
     double[] features;
+    private ImageProcessor ip;
     private ByteProcessor image;
     
     public Canny(){
@@ -60,15 +63,19 @@ public class Canny implements FeatureDescriptor{
     public EnumSet<Supports> supports() {
         throw new UnsupportedOperationException("Not supported yet.");
         /*
-        EnumSet set = EnumSet.of(Supports.NoChanges);
-        set.addAll(DOES_ALL);
+        EnumSet set = EnumSet.of(
+            Supports.NoChanges,
+            Supports.DOES_8C,
+            Supports.DOES_8G,
+            Supports.DOES_RGB
+        );
         return set;*/
     }
 
     @Override
-    public void run(ImageProcessor ip) {
-        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
-            ip = ip.convertToByte(true);
+    public void run(ColorProcessor cp) {
+        if (!ByteProcessor.class.isAssignableFrom(cp.getClass())) {
+            ip = (ImageProcessor) cp.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
         process();
@@ -77,5 +84,11 @@ public class Canny implements FeatureDescriptor{
     private void process() {
        // TODO
     }
+
+    @Override
+    public String[] getInfo() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     
 }

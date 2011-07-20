@@ -1,10 +1,14 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.ifi.dbs.utilities.Arrays2;
+import ij.ImagePlus;
 import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
+
+//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
@@ -48,6 +52,7 @@ public class Haralick implements FeatureDescriptor {
     // -
     private final int haralickDist;
     double[] features = new double[13];
+    private ImageProcessor ip;
     private ByteProcessor image;
 
     public Haralick() {
@@ -66,9 +71,9 @@ public class Haralick implements FeatureDescriptor {
     }
 
     @Override
-    public void run(ImageProcessor ip) {
-        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
-            ip = ip.convertToByte(true);
+    public void run(ColorProcessor cp) {
+        if (!ByteProcessor.class.isAssignableFrom(cp.getClass())) {
+            ip = (ImageProcessor) cp.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
         process();
@@ -204,9 +209,14 @@ public class Haralick implements FeatureDescriptor {
             Arrays2.div(A[i], sum);
         }
     }
-}
 
-//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
+    @Override
+    public String[] getInfo() {
+        throw new UnsupportedOperationException("Not supported yet.");
+        //FIXME implement info about features double array
+    }
+
+}
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf */
 class Coocurrence {

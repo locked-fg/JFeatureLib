@@ -10,4 +10,5 @@ import de.lmu.dbs.jfeaturelib.Descriptor;
 public interface FeatureDescriptor extends Descriptor {
 
     double[] getFeatures();
+    String[] getInfo();
 }
