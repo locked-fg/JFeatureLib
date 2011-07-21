@@ -6,8 +6,11 @@ package de.lmu.dbs.jfeaturelib.features;
 
 import ij.ImagePlus;
 import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
+import java.lang.Math;
 import java.util.EnumSet;
+import javax.swing.ImageIcon;
 
 /**
  * Implements Canny Edge Detection
@@ -45,10 +48,22 @@ END
 public class Canny implements FeatureDescriptor{
 
     double[] features;
-    private ByteProcessor image;
+    private ColorProcessor image;
+    double low = 1.0;
+    double high = 2.0;
+    int[] sigmas = {1,2,1,2,4,2,1,2,1};
+    int[] xSobel = {1,0,-1,2,0,-2,1,0,-1};
+    int[] ySobel = {1,2,1,0,0,0,-1,-2,-1};
+    int PREVIEW_RESOLUTION = 256;
     
     public Canny(){
         
+    }
+    
+    public Canny(double lowT, double highT, int[] sigma){
+        low = lowT;
+        high = highT;
+        sigmas = sigma;
     }
     
     @Override
@@ -72,15 +87,58 @@ public class Canny implements FeatureDescriptor{
 
     @Override
     public void run(ImageProcessor ip) {
-        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
-            ip = ip.convertToByte(true);
-        }
-        this.image = (ByteProcessor) ip;
-        process();
+//        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
+//            ip = ip.convertToByte(true);
+//        }
+//        this.image = (ByteProcessor) ip;
+        this.image = (ColorProcessor)ip;
+        //process();
     }
     
     private void process() {
-       // TODO
+       //Smoothen image using sigma
+        // TODO
+    }
+    
+    public ImageIcon process1(){
+        image.convolve3x3(sigmas);
+        
+        ImagePlus im1 = new ImagePlus("Thumb", image.resize(PREVIEW_RESOLUTION, PREVIEW_RESOLUTION));
+        
+        return new ImageIcon(im1.getImage());
+    }
+    
+    public ImageIcon process2(){
+        ByteProcessor imagex = (ByteProcessor)image.convertToByte(true);
+        ByteProcessor imagey = (ByteProcessor)image.convertToByte(true);
+        imagex.convolve3x3(xSobel);
+        imagey.convolve3x3(ySobel);
+        
+        int g, xval, yval;
+        for(int x = 0; x < image.getWidth(); x++){
+            for(int y = 0; y < image.getHeight(); y++){
+                xval = imagex.getPixel(x,y);
+                yval = imagey.getPixel(x,y);
+                
+                g = (int)java.lang.Math.sqrt(java.lang.Math.pow(xval,2)+java.lang.Math.pow(yval,2));
+                System.out.println("x: " + x + ", xval: " + xval + ", y: " + y + ", yval: " + yval + ", g: " + g + ", arctan: " + java.lang.Math.atan((double)xval/(double)yval));
+                if(imagex.getPixel(x,y) != 0){
+                    double arctan = java.lang.Math.atan((double)xval/(double)yval);
+                    image.putPixel(x,y,(int)arctan*162);
+                }
+                else if(xval == 0 && yval == 0 ){
+                    //0 degree
+                    image.putPixel(x,y,0);
+                }
+                else if(xval == 0 && yval != 0 ){
+                    //90 degree
+                    image.putPixel(x,y,255);
+                }
+            }
+        }
+        ImagePlus im2 = new ImagePlus("Thumb", image.resize(PREVIEW_RESOLUTION, PREVIEW_RESOLUTION));
+        
+        return new ImageIcon(im2.getImage());
     }
 
     @Override
