@@ -79,8 +79,23 @@ public class Haralick implements FeatureDescriptor {
      * Calculates the Haralick texture features.
      */
     @Override
-    public double[] getFeatures() {
+    public double[] getFeaturesDouble() {
         return features;
+    }
+    
+    @Override
+    public int[] getFeaturesInt() {
+        int[] featuresInt = new int[features.length];
+        for(int i = 0; 1 < featuresInt.length; i++){
+            featuresInt[i] = (int) Math.round(features[i]);
+        }
+        return featuresInt;
+    }
+    
+    @Override
+    public String[] getDescription() {
+        //FIXME implement info about features double array
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private void process() {
@@ -204,12 +219,6 @@ public class Haralick implements FeatureDescriptor {
         for (int i = 0; i < A.length; i++) {
             Arrays2.div(A[i], sum);
         }
-    }
-
-    @Override
-    public String[] getInfo() {
-        throw new UnsupportedOperationException("Not supported yet.");
-        //FIXME implement info about features double array
     }
 
 }

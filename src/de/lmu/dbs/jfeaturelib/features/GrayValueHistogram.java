@@ -1,6 +1,5 @@
 package de.lmu.dbs.jfeaturelib.features;
 
-import ij.ImagePlus;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
@@ -12,7 +11,7 @@ import java.util.EnumSet;
 public class GrayValueHistogram implements FeatureDescriptor{
 
     int TONAL_VALUES = 256;
-    double[] features = new double[TONAL_VALUES];
+    int[] features = new int[TONAL_VALUES];
     private ByteProcessor image;
     
     public GrayValueHistogram(){
@@ -22,9 +21,17 @@ public class GrayValueHistogram implements FeatureDescriptor{
     //TODO: implement constructor for 16bit images
     
     @Override
-    public double[] getFeatures() {
-        
+    public int[] getFeaturesInt() {
         return features;
+    }
+
+    @Override
+    public double[] getFeaturesDouble() {
+        double[] featuresDouble = new double[features.length];
+        for (int i = 0; i <  featuresDouble.length; i++){
+            featuresDouble[i] = (double)features[i];
+        }
+        return  featuresDouble;
     }
 
     @Override
@@ -48,15 +55,8 @@ public class GrayValueHistogram implements FeatureDescriptor{
         process();
     }
     
-    private void process() {
-        int[] result = image.getHistogram();
-        for (int i = 0; i < result.length; i++){
-            features[i] = (double)result[i];
-        }
-    }
-
     @Override
-    public String[] getInfo() {
+    public String[] getDescription() {
         String[] info =  new String[TONAL_VALUES];
         for (int i = 0; i < info.length; i++){
             info[i] = "Pixels with tonal value " + i;
@@ -64,4 +64,7 @@ public class GrayValueHistogram implements FeatureDescriptor{
         return(info);
     }
     
+    private void process() {
+        features = image.getHistogram();
+    }
 }

@@ -8,7 +8,6 @@ import ij.ImagePlus;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
-import java.lang.Math;
 import java.util.EnumSet;
 import javax.swing.ImageIcon;
 
@@ -66,12 +65,6 @@ public class Canny implements FeatureDescriptor{
         sigmas = sigma;
     }
     
-    @Override
-    public double[] getFeatures() {
-        
-        return features;
-    }
-
     @Override
     public EnumSet<Supports> supports() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -141,8 +134,19 @@ public class Canny implements FeatureDescriptor{
         return new ImageIcon(im2.getImage());
     }
 
+
     @Override
-    public String[] getInfo() {
+    public int[] getFeaturesInt() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public double[] getFeaturesDouble() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String[] getDescription() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

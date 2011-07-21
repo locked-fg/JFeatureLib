@@ -1,10 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
-import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
@@ -18,7 +14,7 @@ public class RGBHistogram implements FeatureDescriptor{
 
     int TONAL_VALUES = 256;
     int CHANNELS = 3;
-    double[] features = new double[CHANNELS*TONAL_VALUES];
+    int[] features = new int[CHANNELS*TONAL_VALUES];
     private ColorProcessor image;
     
     public RGBHistogram(){
@@ -28,11 +24,20 @@ public class RGBHistogram implements FeatureDescriptor{
     //TODO: implement constructor for 16bit images
     
     @Override
-    public double[] getFeatures() {
+    public int[] getFeaturesInt() {
         
         return features;
     }
-
+    
+    @Override
+    public double[] getFeaturesDouble() {
+        double[] featuresDouble = new double[features.length];
+        for (int i = 0; i <  featuresDouble.length; i++){
+            featuresDouble[i] = (double)features[i];
+        }
+        return  featuresDouble;
+    }
+ 
     @Override
     public EnumSet<Supports> supports() {        
         EnumSet set = EnumSet.of(
@@ -45,6 +50,17 @@ public class RGBHistogram implements FeatureDescriptor{
         return set;
     }
 
+    @Override
+    public String[] getDescription() {
+        String[] info =  new String[CHANNELS*TONAL_VALUES];
+        for (int i = 0; i < info.length; i++){
+            if(i<TONAL_VALUES) info[i] = "Red Pixels with tonal value " + i;
+            else if(i<TONAL_VALUES*2) info[i] = "Green Pixels with tonal value " + i%TONAL_VALUES;
+            else info[i] = "Blue Pixels with tonal value " + i%TONAL_VALUES;
+        }
+        return(info);
+    }
+    
     @Override
     public void run(ImageProcessor ip) {
 
@@ -67,18 +83,5 @@ public class RGBHistogram implements FeatureDescriptor{
             else if(i<TONAL_VALUES*2)features[i] = g[i%TONAL_VALUES];
             else features[i] = b[i%TONAL_VALUES];
         }
-
     }
-    
-    @Override
-    public String[] getInfo() {
-        String[] info =  new String[CHANNELS*TONAL_VALUES];
-        for (int i = 0; i < info.length; i++){
-            if(i<TONAL_VALUES) info[i] = "Red Pixels with tonal value " + i;
-            else if(i<TONAL_VALUES*2) info[i] = "Green Pixels with tonal value " + i%TONAL_VALUES;
-            else info[i] = "Blue Pixels with tonal value " + i%TONAL_VALUES;
-        }
-        return(info);
-    }
-    
 }

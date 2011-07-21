@@ -9,19 +9,29 @@ import de.lmu.dbs.jfeaturelib.Descriptor;
  */
 public interface FeatureDescriptor extends Descriptor {
 
+
+    /**
+     * Returns the values of the descriptor in an int array.
+     * The semantics of the according values should be explained in the JavaDocs 
+     * of the implementing class.
+     * 
+     * @return int array of feature values
+     */
+    int[] getFeaturesInt();
+    
     /**
      * Returns the values of the descriptor in a double array.
      * The semantics of the according values should be explained in the JavaDocs 
      * of the implementing class.
      * 
-     * @return array of feature values
+     * @return double array of feature values
      */
-    double[] getFeatures();
+    double[] getFeaturesDouble();
     
     /**
      * @FIXME add javadoc
      * 
      * @return 
      */
-    String[] getInfo();
+    String[] getDescription();
 }
