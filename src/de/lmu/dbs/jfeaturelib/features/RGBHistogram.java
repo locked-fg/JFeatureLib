@@ -11,6 +11,8 @@ import java.util.EnumSet;
 /**
  * Reads the histogram from the Image Processor and returns it as double[]
  * @author Benedikt
+ * @FIXME add documentation in the WIKI
+ * @TODO add parameter to define the length of the histogram (0-256)
  */
 public class RGBHistogram implements FeatureDescriptor{
 
