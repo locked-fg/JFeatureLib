@@ -5,7 +5,7 @@ import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
 /**
- * Reads the histogram from the Image Processor and returns it as double[]      
+ * Reads the histogram from the Image Processor and returns it as int[].      
  * @author Benedikt
  */
 public class GrayValueHistogram implements FeatureDescriptor{
@@ -13,18 +13,28 @@ public class GrayValueHistogram implements FeatureDescriptor{
     int TONAL_VALUES = 256;
     int[] features = new int[TONAL_VALUES];
     private ByteProcessor image;
-    
+
+    /**
+     * Constructs a histogram with default parameters.
+     */     
     public GrayValueHistogram(){
         //assuming 8bit image
     }
     
     //TODO: implement constructor for 16bit images
     
+    /**
+    * Returns the histogram as int array.
+    */    
     @Override
     public int[] getFeaturesInt() {
         return features;
     }
 
+    /**
+     * Returns the histogram as double array.
+     * This is NOT recommended!
+     */  
     @Override
     public double[] getFeaturesDouble() {
         double[] featuresDouble = new double[features.length];
@@ -33,7 +43,13 @@ public class GrayValueHistogram implements FeatureDescriptor{
         }
         return  featuresDouble;
     }
-
+    
+    /**
+     * Defines the capability of the algorithm.
+     * 
+     * @see PlugInFilter
+     * @see #supports() 
+     */
     @Override
     public EnumSet<Supports> supports() {        
         EnumSet set = EnumSet.of(
@@ -45,7 +61,11 @@ public class GrayValueHistogram implements FeatureDescriptor{
         //set.addAll(DOES_ALL);
         return set;
     }
-
+    
+    /**
+     * Starts the histogram detection.
+     * @param ip ImageProcessor of the source image
+     */ 
     @Override
     public void run(ImageProcessor ip) {
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
@@ -55,6 +75,9 @@ public class GrayValueHistogram implements FeatureDescriptor{
         process();
     }
     
+    /**
+     * Returns information about the getFeauture returns in a String array.
+     */     
     @Override
     public String[] getDescription() {
         String[] info =  new String[TONAL_VALUES];

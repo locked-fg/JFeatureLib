@@ -22,6 +22,7 @@ import java.util.EnumSet;
  * </pre>
  * @author graf
  */
+
 public class Haralick implements FeatureDescriptor {
 
     /** The number of gray values for the textures */
@@ -51,14 +52,27 @@ public class Haralick implements FeatureDescriptor {
     double[] features = new double[13];
     private ByteProcessor image;
 
+    /**
+     * Constructs a haralick detector with default parameters.
+     */ 
     public Haralick() {
         this.haralickDist = 1;
     }
 
+    /**
+     * Constructs a haralick detector.
+     * @param haralickDist Integer for haralick distribution
+     */ 
     public Haralick(int haralickDist) {
         this.haralickDist = haralickDist;
     }
-
+    
+    /**
+     * Defines the capability of the algorithm.
+     * 
+     * @see PlugInFilter
+     * @see #supports() 
+     */
     @Override
     public EnumSet<Supports> supports() {
         EnumSet set = EnumSet.of(Supports.NoChanges);
@@ -66,6 +80,10 @@ public class Haralick implements FeatureDescriptor {
         return set;
     }
 
+    /**
+     * Starts the haralick detection.
+     * @param ip ImageProcessor of the source image
+     */
     @Override
     public void run(ImageProcessor ip) {
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
@@ -76,13 +94,17 @@ public class Haralick implements FeatureDescriptor {
     }
 
     /**
-     * Calculates the Haralick texture features.
+     * Calculates the Haralick texture features and returns them as double array.
      */
     @Override
     public double[] getFeaturesDouble() {
         return features;
     }
     
+    /**
+     * Calculates the Haralick texture features and returns them as double array.
+     * This is NOT recommended!
+     */    
     @Override
     public int[] getFeaturesInt() {
         int[] featuresInt = new int[features.length];
@@ -92,6 +114,9 @@ public class Haralick implements FeatureDescriptor {
         return featuresInt;
     }
     
+    /**
+     * Returns information about the getFeauture returns in a String array.
+     */     
     @Override
     public String[] getDescription() {
         //FIXME implement info about features double array

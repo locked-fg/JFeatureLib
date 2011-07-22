@@ -569,12 +569,20 @@ public class CannyEdgeDetector implements FeatureDescriptor{
 
         
         // Begin of Code added by Benedikt Zierer
+    
+    /**
+    * Returns the image edges as INT_ARGB array.
+    * This can be used to create a buffered image, if the dimensions are known.
+    */
     @Override
     public int[] getFeaturesInt() {
         return data;
     }  
-        
-        
+    
+    /**
+     * Returns the image edges as INT_ARGB double array.
+     * This is NOT recommended!
+     */  
     @Override
     public double[] getFeaturesDouble() {
         double[] features = new double[picsize];
@@ -585,6 +593,9 @@ public class CannyEdgeDetector implements FeatureDescriptor{
         return features;
     }
 
+    /**
+     * Returns information about the getFeauture returns in a String array.
+     */      
     @Override
     public String[] getDescription() {
         String[] info = new String[1];
@@ -595,6 +606,12 @@ public class CannyEdgeDetector implements FeatureDescriptor{
         return info;
     }
 
+    /**
+     * Defines the capability of the algorithm.
+     * 
+     * @see PlugInFilter
+     * @see #supports() 
+     */
     @Override
     public EnumSet<Supports> supports() {
         EnumSet set = EnumSet.of(
@@ -608,6 +625,10 @@ public class CannyEdgeDetector implements FeatureDescriptor{
         return set;
     }
 
+    /**
+     * Starts the canny edge detection.
+     * @param ip ImageProcessor of the source image
+     */ 
     @Override
     public void run(ImageProcessor ip) {
         ColorProcessor cp = (ColorProcessor) ip;

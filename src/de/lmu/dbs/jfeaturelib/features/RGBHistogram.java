@@ -17,18 +17,28 @@ public class RGBHistogram implements FeatureDescriptor{
     int[] features = new int[CHANNELS*TONAL_VALUES];
     private ColorProcessor image;
     
+    /**
+     * Constructs a RGB histogram with default parameters.
+     */    
     public RGBHistogram(){
         //assuming 8bit image
     }
     
     //TODO: implement constructor for 16bit images
     
+    /**
+     * Returns the RGB histogram as double array.
+     */      
     @Override
     public int[] getFeaturesInt() {
         
         return features;
     }
     
+    /**
+     * Returns the RGB histogram as double array.
+     * This is NOT recommended!
+     */    
     @Override
     public double[] getFeaturesDouble() {
         double[] featuresDouble = new double[features.length];
@@ -37,7 +47,13 @@ public class RGBHistogram implements FeatureDescriptor{
         }
         return  featuresDouble;
     }
- 
+    
+    /**
+     * Defines the capability of the algorithm.
+     * 
+     * @see PlugInFilter
+     * @see #supports() 
+     */ 
     @Override
     public EnumSet<Supports> supports() {        
         EnumSet set = EnumSet.of(
@@ -49,7 +65,10 @@ public class RGBHistogram implements FeatureDescriptor{
         //set.addAll(DOES_ALL);
         return set;
     }
-
+    
+    /**
+     * Returns information about the getFeauture returns in a String array.
+     */ 
     @Override
     public String[] getDescription() {
         String[] info =  new String[CHANNELS*TONAL_VALUES];
@@ -61,6 +80,10 @@ public class RGBHistogram implements FeatureDescriptor{
         return(info);
     }
     
+    /**
+     * Starts the RGB histogram detection.
+     * @param ip ImageProcessor of the source image
+     */    
     @Override
     public void run(ImageProcessor ip) {
 
