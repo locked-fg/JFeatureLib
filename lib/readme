@@ -19,6 +19,8 @@ API and sources (if possible).
   Version: Build time in about.properties included in the Jar
   Licence: Public Domain
   URL:     dbs.ifi.lmu.de internal SVN
-  Source:  included in JAR
+  Source:  http://www.dbs.ifi.lmu.de/~graf/Utilities-API/SRC.zip
   API:     http://www.dbs.ifi.lmu.de/~graf/Utilities-API/ 
   API:     http://www.dbs.ifi.lmu.de/~graf/Utilities-API/API.zip
+  If the download URLs are not working, contact graf@dbs.ifi.lmu.de. 
+  I've forgotten to update the permissions then
