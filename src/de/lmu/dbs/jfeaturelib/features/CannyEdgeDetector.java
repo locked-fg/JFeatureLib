@@ -38,7 +38,7 @@ import java.util.EnumSet;
  *
  */
 
-public class CannyEdgeDetector implements FeatureDescriptor{
+public class CannyEdgeDetector implements FeatureDescriptorInt{
 
 	// statics
 	
@@ -575,23 +575,9 @@ public class CannyEdgeDetector implements FeatureDescriptor{
     * This can be used to create a buffered image, if the dimensions are known.
     */
     @Override
-    public int[] getFeaturesInt() {
+    public int[] getFeatures() {
         return data;
     }  
-    
-    /**
-     * Returns the image edges as INT_ARGB double array.
-     * This is NOT recommended!
-     */  
-    @Override
-    public double[] getFeaturesDouble() {
-        double[] features = new double[picsize];
-        for(int i = 0; i < data.length; i++){
-            features[i] = data[i];
-        }
-        
-        return features;
-    }
 
     /**
      * Returns information about the getFeauture returns in a String array.

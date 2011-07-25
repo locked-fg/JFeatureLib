@@ -97,23 +97,10 @@ public class Haralick implements FeatureDescriptor {
      * Calculates the Haralick texture features and returns them as double array.
      */
     @Override
-    public double[] getFeaturesDouble() {
+    public double[] getFeatures() {
         return features;
     }
-    
-    /**
-     * Calculates the Haralick texture features and returns them as double array.
-     * This is NOT recommended!
-     */    
-    @Override
-    public int[] getFeaturesInt() {
-        int[] featuresInt = new int[features.length];
-        for(int i = 0; 1 < featuresInt.length; i++){
-            featuresInt[i] = (int) Math.round(features[i]);
-        }
-        return featuresInt;
-    }
-    
+        
     /**
      * Returns information about the getFeauture returns in a String array.
      */     

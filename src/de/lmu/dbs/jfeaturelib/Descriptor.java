@@ -58,4 +58,11 @@ public interface Descriptor {
      * @param ip 
      */
     public void run(ImageProcessor ip);
+    
+    /**
+     * @FIXME add javadoc
+     * 
+     * @return 
+     */
+    String[] getDescription();
 }

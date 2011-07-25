@@ -7,7 +7,7 @@ import de.lmu.dbs.jfeaturelib.Descriptor;
  * 
  * @author graf
  */
-public interface FeatureDescriptor extends Descriptor {
+public interface FeatureDescriptorInt extends Descriptor {
 
 
     /**
@@ -17,12 +17,7 @@ public interface FeatureDescriptor extends Descriptor {
      * 
      * @return int array of feature values
      */
-    double[] getFeatures();
+    int[] getFeatures();
+    
 
-    /**
-     * @FIXME add javadoc
-     * 
-     * @return 
-     */
-    String[] getDescription();
 }

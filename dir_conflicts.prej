@@ -3,3 +3,11 @@ Trying to add new property 'svn:ignore' with value 'dist
 but property already exists with value 'dist
 build
 '.
+Trying to change property 'svn:ignore' from 'dist
+' to 'dist
+build
+',
+but the property has been locally changed from 'dist
+' to 'dist
+build
+'.

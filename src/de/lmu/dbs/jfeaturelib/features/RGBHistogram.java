@@ -10,7 +10,7 @@ import java.util.EnumSet;
  * @FIXME add documentation in the WIKI
  * @TODO add parameter to define the length of the histogram (0-256)
  */
-public class RGBHistogram implements FeatureDescriptor{
+public class RGBHistogram implements FeatureDescriptorInt{
 
     int TONAL_VALUES = 256;
     int CHANNELS = 3;
@@ -30,24 +30,11 @@ public class RGBHistogram implements FeatureDescriptor{
      * Returns the RGB histogram as double array.
      */      
     @Override
-    public int[] getFeaturesInt() {
+    public int[] getFeatures() {
         
         return features;
     }
-    
-    /**
-     * Returns the RGB histogram as double array.
-     * This is NOT recommended!
-     */    
-    @Override
-    public double[] getFeaturesDouble() {
-        double[] featuresDouble = new double[features.length];
-        for (int i = 0; i <  featuresDouble.length; i++){
-            featuresDouble[i] = (double)features[i];
-        }
-        return  featuresDouble;
-    }
-    
+      
     /**
      * Defines the capability of the algorithm.
      * 

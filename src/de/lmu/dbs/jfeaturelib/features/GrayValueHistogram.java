@@ -8,7 +8,7 @@ import java.util.EnumSet;
  * Reads the histogram from the Image Processor and returns it as int[].      
  * @author Benedikt
  */
-public class GrayValueHistogram implements FeatureDescriptor{
+public class GrayValueHistogram implements FeatureDescriptorInt{
 
     int TONAL_VALUES = 256;
     int[] features = new int[TONAL_VALUES];
@@ -27,21 +27,8 @@ public class GrayValueHistogram implements FeatureDescriptor{
     * Returns the histogram as int array.
     */    
     @Override
-    public int[] getFeaturesInt() {
+    public int[] getFeatures() {
         return features;
-    }
-
-    /**
-     * Returns the histogram as double array.
-     * This is NOT recommended!
-     */  
-    @Override
-    public double[] getFeaturesDouble() {
-        double[] featuresDouble = new double[features.length];
-        for (int i = 0; i <  featuresDouble.length; i++){
-            featuresDouble[i] = (double)features[i];
-        }
-        return  featuresDouble;
     }
     
     /**
