@@ -16,8 +16,9 @@ API and sources (if possible).
   API:    http://rsbweb.nih.gov/ij/download/docs/api.zip
 
 # Utilities.jar
-  Version: Buildtime: 9 Mai 2011 11\:01\:26 according about.properties
+  Version: Build time in about.properties included in the Jar
   Licence: Public Domain
   URL:     dbs.ifi.lmu.de internal SVN
   Source:  included in JAR
-  API:     -
+  API:     http://www.dbs.ifi.lmu.de/~graf/Utilities-API/ 
+  API:     http://www.dbs.ifi.lmu.de/~graf/Utilities-API/API.zip
