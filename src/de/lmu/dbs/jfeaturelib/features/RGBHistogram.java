@@ -12,6 +12,8 @@ import java.util.EnumSet;
  */
 public class RGBHistogram implements FeatureDescriptorInt{
 
+    long time;
+    
     int TONAL_VALUES = 256;
     int CHANNELS = 3;
     int[] features = new int[CHANNELS*TONAL_VALUES];
@@ -73,9 +75,10 @@ public class RGBHistogram implements FeatureDescriptorInt{
      */    
     @Override
     public void run(ImageProcessor ip) {
-
+        long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
         process();
+        time = (System.currentTimeMillis() - start);
     }
     
     private void process() {
@@ -94,4 +97,8 @@ public class RGBHistogram implements FeatureDescriptorInt{
             else features[i] = b[i%TONAL_VALUES];
         }
     }
+    
+     public long getTime(){
+         return time;
+     }
 }

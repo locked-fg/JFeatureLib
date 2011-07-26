@@ -39,6 +39,8 @@ import java.util.EnumSet;
  */
 
 public class CannyEdgeDetector implements FeatureDescriptorInt{
+    
+        long time;
 
 	// statics
 	
@@ -617,9 +619,15 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
      */ 
     @Override
     public void run(ImageProcessor ip) {
+        long start = System.currentTimeMillis();
         ColorProcessor cp = (ColorProcessor) ip;
         setSourceImage(cp.getBufferedImage());
         this.process();
+        time = (System.currentTimeMillis() - start);
+        
     }
- 
+    
+     public long getTime(){
+         return time;
+     }
 }

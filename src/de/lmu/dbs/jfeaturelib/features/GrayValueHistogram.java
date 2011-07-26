@@ -10,6 +10,8 @@ import java.util.EnumSet;
  */
 public class GrayValueHistogram implements FeatureDescriptorInt{
 
+    long time;
+    
     int TONAL_VALUES = 256;
     int[] features = new int[TONAL_VALUES];
     private ByteProcessor image;
@@ -55,11 +57,13 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
      */ 
     @Override
     public void run(ImageProcessor ip) {
+        long start = System.currentTimeMillis();
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
             ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
         process();
+        time = (System.currentTimeMillis() - start);
     }
     
     /**
@@ -77,4 +81,8 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
     private void process() {
         features = image.getHistogram();
     }
+    
+    public long getTime(){
+         return time;
+     }
 }

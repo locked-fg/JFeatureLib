@@ -24,11 +24,12 @@ package de.lmu.dbs.jfeaturelib.features;
 //package sigus.templateMatching;
 //import sigus.*;
 
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.*;
-import ij.plugin.filter.PlugInFilter;
 import ij.process.*;
 import java.awt.*;
 import ij.gui.*;
+import java.util.EnumSet;
 
 /**
 *   This ImageJ plugin shows the Hough Transform Space and search for
@@ -36,8 +37,10 @@ import ij.gui.*;
 *   an edge detection module and have edges marked in white (background
 *   must be in black).
 */
-public class Hough_Circles implements PlugInFilter {
-
+public class Hough_Circles implements FeatureDescriptorInt {
+    
+    long time;
+    
     public int radiusMin;  // Find circles with radius grater or equal radiusMin
     public int radiusMax;  // Find circles with radius less or equal radiusMax
     public int radiusInc;  // Increment used to go from radiusMin to radiusMax
@@ -58,7 +61,7 @@ public class Hough_Circles implements PlugInFilter {
     boolean useThreshold = false;
     int lut[][][]; // LookUp Table for rsin e rcos values
 
-
+    /*
     public int setup(String arg, ImagePlus imp) {
         if (arg.equals("about")) {
             showAbout();
@@ -66,23 +69,37 @@ public class Hough_Circles implements PlugInFilter {
         }
         return DOES_8G+DOES_STACKS+SUPPORTS_MASKING;
     }
-
+     */
+    
+    @Override
     public void run(ImageProcessor ip) {
-
-        imageValues = (byte[])ip.getPixels();
+        long start = System.currentTimeMillis();
+        //imageValues = (byte[])ip.getPixels();
+        
+        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
+            ip = ip.convertToByte(true);
+        }
+        this.imageValues = (byte[]) ip.getPixels();
+        
         Rectangle r = ip.getRoi();
-
-
         offx = r.x;
         offy = r.y;
         width = r.width;
         height = r.height;
         offset = ip.getWidth();
+        
+        process();
+        
+        time = (System.currentTimeMillis() - start);
+    }
+
+        private void process() {
+       
 
 
-        if( readParameters() ) { // Show a Dialog Window for user input of
+        if( readParameters() ) { 
+            // Show a Dialog Window for user input of
             // radius and maxCircles.
-
 
             houghTransform();
 
@@ -104,9 +121,10 @@ public class Hough_Circles implements PlugInFilter {
 
             new ImagePlus("Hough Space [r="+radiusMin+"]", newip).show(); // Shows only the hough space for the minimun radius
             new ImagePlus(maxCircles+" Circles Found", circlesip).show();
+
         }
     }
-
+        
     void showAbout() {
         IJ.showMessage("About Circles_...",
                        "This plugin finds n circles\n" +
@@ -454,7 +472,32 @@ public class Hough_Circles implements PlugInFilter {
         }
 
     }
+    
+    // Begin of Code added by Benedikt Zierer
+    @Override
+    public int[] getFeatures(){
+        int[] result = Arrays2.convertToInt(imageValues);
+        return result;
+    }
 
+    @Override
+    public EnumSet<Supports> supports() {
+        EnumSet set = EnumSet.of(
+            Supports.NoChanges,
+            Supports.DOES_8G
+        );
+        //set.addAll(DOES_ALL);
+        return set;
+    }
+
+    @Override
+    public String[] getDescription() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public long getTime(){
+         return time;
+    }
 }
 
 

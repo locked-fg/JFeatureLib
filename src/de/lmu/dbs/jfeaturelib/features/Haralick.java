@@ -25,6 +25,8 @@ import java.util.EnumSet;
 
 public class Haralick implements FeatureDescriptor {
 
+    long time;
+    
     /** The number of gray values for the textures */
     private final int NUM_GRAY_VALUES = 32;
     /** p_(x+y) statistics */
@@ -86,11 +88,13 @@ public class Haralick implements FeatureDescriptor {
      */
     @Override
     public void run(ImageProcessor ip) {
+        long start = System.currentTimeMillis();
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
             ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
         process();
+        time = (System.currentTimeMillis() - start);
     }
 
     /**
@@ -233,6 +237,9 @@ public class Haralick implements FeatureDescriptor {
         }
     }
 
+     public long getTime(){
+         return time;
+     }
 }
 
 //<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
