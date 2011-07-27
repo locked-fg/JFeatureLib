@@ -19,10 +19,4 @@ public interface FeatureDescriptor extends Descriptor {
      */
     double[] getFeatures();
 
-    /**
-     * @FIXME add javadoc
-     * 
-     * @return 
-     */
-    String[] getDescription();
 }
