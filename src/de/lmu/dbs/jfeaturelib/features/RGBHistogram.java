@@ -5,31 +5,41 @@ import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
 /**
- * Reads the histogram from the Image Processor and returns it as double[]
+ * Reads the histogram from the Image Processor and returns it as int[]
  * @author Benedikt
- * @FIXME add documentation in the WIKI
- * @TODO add parameter to define the length of the histogram (0-256)
  */
 public class RGBHistogram implements FeatureDescriptorInt{
 
     long time;
     
-    int TONAL_VALUES = 256;
-    int CHANNELS = 3;
-    int[] features = new int[CHANNELS*TONAL_VALUES];
+    private int TONAL_VALUES;
+    private int CHANNELS;
+    private int[] features;
     private ColorProcessor image;
     
     /**
-     * Constructs a RGB histogram with default parameters.
+     * Constructs a RGB histogram with default parameters (8bit per channel).
      */    
     public RGBHistogram(){
-        //assuming 8bit image
+        //assuming 8bit RGB image
+        TONAL_VALUES = 256;
+        CHANNELS = 3;
+        features = new int[CHANNELS*TONAL_VALUES];
     }
     
-    //TODO: implement constructor for 16bit images
+    /**
+     * Constructs a RGB histogram.
+     * @param values Number of tonal values, i.e. 256 for 8bit jpeg
+     */ 
+    public RGBHistogram(int values){
+        //assuming 8bit RGB image
+        TONAL_VALUES = values;
+        CHANNELS = 3;
+        features = new int[CHANNELS*TONAL_VALUES];
+    }
     
     /**
-     * Returns the RGB histogram as double array.
+     * Returns the RGB histogram as int array.
      */      
     @Override
     public int[] getFeatures() {

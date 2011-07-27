@@ -12,8 +12,8 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
 
     long time;
     
-    int TONAL_VALUES = 256;
-    int[] features = new int[TONAL_VALUES];
+    int TONAL_VALUES;
+    int[] features;
     private ByteProcessor image;
 
     /**
@@ -21,10 +21,20 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
      */     
     public GrayValueHistogram(){
         //assuming 8bit image
+        TONAL_VALUES = 256;
+        features = new int[TONAL_VALUES];
     }
     
-    //TODO: implement constructor for 16bit images
+    /**
+     * Constructs a histogram.
+     * @param values Number of tonal values, i.e. 256 for 8bit jpeg
+     */  
     
+    public GrayValueHistogram(int values){
+        TONAL_VALUES = values;
+        features = new int[TONAL_VALUES];
+    }
+        
     /**
     * Returns the histogram as int array.
     */    
