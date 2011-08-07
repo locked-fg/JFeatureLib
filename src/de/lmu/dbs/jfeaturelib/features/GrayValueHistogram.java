@@ -10,10 +10,10 @@ import java.util.EnumSet;
  */
 public class GrayValueHistogram implements FeatureDescriptorInt{
 
-    long time;
+    private long time;
     
-    int TONAL_VALUES;
-    int[] features;
+    private int TONAL_VALUES;
+    private int[] features;
     private ByteProcessor image;
 
     /**

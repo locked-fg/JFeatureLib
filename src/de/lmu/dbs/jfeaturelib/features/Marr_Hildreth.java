@@ -10,9 +10,9 @@ import java.util.EnumSet;
 
 public class Marr_Hildreth implements FeatureDescriptorInt{
 
-        long time;
+        private long time;
         private ColorProcessor image;
-        float[] kernel = null;
+        private float[] kernel = null;
 	
         /** Gaussian deviation */
         private double deviation;

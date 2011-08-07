@@ -10,7 +10,7 @@ import java.util.EnumSet;
  */
 public class RGBHistogram implements FeatureDescriptorInt{
 
-    long time;
+    private long time;
     
     private int TONAL_VALUES;
     private int CHANNELS;

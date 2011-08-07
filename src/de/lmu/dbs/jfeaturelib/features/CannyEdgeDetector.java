@@ -40,7 +40,7 @@ import java.util.EnumSet;
 
 public class CannyEdgeDetector implements FeatureDescriptorInt{
     
-        long time;
+        private long time;
 
 	// statics
 	

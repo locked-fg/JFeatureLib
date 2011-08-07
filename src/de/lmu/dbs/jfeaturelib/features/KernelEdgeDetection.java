@@ -7,15 +7,15 @@ import java.util.EnumSet;
 
 public class KernelEdgeDetection implements FeatureDescriptorInt{
 
-        long time;
+        private long time;
         private ByteProcessor image;
-        int imageWidth;
-        int imageHeight;
-        float[] kernelX;
-        float[] kernelY;
-        int kernelWidth;
-        double direction;
-        int[] result;
+        private int imageWidth;
+        private int imageHeight;
+        private float[] kernelX;
+        private float[] kernelY;
+        private int kernelWidth;
+        private double direction;
+        private int[] result;
 	
         // constructors
 	
