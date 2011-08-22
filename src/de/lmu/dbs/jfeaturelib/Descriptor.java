@@ -65,4 +65,18 @@ public interface Descriptor {
      * @return 
      */
     String[] getDescription();
+    
+   /**
+     * Returns the time for opening and processing an image.
+     * 
+     * @return 
+     */
+    long getTime();
+    
+    /**
+     * Returns the feature results.
+     * 
+     * @return 
+     */
+    Object getFeatures();
 }

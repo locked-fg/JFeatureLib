@@ -17,6 +17,7 @@ public interface FeatureDescriptorInt extends Descriptor {
      * 
      * @return int array of feature values
      */
+    @Override
     int[] getFeatures();
     
 

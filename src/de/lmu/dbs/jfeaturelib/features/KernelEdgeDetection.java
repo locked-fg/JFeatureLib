@@ -18,7 +18,7 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
         private int[] result;
 	
         // constructors
-	
+
 	/**
 	 * Constructs a new detector.
          * @param kernel The kernel for x-convolution
@@ -28,8 +28,17 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
 	public KernelEdgeDetection(float[] kernel, int kernelWidth) {
                 this.kernelX = kernel;
                 this.kernelWidth = kernelWidth;
-                kernelY = new float[kernelWidth*kernelWidth];
+                this.kernelY = new float[kernelWidth*kernelWidth];
 	}
+        
+        public void setKernel(float[] kernel){
+            this.kernelX = kernel;
+            this.kernelY = new float[kernelWidth*kernelWidth];
+        }
+                
+        public void setKernelDimension(int kernelWidth){
+             this.kernelWidth = kernelWidth;
+        }
         
        /*
         * Proceses the image applying the kernel in x- and y-direction
@@ -62,6 +71,7 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
             image.convolve(kernelY, kernelWidth, kernelWidth);
             
             result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, imageWidth, imageHeight, null);
+
 	}
 
     /**
@@ -120,6 +130,7 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
         time = (System.currentTimeMillis() - start);
     }
 
+    @Override
     public long getTime(){
          return time;
     }
