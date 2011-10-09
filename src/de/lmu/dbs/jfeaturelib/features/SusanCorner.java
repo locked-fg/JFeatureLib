@@ -11,6 +11,7 @@ import java.util.EnumSet;
 public class SusanCorner implements FeatureDescriptor{
 
     long time;
+    private boolean calculated; 
     double[] features;
 
     private ColorProcessor image;
@@ -19,7 +20,7 @@ public class SusanCorner implements FeatureDescriptor{
      * 
      */    
     public SusanCorner(){
-
+        calculated = false;
     }
     
     
@@ -28,8 +29,13 @@ public class SusanCorner implements FeatureDescriptor{
      */      
     @Override
     public double[] getFeatures() {
-        
-        return features;
+        if(calculated){
+            return features;
+        }
+        else{
+            //TODO throw exception
+            return new double[]{0};
+        }
     }
       
     /**
@@ -69,6 +75,7 @@ public class SusanCorner implements FeatureDescriptor{
         long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
         process();
+        calculated = true;
         time = (System.currentTimeMillis() - start);
     }
     
@@ -79,4 +86,8 @@ public class SusanCorner implements FeatureDescriptor{
      public long getTime(){
          return time;
      }
+
+    public boolean isCalculated(){
+        return calculated;
+    }
 }

@@ -11,7 +11,7 @@ import java.util.EnumSet;
 public class GrayValueHistogram implements FeatureDescriptorInt{
 
     private long time;
-    
+    private boolean calculated;
     private int TONAL_VALUES;
     private int[] features;
     private ByteProcessor image;
@@ -23,6 +23,7 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
         //assuming 8bit image
         TONAL_VALUES = 256;
         features = new int[TONAL_VALUES];
+        calculated = false;
     }
     
     /**
@@ -40,7 +41,13 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
     */    
     @Override
     public int[] getFeatures() {
-        return features;
+        if(calculated){
+            return features;
+        }
+        else{
+            //TODO throw exception
+            return new int[]{0};
+        }
     }
     
     /**
@@ -73,6 +80,7 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
         }
         this.image = (ByteProcessor) ip;
         process();
+        calculated = true;
         time = (System.currentTimeMillis() - start);
     }
     
@@ -95,4 +103,8 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
     public long getTime(){
          return time;
      }
+    
+    public boolean isCalculated(){
+        return calculated;
+    }
 }

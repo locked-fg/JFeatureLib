@@ -79,4 +79,6 @@ public interface Descriptor {
      * @return 
      */
     Object getFeatures();
+    
+    boolean isCalculated();
 }

@@ -40,6 +40,7 @@ import java.util.EnumSet;
 public class Hough_Circles implements FeatureDescriptorInt {
     
     long time;
+    private boolean calculated; 
     
     public int radiusMin;  // Find circles with radius grater or equal radiusMin
     public int radiusMax;  // Find circles with radius less or equal radiusMax
@@ -476,8 +477,14 @@ public class Hough_Circles implements FeatureDescriptorInt {
     // Begin of Code added by Benedikt Zierer
     @Override
     public int[] getFeatures(){
-        int[] result = Arrays2.convertToInt(imageValues);
-        return result;
+        if(calculated){
+            int[] result = Arrays2.convertToInt(imageValues);
+            return result;
+        }
+        else{
+            //TODO throw exception
+            return new int[]{0};
+        }
     }
 
     @Override
@@ -497,6 +504,10 @@ public class Hough_Circles implements FeatureDescriptorInt {
 
     public long getTime(){
          return time;
+    }
+
+    public boolean isCalculated(){
+        return calculated;
     }
 }
 

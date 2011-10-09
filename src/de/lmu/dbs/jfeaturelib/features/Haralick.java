@@ -25,7 +25,8 @@ import java.util.EnumSet;
 
 public class Haralick implements FeatureDescriptor {
 
-    long time;
+    private long time;
+    private boolean calculated; 
     
     /** The number of gray values for the textures */
     private final int NUM_GRAY_VALUES = 32;
@@ -59,6 +60,7 @@ public class Haralick implements FeatureDescriptor {
      */ 
     public Haralick() {
         this.haralickDist = 1;
+        calculated = false;
     }
 
     /**
@@ -67,6 +69,7 @@ public class Haralick implements FeatureDescriptor {
      */ 
     public Haralick(int haralickDist) {
         this.haralickDist = haralickDist;
+        calculated = false;
     }
     
     /**
@@ -94,6 +97,7 @@ public class Haralick implements FeatureDescriptor {
         }
         this.image = (ByteProcessor) ip;
         process();
+        calculated = true;
         time = (System.currentTimeMillis() - start);
     }
 
@@ -102,7 +106,13 @@ public class Haralick implements FeatureDescriptor {
      */
     @Override
     public double[] getFeatures() {
-        return features;
+        if(calculated){
+            return features;
+        }
+        else{
+            //TODO throw exception
+            return new double[]{0};
+        }
     }
         
     /**
@@ -240,6 +250,10 @@ public class Haralick implements FeatureDescriptor {
      public long getTime(){
          return time;
      }
+     
+    public boolean isCalculated(){
+        return calculated;
+    }
 }
 
 //<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">

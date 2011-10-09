@@ -41,6 +41,7 @@ import java.util.EnumSet;
 public class CannyEdgeDetector implements FeatureDescriptorInt{
     
         private long time;
+        private boolean calculated; 
 
 	// statics
 	
@@ -77,11 +78,12 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
 	 */
 	
 	public CannyEdgeDetector() {
-		lowThreshold = 2.5f;
-		highThreshold = 7.5f;
-		gaussianKernelRadius = 2f;
-		gaussianKernelWidth = 16;
-		contrastNormalized = false;
+            lowThreshold = 2.5f;
+            highThreshold = 7.5f;
+            gaussianKernelRadius = 2f;
+            gaussianKernelWidth = 16;
+            contrastNormalized = false;
+            calculated = false;
 	}
 
 	// accessors
@@ -578,7 +580,13 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
     */
     @Override
     public int[] getFeatures() {
-        return data;
+        if(calculated){
+            return data;
+        }
+        else{
+            //TODO throw exception
+            return new int[]{0};
+        }
     }  
 
     /**
@@ -623,6 +631,7 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
         ColorProcessor cp = (ColorProcessor) ip;
         setSourceImage(cp.getBufferedImage());
         this.process();
+        calculated = true;
         time = (System.currentTimeMillis() - start);
         
     }
@@ -630,4 +639,8 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
      public long getTime(){
          return time;
      }
+    
+     public boolean isCalculated(){
+        return calculated;
+    }
 }

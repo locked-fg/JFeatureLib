@@ -12,6 +12,7 @@ import java.util.EnumSet;
 public class SusanEdge implements FeatureDescriptorInt{
 
     long time;
+    private boolean calculated; 
     int WIDTH;
     int HEIGHT;
     int radius;
@@ -26,11 +27,13 @@ public class SusanEdge implements FeatureDescriptorInt{
     public SusanEdge(){
         this.radius = 2;
         this.treshold = 15;
+        calculated = false;
     }
     
      public SusanEdge(int radius, int treshold){
         this.radius = radius;
         this.treshold = treshold;
+        calculated = false;
     
      }
      
@@ -39,8 +42,13 @@ public class SusanEdge implements FeatureDescriptorInt{
      */      
     @Override
     public int[] getFeatures() {
-        
-        return features;
+        if(calculated){
+            return features;
+        }
+        else{
+            //TODO throw exception
+            return new int[]{0};
+        }
     }
       
     /**
@@ -80,6 +88,7 @@ public class SusanEdge implements FeatureDescriptorInt{
         long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
         process();
+        calculated = true;
         time = (System.currentTimeMillis() - start);
     }
     
@@ -171,4 +180,8 @@ public class SusanEdge implements FeatureDescriptorInt{
      public long getTime(){
          return time;
      }
+
+    public boolean isCalculated(){
+        return calculated;
+    }
 }

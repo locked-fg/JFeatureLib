@@ -11,6 +11,7 @@ import java.util.EnumSet;
 public class Marr_Hildreth implements FeatureDescriptorInt{
 
         private long time;
+        private boolean calculated; 
         private ColorProcessor image;
         private float[] kernel = null;
 	
@@ -25,12 +26,14 @@ public class Marr_Hildreth implements FeatureDescriptorInt{
             this.deviation = 0.6;
             this.kernelSize = 7;
             this.times = 1;
+            calculated = false;
         }
         
 	public Marr_Hildreth(double deviation, int kernelSize, int times) {
             this.deviation = deviation;
             this.kernelSize = kernelSize;
             this.times = times;
+            calculated = false;
 	
 	}
         
@@ -78,8 +81,14 @@ public class Marr_Hildreth implements FeatureDescriptorInt{
     */
     @Override
     public int[] getFeatures() {
-        int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
-        return data;
+        if(calculated){
+            int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
+            return data;
+        }
+        else{
+            //TODO throw exception
+            return new int[]{0};
+        }
     }  
 
     /**
@@ -123,10 +132,15 @@ public class Marr_Hildreth implements FeatureDescriptorInt{
         long start = System.currentTimeMillis();
         image = (ColorProcessor) ip;
         this.process();
+        calculated = true;
         time = (System.currentTimeMillis() - start);
     }
 
     public long getTime(){
          return time;
+    }
+
+    public boolean isCalculated(){
+        return calculated;
     }
 }

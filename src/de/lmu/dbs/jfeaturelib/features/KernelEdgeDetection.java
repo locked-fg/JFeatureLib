@@ -8,6 +8,7 @@ import java.util.EnumSet;
 public class KernelEdgeDetection implements FeatureDescriptorInt{
 
         private long time;
+        private boolean calculated; 
         private ByteProcessor image;
         private int imageWidth;
         private int imageHeight;
@@ -26,9 +27,10 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
 	 */
 	
 	public KernelEdgeDetection(float[] kernel, int kernelWidth) {
-                this.kernelX = kernel;
-                this.kernelWidth = kernelWidth;
-                this.kernelY = new float[kernelWidth*kernelWidth];
+            this.kernelX = kernel;
+            this.kernelWidth = kernelWidth;
+            this.kernelY = new float[kernelWidth*kernelWidth];
+            calculated = false;
 	}
         
         public void setKernel(float[] kernel){
@@ -80,7 +82,13 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
     */
     @Override
     public int[] getFeatures() {
-        return result;
+        if(calculated){
+            return result;
+        }
+        else{
+            //TODO throw exception
+            return new int[]{0};
+        }
     }  
 
     /**
@@ -127,11 +135,16 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
         }
         this.image = (ByteProcessor) ip;
         this.process();
+        calculated = true;
         time = (System.currentTimeMillis() - start);
     }
 
     @Override
     public long getTime(){
          return time;
+    }
+    
+    public boolean isCalculated(){
+        return calculated;
     }
 }

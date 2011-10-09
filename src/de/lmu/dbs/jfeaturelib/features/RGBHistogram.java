@@ -11,7 +11,7 @@ import java.util.EnumSet;
 public class RGBHistogram implements FeatureDescriptorInt{
 
     private long time;
-    
+    private boolean calculated;    
     private int TONAL_VALUES;
     private int CHANNELS;
     private int[] features;
@@ -25,6 +25,7 @@ public class RGBHistogram implements FeatureDescriptorInt{
         TONAL_VALUES = 256;
         CHANNELS = 3;
         features = new int[CHANNELS*TONAL_VALUES];
+        calculated = false;
     }
     
     /**
@@ -36,6 +37,7 @@ public class RGBHistogram implements FeatureDescriptorInt{
         TONAL_VALUES = values;
         CHANNELS = 3;
         features = new int[CHANNELS*TONAL_VALUES];
+        calculated = false;
     }
     
     /**
@@ -43,8 +45,13 @@ public class RGBHistogram implements FeatureDescriptorInt{
      */      
     @Override
     public int[] getFeatures() {
-        
-        return features;
+        if(calculated){
+            return features;
+        }
+        else{
+            //TODO throw exception
+            return new int[]{0};
+        }
     }
       
     /**
@@ -88,6 +95,7 @@ public class RGBHistogram implements FeatureDescriptorInt{
         long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
         process();
+        calculated = true;
         time = (System.currentTimeMillis() - start);
     }
     
@@ -111,4 +119,8 @@ public class RGBHistogram implements FeatureDescriptorInt{
      public long getTime(){
          return time;
      }
+     
+    public boolean isCalculated(){
+        return calculated;
+    }     
 }
