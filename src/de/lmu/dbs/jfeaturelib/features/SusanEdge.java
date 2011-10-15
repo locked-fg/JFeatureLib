@@ -1,5 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
@@ -9,10 +10,11 @@ import java.util.EnumSet;
  * 
  * @author Benedikt
  */
-public class SusanEdge implements FeatureDescriptorInt{
+public class SusanEdge implements FeatureDescriptor{
 
-    long time;
-    private boolean calculated; 
+    private long time;
+    private boolean calculated;
+    private int progress;
     int WIDTH;
     int HEIGHT;
     int radius;
@@ -34,6 +36,7 @@ public class SusanEdge implements FeatureDescriptorInt{
         this.radius = radius;
         this.treshold = treshold;
         calculated = false;
+        progress = 0;
     
      }
      
@@ -41,13 +44,13 @@ public class SusanEdge implements FeatureDescriptorInt{
      * 
      */      
     @Override
-    public int[] getFeatures() {
+    public double[] getFeatures() {
         if(calculated){
-            return features;
+            return Arrays2.convertToDouble(features);
         }
         else{
             //TODO throw exception
-            return new int[]{0};
+            return null;
         }
     }
       
@@ -171,17 +174,25 @@ public class SusanEdge implements FeatureDescriptorInt{
                 i++;
                 //System.out.println("Int: " + picture[x][y] + ", converted: " + de.lmu.dbs.jfeaturelib.utils.RGBtoGray.ARGB_NTSC(picture[x][y]));
             }
+        progress = (int)Math.round(i*(100.0/WIDTH*HEIGHT));
         }
         ColorProcessor cp = new ColorProcessor(result);
         features = (int[]) cp.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, WIDTH, HEIGHT, null);
         //TODO this is not very nice
     }
     
+    @Override
      public long getTime(){
          return time;
      }
 
+    @Override
     public boolean isCalculated(){
         return calculated;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
     }
 }

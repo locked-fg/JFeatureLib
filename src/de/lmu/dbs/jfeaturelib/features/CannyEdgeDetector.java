@@ -1,5 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
@@ -38,10 +39,11 @@ import java.util.EnumSet;
  *
  */
 
-public class CannyEdgeDetector implements FeatureDescriptorInt{
+public class CannyEdgeDetector implements FeatureDescriptor {
     
         private long time;
-        private boolean calculated; 
+        private boolean calculated;
+        private int progress; 
 
 	// statics
 	
@@ -84,6 +86,7 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
             gaussianKernelWidth = 16;
             contrastNormalized = false;
             calculated = false;
+            progress = 0;
 	}
 
 	// accessors
@@ -260,15 +263,25 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
 		width = sourceImage.getWidth();
 		height = sourceImage.getHeight();
 		picsize = width * height;
+                progress = 10;
 		initArrays();
+                progress = 20;
 		readLuminance();
+                progress = 30;
 		if (contrastNormalized) normalizeContrast();
+                progress = 40;
 		computeGradients(gaussianKernelRadius, gaussianKernelWidth);
+                progress = 50;
 		int low = Math.round(lowThreshold * MAGNITUDE_SCALE);
+                progress = 60;
 		int high = Math.round( highThreshold * MAGNITUDE_SCALE);
+                progress = 70;
 		performHysteresis(low, high);
+                progress = 80;
 		thresholdEdges();
+                progress = 90;
 		writeEdges(data);
+                progress = 100;
 	}
  
 	// private utility methods
@@ -579,13 +592,13 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
     * This can be used to create a buffered image, if the dimensions are known.
     */
     @Override
-    public int[] getFeatures() {
+    public double[] getFeatures() {
         if(calculated){
-            return data;
+            return Arrays2.convertToDouble(data);
         }
         else{
             //TODO throw exception
-            return new int[]{0};
+            return null;
         }
     }  
 
@@ -636,11 +649,18 @@ public class CannyEdgeDetector implements FeatureDescriptorInt{
         
     }
     
+    @Override
      public long getTime(){
          return time;
      }
     
+    @Override
      public boolean isCalculated(){
         return calculated;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
     }
 }

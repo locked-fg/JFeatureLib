@@ -1,7 +1,6 @@
 package de.lmu.dbs.jfeaturelib;
 
 import ij.plugin.filter.PlugInFilter;
-import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
@@ -60,25 +59,9 @@ public interface Descriptor {
     public void run(ImageProcessor ip);
     
     /**
-     * @FIXME add javadoc
-     * 
-     * @return 
-     */
-    String[] getDescription();
-    
-   /**
-     * Returns the time for opening and processing an image.
-     * 
-     * @return 
-     */
-    long getTime();
-    
-    /**
      * Returns the feature results.
      * 
-     * @return 
+     * @return Results
      */
     Object getFeatures();
-    
-    boolean isCalculated();
 }

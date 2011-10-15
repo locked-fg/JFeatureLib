@@ -37,9 +37,10 @@ import java.util.EnumSet;
 *   an edge detection module and have edges marked in white (background
 *   must be in black).
 */
-public class Hough_Circles implements FeatureDescriptorInt {
+public class Hough_Circles implements FeatureDescriptor {
     
-    long time;
+    private int progress = 0;
+    private long time;
     private boolean calculated; 
     
     public int radiusMin;  // Find circles with radius grater or equal radiusMin
@@ -90,6 +91,7 @@ public class Hough_Circles implements FeatureDescriptorInt {
         offset = ip.getWidth();
         
         process();
+        progress = 100;
         
         time = (System.currentTimeMillis() - start);
     }
@@ -476,14 +478,14 @@ public class Hough_Circles implements FeatureDescriptorInt {
     
     // Begin of Code added by Benedikt Zierer
     @Override
-    public int[] getFeatures(){
+    public double[] getFeatures(){
         if(calculated){
-            int[] result = Arrays2.convertToInt(imageValues);
+            double[] result = Arrays2.convertToDouble(imageValues);
             return result;
         }
         else{
             //TODO throw exception
-            return new int[]{0};
+            return null;
         }
     }
 
@@ -502,12 +504,19 @@ public class Hough_Circles implements FeatureDescriptorInt {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public long getTime(){
          return time;
     }
 
+    @Override
     public boolean isCalculated(){
         return calculated;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
     }
 }
 

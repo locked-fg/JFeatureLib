@@ -1,17 +1,19 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
 /**
- * Reads the histogram from the Image Processor and returns it as int[].      
+ * Reads the histogram from the Image Processor and returns it as double[].      
  * @author Benedikt
  */
-public class GrayValueHistogram implements FeatureDescriptorInt{
+public class GrayValueHistogram implements FeatureDescriptor{
 
     private long time;
     private boolean calculated;
+    private int progress; 
     private int TONAL_VALUES;
     private int[] features;
     private ByteProcessor image;
@@ -24,6 +26,7 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
         TONAL_VALUES = 256;
         features = new int[TONAL_VALUES];
         calculated = false;
+        progress = 0;
     }
     
     /**
@@ -40,13 +43,13 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
     * Returns the histogram as int array.
     */    
     @Override
-    public int[] getFeatures() {
+    public double[] getFeatures() {
         if(calculated){
-            return features;
+            return Arrays2.convertToDouble(features);
         }
         else{
             //TODO throw exception
-            return new int[]{0};
+            return null;
         }
     }
     
@@ -98,6 +101,7 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
     
     private void process() {
         features = image.getHistogram();
+        progress = 100;
     }
     
     public long getTime(){
@@ -106,5 +110,10 @@ public class GrayValueHistogram implements FeatureDescriptorInt{
     
     public boolean isCalculated(){
         return calculated;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
     }
 }

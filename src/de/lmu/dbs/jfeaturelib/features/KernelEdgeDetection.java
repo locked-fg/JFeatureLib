@@ -1,14 +1,16 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
 
-public class KernelEdgeDetection implements FeatureDescriptorInt{
+public class KernelEdgeDetection implements FeatureDescriptor{
 
         private long time;
-        private boolean calculated; 
+        private boolean calculated;
+        private int progress; 
         private ByteProcessor image;
         private int imageWidth;
         private int imageHeight;
@@ -31,6 +33,7 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
             this.kernelWidth = kernelWidth;
             this.kernelY = new float[kernelWidth*kernelWidth];
             calculated = false;
+            progress = 0;
 	}
         
         public void setKernel(float[] kernel){
@@ -65,6 +68,7 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
                 for(int y = 0; y<kernelWidth; y++){
                     kernelY[i] = kernelY2D[x][y];
                     //System.out.println("Y kernel (" + x + "," + y + "):" + kernelY[i]);
+                    progress = (int)Math.round(i*(100.0/kernelWidth*kernelWidth));
                     i++;
                 }                
             }
@@ -81,13 +85,13 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
     * This can be used to create a buffered image, if the dimensions are known.
     */
     @Override
-    public int[] getFeatures() {
+    public double[] getFeatures() {
         if(calculated){
-            return result;
+            return Arrays2.convertToDouble(result);
         }
         else{
             //TODO throw exception
-            return new int[]{0};
+            return null;
         }
     }  
 
@@ -144,7 +148,13 @@ public class KernelEdgeDetection implements FeatureDescriptorInt{
          return time;
     }
     
+    @Override
     public boolean isCalculated(){
         return calculated;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
     }
 }

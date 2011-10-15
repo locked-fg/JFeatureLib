@@ -6,6 +6,8 @@ import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
 
+
+//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
@@ -26,7 +28,8 @@ import java.util.EnumSet;
 public class Haralick implements FeatureDescriptor {
 
     private long time;
-    private boolean calculated; 
+    private boolean calculated;
+    private int progress; 
     
     /** The number of gray values for the textures */
     private final int NUM_GRAY_VALUES = 32;
@@ -61,6 +64,7 @@ public class Haralick implements FeatureDescriptor {
     public Haralick() {
         this.haralickDist = 1;
         calculated = false;
+        progress = 0;
     }
 
     /**
@@ -171,6 +175,8 @@ public class Haralick implements FeatureDescriptor {
                 sum_j_p_x_plus_y += j * p_x_plus_y[j];
             }
             features[6] += (i - sum_j_p_x_plus_y) * (i - sum_j_p_x_plus_y) * p_x_plus_y[i];
+            
+            progress = Math.round(i*(100.0f/(2*NUM_GRAY_VALUES-1)));
         }
 
         features[7] *= -1;
@@ -247,16 +253,22 @@ public class Haralick implements FeatureDescriptor {
         }
     }
 
+    @Override
      public long getTime(){
          return time;
      }
      
+    @Override
     public boolean isCalculated(){
         return calculated;
     }
+
+    @Override
+    public int getProgress() {
+        return progress;
+    }
 }
 
-//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf */
 class Coocurrence {

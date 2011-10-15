@@ -8,10 +8,11 @@ import java.util.EnumSet;
  *
  */
 
-public class Marr_Hildreth implements FeatureDescriptorInt{
+public class Marr_Hildreth implements FeatureDescriptor{
 
         private long time;
-        private boolean calculated; 
+        private boolean calculated;
+        private int progress; 
         private ColorProcessor image;
         private float[] kernel = null;
 	
@@ -34,6 +35,7 @@ public class Marr_Hildreth implements FeatureDescriptorInt{
             this.kernelSize = kernelSize;
             this.times = times;
             calculated = false;
+            progress = 0;
 	
 	}
         
@@ -70,6 +72,7 @@ public class Marr_Hildreth implements FeatureDescriptorInt{
                 }
                 for (int i = 0; i < times; i++) {
                     image.convolve(kernel, kernelSize, kernelSize);
+                    progress = (int)Math.round(i*(100.0/times));
                 }
 	}
 
@@ -80,14 +83,14 @@ public class Marr_Hildreth implements FeatureDescriptorInt{
     * This can be used to create a buffered image, if the dimensions are known.
     */
     @Override
-    public int[] getFeatures() {
+    public double[] getFeatures() {
         if(calculated){
-            int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
+            double[] data = (double[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
             return data;
         }
         else{
             //TODO throw exception
-            return new int[]{0};
+            return null;
         }
     }  
 
@@ -136,11 +139,18 @@ public class Marr_Hildreth implements FeatureDescriptorInt{
         time = (System.currentTimeMillis() - start);
     }
 
+    @Override
     public long getTime(){
          return time;
     }
 
+    @Override
     public boolean isCalculated(){
         return calculated;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
     }
 }
