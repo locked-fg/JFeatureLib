@@ -670,4 +670,20 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     public int getProgress() {
         return progress;
     }
+
+    @Override
+    public void setArgs(double[] args) {
+        if(args == null){
+            
+        }
+        else if(args.length == 4){
+            this.lowThreshold = (float)args[0];
+            this.highThreshold = (float)args[1];
+            this.gaussianKernelRadius = (float)args[2];
+            this.gaussianKernelWidth = (int)args[3];
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
+        }    
+    }
 }

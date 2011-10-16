@@ -1,5 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
@@ -85,8 +86,8 @@ public class Marr_Hildreth implements FeatureDescriptor{
     @Override
     public double[] getFeatures() {
         if(calculated){
-            double[] data = (double[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
-            return data;
+            int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
+            return Arrays2.convertToDouble(data);
         }
         else{
             //TODO throw exception
@@ -152,5 +153,20 @@ public class Marr_Hildreth implements FeatureDescriptor{
     @Override
     public int getProgress() {
         return progress;
+    }
+
+    @Override
+    public void setArgs(double[] args) {
+        if(args == null){
+            
+        }
+        else if(args.length == 3){
+            this.deviation = args[0];
+            this.kernelSize = Integer.valueOf((int)args[1]);
+            this.times = Integer.valueOf((int)args[2]);
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
+        }
     }
 }

@@ -195,4 +195,18 @@ public class SusanEdge implements FeatureDescriptor{
     public int getProgress() {
         return progress;
     }
+
+    @Override
+    public void setArgs(double[] args) {
+        if(args == null){
+            
+        }
+        else if(args.length == 2){
+            this.radius = Integer.valueOf((int)args[0]);
+            this.treshold = Integer.valueOf((int)args[1]);
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
+        }
+    }
 }

@@ -8,6 +8,7 @@ import java.util.EnumSet;
 
 
 //<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
+
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
@@ -54,7 +55,7 @@ public class Haralick implements FeatureDescriptor {
     /** HXY2 statistics */
     private double hxy2 = 0;
     // -
-    private final int haralickDist;
+    private int haralickDist;
     double[] features = new double[13];
     private ByteProcessor image;
 
@@ -267,8 +268,21 @@ public class Haralick implements FeatureDescriptor {
     public int getProgress() {
         return progress;
     }
-}
 
+    @Override
+    public void setArgs(double[] args) {
+        if(args == null){
+            this.haralickDist = 1;
+        }
+        else if(args.length == 1){
+            this.haralickDist = Integer.valueOf((int)args[0]);
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
+        }
+        
+    }
+}
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf */
 class Coocurrence {

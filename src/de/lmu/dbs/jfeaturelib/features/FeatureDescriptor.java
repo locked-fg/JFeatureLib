@@ -50,4 +50,11 @@ public interface FeatureDescriptor extends Descriptor {
      * @return progress of the calculation int from 0 to 100
      */
     int getProgress();
+    
+    /**
+     * Each descriptor must be able to take an empty constructor and pull args from a double array
+     * 
+     * @param args double array with arguments
+     */
+    void setArgs(double[] args);
 }

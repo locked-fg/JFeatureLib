@@ -15,19 +15,26 @@ import javax.swing.SwingWorker;
  */
 public class ThreadWrapper extends SwingWorker<double[], Object> {
     private FeatureDescriptor descriptor;
+    private String descriptorName;
     private ImagePlus imp;
-    private int[] result;
     private double[] args;
     private long time;
+    private final String featurePackage = "de.lmu.dbs.jfeaturelib.features.";
         
-            
-    public ThreadWrapper(FeatureDescriptor descriptor, ImagePlus imp, int result[], double[] args){
-        this.descriptor = descriptor;
-        this.imp = imp;
-        this.result = result;
+    public ThreadWrapper(String descriptorName, ImagePlus imp, double[] args){
+        this.descriptorName = descriptorName;this.imp = imp;
         this.args = args;
+        
+        try{
+            descriptor = (FeatureDescriptor) Class.forName(featurePackage+descriptorName).newInstance();
+            descriptor.setArgs(args);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
-      
+
     @Override
     protected double[] doInBackground(){
         //For evaluation
@@ -39,17 +46,6 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
         descriptor.run(new ColorProcessor(imp.getImage()));
         time = descriptor.getTime();
         return descriptor.getFeatures();
-    }
-    
-    @Override
-    protected void done(){
-        try {
-            result = Arrays2.convertToInt(get());
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ThreadWrapper.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ExecutionException ex) {
-            Logger.getLogger(ThreadWrapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     /**
@@ -64,5 +60,9 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
      public int getCurrent(){
          System.out.println(descriptor.getProgress());
          return descriptor.getProgress();
+     }
+     
+     public String getDescriptorName(){
+         return descriptorName;
      }
 }

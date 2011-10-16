@@ -99,4 +99,14 @@ public class SusanCorner implements FeatureDescriptor{
     public int getProgress() {
         return progress;
     }
+
+    @Override
+    public void setArgs(double[] args) {
+        if(args == null){
+            
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
+        }
+    }
 }

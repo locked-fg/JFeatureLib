@@ -29,6 +29,11 @@ public class KernelEdgeDetection implements FeatureDescriptor{
 	 */
 	
         public KernelEdgeDetection(){
+            float[] kernel = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+            this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
+            this.kernelX = kernel;
+            calculated = false;
+            progress = 0;
             
         }
         
@@ -60,6 +65,7 @@ public class KernelEdgeDetection implements FeatureDescriptor{
         * Proceses the image applying the kernel in x- and y-direction
         */
         public void process() {
+            System.out.println("Width: " + kernelWidth);
             result = new int[imageWidth*imageHeight];
             imageWidth = image.getWidth();
             imageHeight = image.getHeight();
@@ -167,5 +173,19 @@ public class KernelEdgeDetection implements FeatureDescriptor{
     @Override
     public int getProgress() {
         return progress;
+    }
+
+    @Override
+    public void setArgs(double[] args) {
+        if(args == null){
+            
+        }
+        else if(args.length % 2 == 0 || args.length % 3 == 0 || args.length % 4 == 0){
+            this.kernelWidth = Math.round((float)Math.sqrt(args.length+1.0f));
+            this.kernelX = Arrays2.convertToFloat(args);
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
+        }
     }
 }

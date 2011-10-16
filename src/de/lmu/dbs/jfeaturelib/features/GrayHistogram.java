@@ -14,7 +14,7 @@ public class GrayHistogram implements FeatureDescriptor{
     private long time;
     private boolean calculated;
     private int progress; 
-    private int TONAL_VALUES;
+    private int tonalValues;
     private int[] features;
     private ByteProcessor image;
 
@@ -23,8 +23,8 @@ public class GrayHistogram implements FeatureDescriptor{
      */     
     public GrayHistogram(){
         //assuming 8bit image
-        TONAL_VALUES = 256;
-        features = new int[TONAL_VALUES];
+        tonalValues = 256;
+        features = new int[tonalValues];
         calculated = false;
         progress = 0;
     }
@@ -35,8 +35,8 @@ public class GrayHistogram implements FeatureDescriptor{
      */  
     
     public GrayHistogram(int values){
-        TONAL_VALUES = values;
-        features = new int[TONAL_VALUES];
+        tonalValues = values;
+        features = new int[tonalValues];
     }
         
     /**
@@ -92,7 +92,7 @@ public class GrayHistogram implements FeatureDescriptor{
      */     
     @Override
     public String[] getDescription() {
-        String[] info =  new String[TONAL_VALUES];
+        String[] info =  new String[tonalValues];
         for (int i = 0; i < info.length; i++){
             info[i] = "Pixels with tonal value " + i;
         }
@@ -115,5 +115,19 @@ public class GrayHistogram implements FeatureDescriptor{
     @Override
     public int getProgress() {
         return progress;
+    }
+
+    @Override
+    public void setArgs(double[] args) {
+        if(args == null){
+            this.tonalValues = 256;
+        }
+        else if(args.length == 1){
+            this.tonalValues = Integer.valueOf((int)args[0]);
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
+        }
+        
     }
 }

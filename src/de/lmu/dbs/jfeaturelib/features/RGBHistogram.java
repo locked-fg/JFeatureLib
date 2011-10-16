@@ -14,8 +14,8 @@ public class RGBHistogram implements FeatureDescriptor{
     private long time;
     private boolean calculated;
     private int progress;    
-    private int TONAL_VALUES;
-    private int CHANNELS;
+    private int tonalValues;
+    private final int CHANNELS;
     private int[] features;
     private ColorProcessor image;
     
@@ -24,9 +24,9 @@ public class RGBHistogram implements FeatureDescriptor{
      */    
     public RGBHistogram(){
         //assuming 8bit RGB image
-        TONAL_VALUES = 256;
+        tonalValues = 256;
         CHANNELS = 3;
-        features = new int[CHANNELS*TONAL_VALUES];
+        features = new int[CHANNELS*tonalValues];
         calculated = false;
         progress = 0;
     }
@@ -37,9 +37,9 @@ public class RGBHistogram implements FeatureDescriptor{
      */ 
     public RGBHistogram(int values){
         //assuming 8bit RGB image
-        TONAL_VALUES = values;
+        tonalValues = values;
         CHANNELS = 3;
-        features = new int[CHANNELS*TONAL_VALUES];
+        features = new int[CHANNELS*tonalValues];
         calculated = false;
     }
     
@@ -80,11 +80,11 @@ public class RGBHistogram implements FeatureDescriptor{
      */ 
     @Override
     public String[] getDescription() {
-        String[] info =  new String[CHANNELS*TONAL_VALUES];
+        String[] info =  new String[CHANNELS*tonalValues];
         for (int i = 0; i < info.length; i++){
-            if(i<TONAL_VALUES) info[i] = "Red Pixels with tonal value " + i;
-            else if(i<TONAL_VALUES*2) info[i] = "Green Pixels with tonal value " + i%TONAL_VALUES;
-            else info[i] = "Blue Pixels with tonal value " + i%TONAL_VALUES;
+            if(i<tonalValues) info[i] = "Red Pixels with tonal value " + i;
+            else if(i<tonalValues*2) info[i] = "Green Pixels with tonal value " + i%tonalValues;
+            else info[i] = "Blue Pixels with tonal value " + i%tonalValues;
         }
         return(info);
     }
@@ -113,9 +113,9 @@ public class RGBHistogram implements FeatureDescriptor{
         b = image.getHistogram();
         
         for(int i = 0; i < features.length; i++){
-            if(i<TONAL_VALUES)features[i] = r[i];
-            else if(i<TONAL_VALUES*2)features[i] = g[i%TONAL_VALUES];
-            else features[i] = b[i%TONAL_VALUES];
+            if(i<tonalValues)features[i] = r[i];
+            else if(i<tonalValues*2)features[i] = g[i%tonalValues];
+            else features[i] = b[i%tonalValues];
             progress = (int)Math.round(i*(100.0/features.length));
         }
     }
@@ -133,5 +133,19 @@ public class RGBHistogram implements FeatureDescriptor{
     @Override
     public int getProgress() {
         return progress;
+    }
+
+    @Override
+    public void setArgs(double[] args) {
+        if(args == null){
+            this.tonalValues = 256;
+        }
+        else if(args.length == 1){
+            this.tonalValues = Integer.valueOf((int)args[0]);
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
+        }
+        
     }
 }
