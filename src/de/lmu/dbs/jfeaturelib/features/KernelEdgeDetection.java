@@ -28,9 +28,20 @@ public class KernelEdgeDetection implements FeatureDescriptor{
          * @param kernelWidth Dimension of the kernel matrix
 	 */
 	
-	public KernelEdgeDetection(float[] kernel, int kernelWidth) {
+        public KernelEdgeDetection(){
+            
+        }
+        
+        public KernelEdgeDetection(double[] kernel){
+            this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
+            this.kernelX = Arrays2.convertToFloat(kernel);
+            calculated = false;
+            progress = 0;
+        }
+        
+	public KernelEdgeDetection(float[] kernel) {
+            this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = kernel;
-            this.kernelWidth = kernelWidth;
             this.kernelY = new float[kernelWidth*kernelWidth];
             calculated = false;
             progress = 0;

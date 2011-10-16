@@ -9,7 +9,7 @@ import java.util.EnumSet;
  * Reads the histogram from the Image Processor and returns it as double[].      
  * @author Benedikt
  */
-public class GrayValueHistogram implements FeatureDescriptor{
+public class GrayHistogram implements FeatureDescriptor{
 
     private long time;
     private boolean calculated;
@@ -21,7 +21,7 @@ public class GrayValueHistogram implements FeatureDescriptor{
     /**
      * Constructs a histogram with default parameters.
      */     
-    public GrayValueHistogram(){
+    public GrayHistogram(){
         //assuming 8bit image
         TONAL_VALUES = 256;
         features = new int[TONAL_VALUES];
@@ -34,7 +34,7 @@ public class GrayValueHistogram implements FeatureDescriptor{
      * @param values Number of tonal values, i.e. 256 for 8bit jpeg
      */  
     
-    public GrayValueHistogram(int values){
+    public GrayHistogram(int values){
         TONAL_VALUES = values;
         features = new int[TONAL_VALUES];
     }

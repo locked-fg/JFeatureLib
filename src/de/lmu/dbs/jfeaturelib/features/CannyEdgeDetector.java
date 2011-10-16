@@ -89,6 +89,13 @@ public class CannyEdgeDetector implements FeatureDescriptor {
             progress = 0;
 	}
 
+        public CannyEdgeDetector(double[] args) {
+            lowThreshold = (float)args[0];
+            highThreshold = (float)args[1];
+            gaussianKernelRadius = (float)args[2];
+            gaussianKernelWidth = (int)args[3];
+        }
+        
 	// accessors
 	
 	/**
