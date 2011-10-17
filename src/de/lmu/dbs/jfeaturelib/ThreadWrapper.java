@@ -18,12 +18,18 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
     private String descriptorName;
     private ImagePlus imp;
     private double[] args;
+    private int number;
     private long time;
     private final String featurePackage = "de.lmu.dbs.jfeaturelib.features.";
         
     public ThreadWrapper(String descriptorName, ImagePlus imp, double[] args){
+        this(descriptorName, imp, args, -1);
+    }
+    
+        public ThreadWrapper(String descriptorName, ImagePlus imp, double[] args, int number){
         this.descriptorName = descriptorName;this.imp = imp;
         this.args = args;
+        this.number = number;
         
         try{
             descriptor = (FeatureDescriptor) Class.forName(featurePackage+descriptorName).newInstance();
@@ -64,5 +70,9 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
      
      public String getDescriptorName(){
          return descriptorName;
+     }
+     
+     public int getNumber(){
+         return number;
      }
 }
