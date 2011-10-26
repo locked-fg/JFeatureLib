@@ -11,6 +11,7 @@ import java.util.EnumSet;
 
 public class Marr_Hildreth implements FeatureDescriptor{
 
+        private DescriptorChangeListener changeListener;
         private long time;
         private boolean calculated;
         private int progress; 
@@ -73,7 +74,8 @@ public class Marr_Hildreth implements FeatureDescriptor{
                 }
                 for (int i = 0; i < times; i++) {
                     image.convolve(kernel, kernelSize, kernelSize);
-                    progress = (int)Math.round(i*(100.0/times));
+                    progress = (int)Math.round(i*(100.0/(double)times));
+                    fireStateChanged();
                 }
 	}
 
@@ -135,7 +137,10 @@ public class Marr_Hildreth implements FeatureDescriptor{
     public void run(ImageProcessor ip) {
         long start = System.currentTimeMillis();
         image = (ColorProcessor) ip;
+        fireStateChanged();
         this.process();
+        progress = 100;
+        fireStateChanged();
         calculated = true;
         time = (System.currentTimeMillis() - start);
     }
@@ -168,5 +173,16 @@ public class Marr_Hildreth implements FeatureDescriptor{
         else{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
+    }
+    
+    @Override
+    public void addChangeListener(DescriptorChangeListener l) {
+        changeListener = l;
+        l.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void fireStateChanged() {
+        changeListener.valueChanged(new DescriptorChangeEvent(this));
     }
 }

@@ -28,6 +28,7 @@ import java.util.EnumSet;
 
 public class Haralick implements FeatureDescriptor {
 
+    private DescriptorChangeListener changeListener;
     private long time;
     private boolean calculated;
     private int progress; 
@@ -101,6 +102,7 @@ public class Haralick implements FeatureDescriptor {
             ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
+        fireStateChanged();
         process();
         calculated = true;
         time = (System.currentTimeMillis() - start);
@@ -178,6 +180,7 @@ public class Haralick implements FeatureDescriptor {
             features[6] += (i - sum_j_p_x_plus_y) * (i - sum_j_p_x_plus_y) * p_x_plus_y[i];
             
             progress = Math.round(i*(100.0f/(2*NUM_GRAY_VALUES-1)));
+            fireStateChanged();
         }
 
         features[7] *= -1;
@@ -281,6 +284,17 @@ public class Haralick implements FeatureDescriptor {
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
         
+    }
+    
+    @Override
+    public void addChangeListener(DescriptorChangeListener l) {
+        changeListener = l;
+        l.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void fireStateChanged() {
+        changeListener.valueChanged(new DescriptorChangeEvent(this));
     }
 }
 /**

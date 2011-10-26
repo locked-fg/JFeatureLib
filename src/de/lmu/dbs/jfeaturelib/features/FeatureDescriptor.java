@@ -1,7 +1,8 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Descriptor;
-import java.beans.PropertyChangeListener;
+import java.util.EventListener;
+import java.util.EventObject;
 
 /**
  * Interface for a common descriptor that returns a <b>single</b> feature vector.
@@ -9,7 +10,6 @@ import java.beans.PropertyChangeListener;
  * @author graf
  */
 public interface FeatureDescriptor extends Descriptor {
-
 
     /**
      * Returns the values of the descriptor in an int array.
@@ -57,4 +57,33 @@ public interface FeatureDescriptor extends Descriptor {
      * @param args double array with arguments
      */
     void setArgs(double[] args);
+    
+    
+    
+    public void addChangeListener(DescriptorChangeListener l);
+
+    public void fireStateChanged();
+    
+
+    public interface DescriptorChangeListener extends EventListener
+    {
+        public void valueChanged(DescriptorChangeEvent e);
+    }
+    
+    public class DescriptorChangeEvent extends EventObject
+    {
+
+        public DescriptorChangeEvent(FeatureDescriptor source){
+            super(source);
+        }
+        
+        public int getProgress(){
+           return ((FeatureDescriptor)source).getProgress();
+        }
+
+        @Override
+        public FeatureDescriptor getSource(){
+            return (FeatureDescriptor)source;
+        }
+    }
 }

@@ -8,6 +8,7 @@ import java.util.EnumSet;
 
 public class KernelEdgeDetection implements FeatureDescriptor{
 
+        private DescriptorChangeListener changeListener;
         private long time;
         private boolean calculated;
         private int progress; 
@@ -65,12 +66,13 @@ public class KernelEdgeDetection implements FeatureDescriptor{
         * Proceses the image applying the kernel in x- and y-direction
         */
         public void process() {
-            System.out.println("Width: " + kernelWidth);
             result = new int[imageWidth*imageHeight];
             imageWidth = image.getWidth();
             imageHeight = image.getHeight();
             
             float[][] kernelX2D = new float[kernelWidth][kernelWidth];
+            kernelY = new float[kernelWidth*kernelWidth];
+            
             int i = 0;
             for(int x = 0; x<kernelWidth; x++){
                 for(int y = 0; y<kernelWidth; y++){
@@ -84,8 +86,8 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             for(int x = 0; x<kernelWidth; x++){
                 for(int y = 0; y<kernelWidth; y++){
                     kernelY[i] = kernelY2D[x][y];
-                    //System.out.println("Y kernel (" + x + "," + y + "):" + kernelY[i]);
-                    progress = (int)Math.round(i*(100.0/kernelWidth*kernelWidth));
+                    progress = (int)Math.round(i*(100.0/(double)(kernelWidth*kernelWidth)));
+                    fireStateChanged();
                     i++;
                 }                
             }
@@ -94,6 +96,8 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             image.convolve(kernelY, kernelWidth, kernelWidth);
             
             result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, imageWidth, imageHeight, null);
+            progress = 100;
+            fireStateChanged();
 
 	}
 
@@ -155,6 +159,7 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
+        fireStateChanged();
         this.process();
         calculated = true;
         time = (System.currentTimeMillis() - start);
@@ -187,5 +192,16 @@ public class KernelEdgeDetection implements FeatureDescriptor{
         else{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
+    }
+    
+    @Override
+    public void addChangeListener(DescriptorChangeListener l) {
+        changeListener = l;
+        l.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void fireStateChanged() {
+        changeListener.valueChanged(new DescriptorChangeEvent(this));
     }
 }

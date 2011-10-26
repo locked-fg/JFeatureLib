@@ -39,6 +39,7 @@ import java.util.EnumSet;
 */
 public class Hough_Circles implements FeatureDescriptor {
     
+    private DescriptorChangeListener changeListener;
     private int progress = 0;
     private long time;
     private boolean calculated; 
@@ -90,8 +91,10 @@ public class Hough_Circles implements FeatureDescriptor {
         height = r.height;
         offset = ip.getWidth();
         
+        fireStateChanged();
         process();
         progress = 100;
+        fireStateChanged();
         
         time = (System.currentTimeMillis() - start);
     }
@@ -529,6 +532,16 @@ public class Hough_Circles implements FeatureDescriptor {
         }
         
     }
-}
 
+    @Override
+    public void addChangeListener(DescriptorChangeListener l) {
+        changeListener = l;
+        l.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void fireStateChanged() {
+        changeListener.valueChanged(new DescriptorChangeEvent(this));
+    }
+}
 

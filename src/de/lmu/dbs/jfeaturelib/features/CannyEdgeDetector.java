@@ -41,6 +41,7 @@ import java.util.EnumSet;
 
 public class CannyEdgeDetector implements FeatureDescriptor {
     
+        private DescriptorChangeListener changeListener;
         private long time;
         private boolean calculated;
         private int progress; 
@@ -271,24 +272,34 @@ public class CannyEdgeDetector implements FeatureDescriptor {
 		height = sourceImage.getHeight();
 		picsize = width * height;
                 progress = 10;
+                fireStateChanged();
 		initArrays();
                 progress = 20;
+                fireStateChanged();
 		readLuminance();
                 progress = 30;
+                fireStateChanged();
 		if (contrastNormalized) normalizeContrast();
                 progress = 40;
+                fireStateChanged();
 		computeGradients(gaussianKernelRadius, gaussianKernelWidth);
                 progress = 50;
+                fireStateChanged();
 		int low = Math.round(lowThreshold * MAGNITUDE_SCALE);
                 progress = 60;
+                fireStateChanged();
 		int high = Math.round( highThreshold * MAGNITUDE_SCALE);
                 progress = 70;
+                fireStateChanged();
 		performHysteresis(low, high);
                 progress = 80;
+                fireStateChanged();
 		thresholdEdges();
                 progress = 90;
+                fireStateChanged();
 		writeEdges(data);
                 progress = 100;
+                fireStateChanged();
 	}
  
 	// private utility methods
@@ -650,6 +661,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         long start = System.currentTimeMillis();
         ColorProcessor cp = (ColorProcessor) ip;
         setSourceImage(cp.getBufferedImage());
+        fireStateChanged();
         this.process();
         calculated = true;
         time = (System.currentTimeMillis() - start);
@@ -685,5 +697,16 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         else{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }    
+    }
+    
+    @Override
+    public void addChangeListener(DescriptorChangeListener l) {
+        changeListener = l;
+        l.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void fireStateChanged() {
+        changeListener.valueChanged(new DescriptorChangeEvent(this));
     }
 }

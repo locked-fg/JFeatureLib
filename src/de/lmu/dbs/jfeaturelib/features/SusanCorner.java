@@ -10,6 +10,7 @@ import java.util.EnumSet;
  */
 public class SusanCorner implements FeatureDescriptor{
 
+    private DescriptorChangeListener changeListener;
     private long time;
     private boolean calculated; 
     private int progress;
@@ -76,6 +77,7 @@ public class SusanCorner implements FeatureDescriptor{
     public void run(ImageProcessor ip) {
         long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
+        fireStateChanged();
         process();
         calculated = true;
         time = (System.currentTimeMillis() - start);
@@ -108,5 +110,16 @@ public class SusanCorner implements FeatureDescriptor{
         else{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
+    }
+    
+    @Override
+    public void addChangeListener(DescriptorChangeListener l) {
+        changeListener = l;
+        l.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void fireStateChanged() {
+        changeListener.valueChanged(new DescriptorChangeEvent(this));
     }
 }

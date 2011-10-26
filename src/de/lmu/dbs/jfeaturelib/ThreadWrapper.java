@@ -1,10 +1,12 @@
 package de.lmu.dbs.jfeaturelib;
 
 import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
-import de.lmu.ifi.dbs.utilities.Arrays2;
+import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor.DescriptorChangeEvent;
+import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor.DescriptorChangeListener;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
-import java.util.concurrent.ExecutionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
@@ -48,7 +50,8 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
             Thread.sleep(3000);
         } catch (InterruptedException ex) {
             Logger.getLogger(ThreadWrapper.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
+        descriptor.addChangeListener(new ProgressListener());
         descriptor.run(new ColorProcessor(imp.getImage()));
         time = descriptor.getTime();
         return descriptor.getFeatures();
@@ -75,4 +78,20 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
      public int getNumber(){
          return number;
      }
+     
+     /**
+     * ProgressListener listens to "progress" property
+     * changes in the SwingWorkers that search and load
+     * images.
+     */
+    class ProgressListener implements DescriptorChangeListener {
+
+          ProgressListener() {
+          }
+
+        @Override
+        public void valueChanged(DescriptorChangeEvent evt) {
+            setProgress(evt.getProgress());
+        }
+    }
 }

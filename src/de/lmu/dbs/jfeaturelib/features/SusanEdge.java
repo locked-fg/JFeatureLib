@@ -12,6 +12,7 @@ import java.util.EnumSet;
  */
 public class SusanEdge implements FeatureDescriptor{
 
+    private DescriptorChangeListener changeListener;
     private long time;
     private boolean calculated;
     private int progress;
@@ -90,6 +91,7 @@ public class SusanEdge implements FeatureDescriptor{
     public void run(ImageProcessor ip) {
         long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
+        fireStateChanged();
         process();
         calculated = true;
         time = (System.currentTimeMillis() - start);
@@ -174,7 +176,8 @@ public class SusanEdge implements FeatureDescriptor{
                 i++;
                 //System.out.println("Int: " + picture[x][y] + ", converted: " + de.lmu.dbs.jfeaturelib.utils.RGBtoGray.ARGB_NTSC(picture[x][y]));
             }
-        progress = (int)Math.round(i*(100.0/WIDTH*HEIGHT));
+        progress = (int)Math.round(i*(100.0/(double)(WIDTH*HEIGHT)));
+        fireStateChanged();
         }
         ColorProcessor cp = new ColorProcessor(result);
         features = (int[]) cp.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, WIDTH, HEIGHT, null);
@@ -208,5 +211,16 @@ public class SusanEdge implements FeatureDescriptor{
         else{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
+    }
+    
+    @Override
+    public void addChangeListener(DescriptorChangeListener l) {
+        changeListener = l;
+        l.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void fireStateChanged() {
+        changeListener.valueChanged(new DescriptorChangeEvent(this));
     }
 }

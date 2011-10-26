@@ -11,6 +11,7 @@ import java.util.EnumSet;
  */
 public class GrayHistogram implements FeatureDescriptor{
 
+    private DescriptorChangeListener changeListener;
     private long time;
     private boolean calculated;
     private int progress; 
@@ -82,6 +83,7 @@ public class GrayHistogram implements FeatureDescriptor{
             ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
+        fireStateChanged();
         process();
         calculated = true;
         time = (System.currentTimeMillis() - start);
@@ -102,12 +104,15 @@ public class GrayHistogram implements FeatureDescriptor{
     private void process() {
         features = image.getHistogram();
         progress = 100;
+        fireStateChanged();
     }
     
+    @Override
     public long getTime(){
          return time;
      }
     
+    @Override
     public boolean isCalculated(){
         return calculated;
     }
@@ -129,5 +134,16 @@ public class GrayHistogram implements FeatureDescriptor{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
         
+    }
+
+    @Override
+    public void addChangeListener(DescriptorChangeListener l) {
+        changeListener = l;
+        l.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void fireStateChanged() {
+        changeListener.valueChanged(new DescriptorChangeEvent(this));
     }
 }
