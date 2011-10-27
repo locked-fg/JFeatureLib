@@ -131,7 +131,7 @@ public class Haralick implements FeatureDescriptor {
      * Returns information about the getFeauture returns in a String array.
      */     
     @Override
-    public String[] getDescription() {
+    public String getDescription() {
         //FIXME implement info about features double array
         throw new UnsupportedOperationException("Not supported yet.");
     }

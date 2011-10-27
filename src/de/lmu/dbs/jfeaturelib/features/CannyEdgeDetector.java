@@ -611,12 +611,8 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * Returns information about the getFeauture returns in a String array.
      */
     @Override
-    public String[] getDescription() {
-        String[] info = new String[1];
-        info[0] = "Each pixel value";
-        info[1] = "Each pixel value";
-        info[2] = "Each pixel value";
-        info[3] = "Each pixel value";
+    public String getDescription() {
+        String info = "Each pixel value";
         return info;
     }
 

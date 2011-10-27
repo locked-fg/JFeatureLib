@@ -98,11 +98,8 @@ public class GrayHistogram implements FeatureDescriptor{
      * Returns information about the getFeauture returns in a String array.
      */     
     @Override
-    public String[] getDescription() {
-        String[] info =  new String[tonalValues];
-        for (int i = 0; i < info.length; i++){
-            info[i] = "Pixels with tonal value " + i;
-        }
+    public String getDescription() {
+        String info =  "Pixels with tonal value ";
         return(info);
     }
     

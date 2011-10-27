@@ -9,7 +9,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * Reads the histogram from the Image Processor and returns it as int[]
+ * Reads the histogram from the Image Processor and returns it as double[]
  * @author Benedikt
  */
 public class SusanCorner implements FeatureDescriptor{
@@ -59,16 +59,6 @@ public class SusanCorner implements FeatureDescriptor{
         );
         //set.addAll(DOES_ALL);
         return set;
-    }
-    
-    /**
-     * Returns information about the getFeauture returns in a String array.
-     */ 
-    @Override
-    public String[] getDescription() {
-        String[] info =  new String[2];
-
-        return(info);
     }
     
     /**
@@ -127,5 +117,10 @@ public class SusanCorner implements FeatureDescriptor{
 
     @Override
     public void addChangeListener(PropertyChangeListener listener) {
+    }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

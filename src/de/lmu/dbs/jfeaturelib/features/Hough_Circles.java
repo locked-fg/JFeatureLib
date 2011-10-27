@@ -509,7 +509,7 @@ public class Hough_Circles implements FeatureDescriptor {
     }
 
     @Override
-    public String[] getDescription() {
+    public String getDescription() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

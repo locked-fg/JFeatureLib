@@ -26,6 +26,7 @@ public interface FeatureDescriptor extends Descriptor {
      * @return list of feature vectors
      */
     @SuppressWarnings("deprecation")
+    @Override
     List<double[]> getFeatures();
 
     /**
@@ -33,7 +34,7 @@ public interface FeatureDescriptor extends Descriptor {
      * 
      * @return 
      */
-    String[] getDescription();
+    String getDescription();
 
     /**
      * Returns the time for opening and processing an image.

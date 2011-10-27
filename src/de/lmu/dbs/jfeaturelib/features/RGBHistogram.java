@@ -85,13 +85,8 @@ public class RGBHistogram implements FeatureDescriptor{
      * Returns information about the getFeauture returns in a String array.
      */ 
     @Override
-    public String[] getDescription() {
-        String[] info =  new String[CHANNELS*tonalValues];
-        for (int i = 0; i < info.length; i++){
-            if(i<tonalValues) info[i] = "Red Pixels with tonal value " + i;
-            else if(i<tonalValues*2) info[i] = "Green Pixels with tonal value " + i%tonalValues;
-            else info[i] = "Blue Pixels with tonal value " + i%tonalValues;
-        }
+    public String getDescription() {
+        String info =  "RGB Histogram tonal values ";
         return(info);
     }
     

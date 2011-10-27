@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.util.logging.Logger;
 
 /**
- * Adapter class to avoid ahving to implement methods that sou just don't want 
+ * Adapter class to avoid having to implement methods that you just don't want 
  * to use or to hide deprectaed methods.
  * 
  * @author graf
@@ -15,7 +15,7 @@ public abstract class FeatureDescriptorAdapter implements FeatureDescriptor {
 
     @Override
     @Deprecated
-    public final String[] getDescription() {
+    public final String getDescription() {
         throw new UnsupportedOperationException("Use of deprecated API");
     }
 

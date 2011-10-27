@@ -79,16 +79,7 @@ public class SusanEdge implements FeatureDescriptor{
         return set;
     }
     
-    /**
-     * Returns information about the getFeauture returns in a String array.
-     */ 
-    @Override
-    public String[] getDescription() {
-        String[] info =  new String[2];
-
-        return(info);
-    }
-    
+ 
     /**
      * 
      * @param ip ImageProcessor of the source image
@@ -232,5 +223,10 @@ public class SusanEdge implements FeatureDescriptor{
 
     @Override
     public void addChangeListener(PropertyChangeListener listener) {
+    }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
