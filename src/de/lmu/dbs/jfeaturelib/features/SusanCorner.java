@@ -2,7 +2,11 @@ package de.lmu.dbs.jfeaturelib.features;
 
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Reads the histogram from the Image Processor and returns it as int[]
@@ -27,17 +31,15 @@ public class SusanCorner implements FeatureDescriptor{
     }
     
     
-    /**
-     * 
-     */      
     @Override
-    public double[] getFeatures() {
+    public List<double[]> getFeatures() {
         if(calculated){
-            return features;
+            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            result.add(features);
+            return result;
         }
         else{
-            //TODO throw exception
-            return new double[]{0};
+            return Collections.EMPTY_LIST;
         }
     }
       
@@ -121,5 +123,9 @@ public class SusanCorner implements FeatureDescriptor{
     @Override
     public void fireStateChanged() {
         changeListener.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void addChangeListener(PropertyChangeListener listener) {
     }
 }

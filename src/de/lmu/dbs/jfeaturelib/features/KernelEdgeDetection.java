@@ -3,7 +3,11 @@ package de.lmu.dbs.jfeaturelib.features;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 
 public class KernelEdgeDetection implements FeatureDescriptor{
@@ -106,13 +110,13 @@ public class KernelEdgeDetection implements FeatureDescriptor{
     * This can be used to create a buffered image, if the dimensions are known.
     */
     @Override
-    public double[] getFeatures() {
-        if(calculated){
-            return Arrays2.convertToDouble(result);
-        }
-        else{
-            //TODO throw exception
-            return null;
+    public List<double[]> getFeatures() {
+        if (calculated) {
+            ArrayList<double[]> thisResult = new ArrayList<double[]>(1);
+            thisResult.add(Arrays2.convertToDouble(result));
+            return thisResult;
+        } else {
+            return Collections.EMPTY_LIST;
         }
     }  
 
@@ -203,5 +207,9 @@ public class KernelEdgeDetection implements FeatureDescriptor{
     @Override
     public void fireStateChanged() {
         changeListener.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void addChangeListener(PropertyChangeListener listener) {
     }
 }

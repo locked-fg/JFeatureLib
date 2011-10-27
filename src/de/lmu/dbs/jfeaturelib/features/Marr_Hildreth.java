@@ -3,12 +3,15 @@ package de.lmu.dbs.jfeaturelib.features;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 /** 
- *
+ * FIXME doc!
  */
-
 public class Marr_Hildreth implements FeatureDescriptor{
 
         private DescriptorChangeListener changeListener;
@@ -86,14 +89,15 @@ public class Marr_Hildreth implements FeatureDescriptor{
     * This can be used to create a buffered image, if the dimensions are known.
     */
     @Override
-    public double[] getFeatures() {
+    public List<double[]> getFeatures() {
         if(calculated){
             int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
-            return Arrays2.convertToDouble(data);
+            ArrayList<double[]> list = new ArrayList<double[]>(1);
+            list.add(Arrays2.convertToDouble(data));
+            return list;
         }
         else{
-            //TODO throw exception
-            return null;
+            return Collections.EMPTY_LIST;
         }
     }  
 
@@ -184,5 +188,9 @@ public class Marr_Hildreth implements FeatureDescriptor{
     @Override
     public void fireStateChanged() {
         changeListener.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void addChangeListener(PropertyChangeListener listener) {
     }
 }

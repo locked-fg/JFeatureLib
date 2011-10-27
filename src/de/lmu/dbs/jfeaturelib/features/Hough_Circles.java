@@ -27,16 +27,23 @@ package de.lmu.dbs.jfeaturelib.features;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.*;
 import ij.process.*;
-import java.awt.*;
 import ij.gui.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
-*   This ImageJ plugin shows the Hough Transform Space and search for
-*   circles in a binary image. The image must have been passed through
-*   an edge detection module and have edges marked in white (background
-*   must be in black).
-*/
+ *   This ImageJ plugin shows the Hough Transform Space and search for
+ *   circles in a binary image. The image must have been passed through
+ *   an edge detection module and have edges marked in white (background
+ *   must be in black).
+ * 
+ *  FIXME should we really treat this as a feature?
+ */
 public class Hough_Circles implements FeatureDescriptor {
     
     private DescriptorChangeListener changeListener;
@@ -481,14 +488,13 @@ public class Hough_Circles implements FeatureDescriptor {
     
     // Begin of Code added by Benedikt Zierer
     @Override
-    public double[] getFeatures(){
-        if(calculated){
-            double[] result = Arrays2.convertToDouble(imageValues);
+    public List<double[]> getFeatures() {
+        if (calculated) {
+            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            result.add(Arrays2.convertToDouble(imageValues));
             return result;
-        }
-        else{
-            //TODO throw exception
-            return null;
+        } else {
+            return Collections.EMPTY_LIST;
         }
     }
 
@@ -542,6 +548,10 @@ public class Hough_Circles implements FeatureDescriptor {
     @Override
     public void fireStateChanged() {
         changeListener.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void addChangeListener(PropertyChangeListener listener) {
     }
 }
 

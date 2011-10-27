@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 
 /**
- *
+ * FIXME add Documentation
  * @author Benedikt
  */
 public class ThreadWrapper extends SwingWorker<double[], Object> {
@@ -29,7 +29,8 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
     }
     
         public ThreadWrapper(String descriptorName, ImagePlus imp, double[] args, int number){
-        this.descriptorName = descriptorName;this.imp = imp;
+        this.descriptorName = descriptorName;
+        this.imp = imp;
         this.args = args;
         this.number = number;
         
@@ -54,7 +55,8 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
         descriptor.addChangeListener(new ProgressListener());
         descriptor.run(new ColorProcessor(imp.getImage()));
         time = descriptor.getTime();
-        return descriptor.getFeatures();
+        // Fixme, there can be more than just asingle feature vector!
+        return descriptor.getFeatures().get(0);
     }
     
     /**

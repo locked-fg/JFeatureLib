@@ -3,6 +3,7 @@ package de.lmu.dbs.jfeaturelib;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * @author graf
@@ -59,9 +60,10 @@ public interface Descriptor {
     public void run(ImageProcessor ip);
     
     /**
-     * Returns the feature results.
+     * Returns the feature results. 
      * 
-     * @return Results
+     * @return list of feature vectors
+     * @deprecated moved to FeatureDescriptor. 10/27/2011
      */
     Object getFeatures();
 }

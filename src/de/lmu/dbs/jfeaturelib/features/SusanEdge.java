@@ -4,7 +4,12 @@ import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * 
@@ -45,13 +50,14 @@ public class SusanEdge implements FeatureDescriptor{
      * 
      */      
     @Override
-    public double[] getFeatures() {
+    public List<double[]> getFeatures() {
         if(calculated){
-            return Arrays2.convertToDouble(features);
+            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            result.add(Arrays2.convertToDouble(features));
+            return result;
         }
         else{
-            //TODO throw exception
-            return null;
+            return Collections.EMPTY_LIST;
         }
     }
       
@@ -222,5 +228,9 @@ public class SusanEdge implements FeatureDescriptor{
     @Override
     public void fireStateChanged() {
         changeListener.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void addChangeListener(PropertyChangeListener listener) {
     }
 }

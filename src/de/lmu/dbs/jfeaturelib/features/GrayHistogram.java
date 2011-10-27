@@ -1,9 +1,14 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.ifi.dbs.utilities.Arrays2;
+import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Reads the histogram from the Image Processor and returns it as double[].      
@@ -44,13 +49,13 @@ public class GrayHistogram implements FeatureDescriptor{
     * Returns the histogram as int array.
     */    
     @Override
-    public double[] getFeatures() {
-        if(calculated){
-            return Arrays2.convertToDouble(features);
-        }
-        else{
-            //TODO throw exception
-            return null;
+    public List<double[]> getFeatures() {
+        if (calculated) {
+            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            result.add(Arrays2.convertToDouble(features));
+            return result;
+        } else {
+            return Collections.EMPTY_LIST;
         }
     }
     
@@ -145,5 +150,9 @@ public class GrayHistogram implements FeatureDescriptor{
     @Override
     public void fireStateChanged() {
         changeListener.valueChanged(new DescriptorChangeEvent(this));
+    }
+
+    @Override
+    public void addChangeListener(PropertyChangeListener listener) {
     }
 }
