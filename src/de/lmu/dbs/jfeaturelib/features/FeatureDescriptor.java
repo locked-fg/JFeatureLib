@@ -30,9 +30,13 @@ public interface FeatureDescriptor extends Descriptor {
     List<double[]> getFeatures();
 
     /**
-     * @FIXME change to String return only
+     * Returns a short plain Text description about the Descriptor and the 
+     * semantics of the double array obtained from {@link #getFeatures()}.
      * 
-     * @return 
+     * May return null if no description is implemented - even though this 
+     * should be avoided by any means.
+     * 
+     * @return semantic description of getFeatures or null.
      */
     String getDescription();
 
@@ -69,7 +73,7 @@ public interface FeatureDescriptor extends Descriptor {
     void setArgs(double[] args);
 
     /**
-     * @deprecated use {@link FeatureDescriptor#addChangeListener(PropertyChangeListener)} instead. 10/27/2011
+     * @deprecated use {@link FeatureDescriptor#addPropertyChangeListener(PropertyChangeListener)} instead. 10/27/2011
      */
     public void addChangeListener(DescriptorChangeListener listener);
     
@@ -81,7 +85,7 @@ public interface FeatureDescriptor extends Descriptor {
      * 
      * @param listener 
      */
-    public void addChangeListener(PropertyChangeListener listener);
+    public void addPropertyChangeListener(PropertyChangeListener listener);
 
     @Deprecated
     /*
