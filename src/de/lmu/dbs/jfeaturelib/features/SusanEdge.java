@@ -222,7 +222,7 @@ public class SusanEdge implements FeatureDescriptor{
     }
 
     @Override
-    public void addChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 
     @Override

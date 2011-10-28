@@ -1,18 +1,15 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-
-
-
-//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
@@ -30,14 +27,9 @@ import java.util.List;
  * </pre>
  * @author graf
  */
+public class Haralick extends FeatureDescriptorAdapter {
 
-public class Haralick implements FeatureDescriptor {
-
-    private DescriptorChangeListener changeListener;
-    private long time;
-    private boolean calculated;
-    private int progress; 
-    
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     /** The number of gray values for the textures */
     private final int NUM_GRAY_VALUES = 32;
     /** p_(x+y) statistics */
@@ -62,27 +54,24 @@ public class Haralick implements FeatureDescriptor {
     private double hxy2 = 0;
     // -
     private int haralickDist;
-    double[] features = new double[13];
+    double[] features = null;
     private ByteProcessor image;
 
     /**
      * Constructs a haralick detector with default parameters.
-     */ 
+     */
     public Haralick() {
         this.haralickDist = 1;
-        calculated = false;
-        progress = 0;
     }
 
     /**
      * Constructs a haralick detector.
      * @param haralickDist Integer for haralick distribution
-     */ 
+     */
     public Haralick(int haralickDist) {
         this.haralickDist = haralickDist;
-        calculated = false;
     }
-    
+
     /**
      * Defines the capability of the algorithm.
      * 
@@ -102,15 +91,13 @@ public class Haralick implements FeatureDescriptor {
      */
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
             ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
-        calculated = true;
-        time = (System.currentTimeMillis() - start);
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
 
     /**
@@ -118,32 +105,51 @@ public class Haralick implements FeatureDescriptor {
      */
     @Override
     public List<double[]> getFeatures() {
-        if (calculated) {
-            ArrayList<double[]> result = new ArrayList<double[]>(1);
+        ArrayList<double[]> result = new ArrayList<double[]>(1);
+        if (features != null) {
             result.add(features);
-            return result;
-        } else {
-            return Collections.EMPTY_LIST;
         }
+        return result;
     }
-        
+
     /**
      * Returns information about the getFeauture returns in a String array.
-     */     
+     */
     @Override
     public String getDescription() {
-        //FIXME implement info about features double array
-        throw new UnsupportedOperationException("Not supported yet.");
+        StringBuilder sb = new StringBuilder("50");
+        sb.append("Haralick features: ");
+        sb.append("Angular 2nd moment, ");
+        sb.append("Contrast, ");
+        sb.append("Correlation, ");
+        sb.append("variance, ");
+        sb.append("Inverse Difference Moment, ");
+        sb.append("Sum Average, ");
+        sb.append("Sum Variance, ");
+        sb.append("Sum Entropy, ");
+        sb.append("Entropy, ");
+        sb.append("Difference Variance, ");
+        sb.append("Difference Entropy, ");
+        sb.append("Information Measures of Correlation, ");
+        sb.append("Information Measures of Correlation");
+        return sb.toString();
     }
 
     private void process() {
+        features = new double[13];
+
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(1, "creating coocurrence matrix"));
         Coocurrence coocurrence = new Coocurrence(image, NUM_GRAY_VALUES, this.haralickDist);
         double[][] cooccurrenceMatrix = coocurrence.getCooccurrenceMatrix();
         double meanGrayValue = coocurrence.getMeanGrayValue();
 
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(25, "normalizing"));
         normalize(cooccurrenceMatrix, coocurrence.getCooccurenceSums());
+
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(50, "computing statistics"));
         calculateStatistics(cooccurrenceMatrix);
 
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(75, "computing features"));
         for (int i = 0; i < NUM_GRAY_VALUES; i++) {
             double sum_j_p_x_minus_y = 0;
             for (int j = 0; j < NUM_GRAY_VALUES; j++) {
@@ -183,9 +189,6 @@ public class Haralick implements FeatureDescriptor {
                 sum_j_p_x_plus_y += j * p_x_plus_y[j];
             }
             features[6] += (i - sum_j_p_x_plus_y) * (i - sum_j_p_x_plus_y) * p_x_plus_y[i];
-            
-            progress = Math.round(i*(100.0f/(2*NUM_GRAY_VALUES-1)));
-            fireStateChanged();
         }
 
         features[7] *= -1;
@@ -263,50 +266,12 @@ public class Haralick implements FeatureDescriptor {
     }
 
     @Override
-     public long getTime(){
-         return time;
-     }
-     
-    @Override
-    public boolean isCalculated(){
-        return calculated;
-    }
-
-    @Override
-    public int getProgress() {
-        return progress;
-    }
-
-    @Override
-    public void setArgs(double[] args) {
-        if(args == null){
-            this.haralickDist = 1;
-        }
-        else if(args.length == 1){
-            this.haralickDist = Integer.valueOf((int)args[0]);
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
-        
-    }
-    
-    @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void addChangeListener(PropertyChangeListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 }
+
+//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf */
 class Coocurrence {

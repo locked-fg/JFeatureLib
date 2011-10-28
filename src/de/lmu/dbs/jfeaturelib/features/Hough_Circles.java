@@ -551,7 +551,7 @@ public class Hough_Circles implements FeatureDescriptor {
     }
 
     @Override
-    public void addChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 }
 

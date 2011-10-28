@@ -164,6 +164,6 @@ public class RGBHistogram implements FeatureDescriptor{
     }
 
     @Override
-    public void addChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 }

@@ -187,6 +187,6 @@ public class Marr_Hildreth implements FeatureDescriptor{
     }
 
     @Override
-    public void addChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 }

@@ -206,6 +206,6 @@ public class KernelEdgeDetection implements FeatureDescriptor{
     }
 
     @Override
-    public void addChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 }

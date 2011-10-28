@@ -9,9 +9,10 @@ package de.lmu.dbs.jfeaturelib;
  * 
  * @author graf
  */
-public enum Progress {
+public class Progress {
 
-    START(0, "started"), END(100, "finished");
+    public static final Progress START = new Progress(0, "started");
+    public static final Progress END = new Progress(100, "finished");
     /**
      * Describes a progress between 0 and 100. 
      * 0 Indicates the start of a progress, 100 the end.
@@ -25,7 +26,7 @@ public enum Progress {
      * @param progress in [0,100]
      * @throws IllegalArgumentException if progress is out of bounds
      */
-    Progress(int progress) {
+    public Progress(int progress) {
         this(progress, "");
     }
 
@@ -36,7 +37,7 @@ public enum Progress {
      * @param message the progress message.
      * @throws IllegalArgumentException if progress is out of bounds
      */
-    Progress(int progress, String message) {
+    public Progress(int progress, String message) {
         if (progress < 0 || progress > 100) {
             throw new IllegalArgumentException("progress value must be in [0,100] but was " + progress);
         }

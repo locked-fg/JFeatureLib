@@ -690,6 +690,6 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     }
 
     @Override
-    public void addChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 }
