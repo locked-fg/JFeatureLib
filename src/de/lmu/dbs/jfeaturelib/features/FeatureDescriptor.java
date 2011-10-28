@@ -85,11 +85,12 @@ public interface FeatureDescriptor extends Descriptor {
      */
     public void addPropertyChangeListener(PropertyChangeListener listener);
 
-    @Deprecated
-    /*
+    /**
      * This should be handeled by one of the
      * PropertyChangeSupport.firePropertyChange(...)
      * methods.
+     * 
+     * @deprecated 10/26/2011
      */
     public void fireStateChanged();
 
