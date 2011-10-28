@@ -58,12 +58,4 @@ public interface Descriptor {
      * @param ip 
      */
     public void run(ImageProcessor ip);
-    
-    /**
-     * Returns the feature results. 
-     * 
-     * @return list of feature vectors
-     * @deprecated moved to FeatureDescriptor. 10/27/2011
-     */
-    Object getFeatures();
 }

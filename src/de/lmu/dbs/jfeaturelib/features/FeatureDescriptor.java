@@ -25,8 +25,6 @@ public interface FeatureDescriptor extends Descriptor {
      * 
      * @return list of feature vectors
      */
-    @SuppressWarnings("deprecation")
-    @Override
     List<double[]> getFeatures();
 
     /**
