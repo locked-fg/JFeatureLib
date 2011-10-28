@@ -1,6 +1,7 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.logging.Logger;
 
 /**
@@ -14,9 +15,9 @@ public abstract class FeatureDescriptorAdapter implements FeatureDescriptor {
     private static final Logger log = Logger.getLogger(FeatureDescriptorAdapter.class.getName());
 
     @Override
-    @Deprecated
-    public final String getDescription() {
-        throw new UnsupportedOperationException("Use of deprecated API");
+    public String getDescription() {
+        log.fine("getDescription() not implemented in ".getClass().getName());
+        return null;
     }
 
     @Override
@@ -56,6 +57,7 @@ public abstract class FeatureDescriptorAdapter implements FeatureDescriptor {
     }
 
     @Override
-    public void addChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        log.fine("Property Change support not implemented in this Descriptor");
     }
 }
