@@ -13,6 +13,7 @@ import java.util.List;
  * If no special keys are required, Integers should be used as keys.
  *
  * @author graf
+ * @deprecated 10/26/2011
  */
 interface MultiFeatureDescriptor<T> extends Descriptor {
 
