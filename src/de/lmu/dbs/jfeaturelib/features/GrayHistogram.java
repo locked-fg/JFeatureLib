@@ -19,7 +19,6 @@ import java.util.List;
 public class GrayHistogram implements FeatureDescriptor{
     
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean calculated;
     private int tonalValues;
     private int[] features;
     private ByteProcessor image;
@@ -31,7 +30,6 @@ public class GrayHistogram implements FeatureDescriptor{
         //assuming 8bit image
         tonalValues = 256;
         features = new int[tonalValues];
-        calculated = false;
         pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "getting started"));
     }
     
@@ -50,7 +48,7 @@ public class GrayHistogram implements FeatureDescriptor{
     */    
     @Override
     public List<double[]> getFeatures() {
-        if (calculated) {
+        if (features != null) {
             ArrayList<double[]> result = new ArrayList<double[]>(1);
             result.add(Arrays2.convertToDouble(features));
             return result;
@@ -90,7 +88,6 @@ public class GrayHistogram implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-        calculated = true;
     }
     
     /**
@@ -105,11 +102,6 @@ public class GrayHistogram implements FeatureDescriptor{
     private void process() {
         features = image.getHistogram();
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
-    }
-    
-    @Override
-    public boolean isCalculated(){
-        return calculated;
     }
 
     @Override

@@ -17,7 +17,6 @@ import java.util.List;
 public class Marr_Hildreth implements FeatureDescriptor{
 
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-        private boolean calculated;
         private ColorProcessor image;
         private float[] kernel = null;
 	
@@ -32,14 +31,12 @@ public class Marr_Hildreth implements FeatureDescriptor{
             this.deviation = 0.6;
             this.kernelSize = 7;
             this.times = 1;
-            calculated = false;
         }
         
 	public Marr_Hildreth(double deviation, int kernelSize, int times) {
             this.deviation = deviation;
             this.kernelSize = kernelSize;
             this.times = times;
-            calculated = false;
 	
 	}
         
@@ -89,7 +86,7 @@ public class Marr_Hildreth implements FeatureDescriptor{
     */
     @Override
     public List<double[]> getFeatures() {
-        if(calculated){
+        if(image != null){
             int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
             ArrayList<double[]> list = new ArrayList<double[]>(1);
             list.add(Arrays2.convertToDouble(data));
@@ -138,14 +135,7 @@ public class Marr_Hildreth implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-        calculated = true;
     }
-
-    @Override
-    public boolean isCalculated(){
-        return calculated;
-    }
-
 
     @Override
     public void setArgs(double[] args) {

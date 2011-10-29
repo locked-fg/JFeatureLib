@@ -36,14 +36,6 @@ public interface FeatureDescriptor extends Descriptor {
     String getDescription();
 
     /**
-     * Checks wether this instance was calculated
-     * 
-     * @return Boolean if instance was calculated
-     * @deprecated feature descriptors should be used ONCE only. If such checks are needed, use a wrapper class. 10/27/2011
-     */
-    boolean isCalculated();
-
-    /**
      * Each descriptor must be able to take an empty constructor and pull args from a double array
      * 
      * @param args double array with arguments

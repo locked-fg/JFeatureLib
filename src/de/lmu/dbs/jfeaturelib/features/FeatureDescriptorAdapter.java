@@ -21,13 +21,6 @@ public abstract class FeatureDescriptorAdapter implements FeatureDescriptor {
 
     @Override
     @Deprecated
-    public final boolean isCalculated() {
-        throw new UnsupportedOperationException("Use of deprecated API");
-    }
-
-
-    @Override
-    @Deprecated
     public final void setArgs(double[] args) {
         throw new UnsupportedOperationException("Use of deprecated API");
     }

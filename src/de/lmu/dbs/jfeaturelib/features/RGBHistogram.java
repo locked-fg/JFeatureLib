@@ -19,7 +19,6 @@ import java.util.List;
 public class RGBHistogram implements FeatureDescriptor{
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean calculated;
     private int tonalValues;
     private final int CHANNELS;
     private int[] features;
@@ -33,7 +32,6 @@ public class RGBHistogram implements FeatureDescriptor{
         tonalValues = 256;
         CHANNELS = 3;
         features = new int[CHANNELS*tonalValues];
-        calculated = false;
     }
     
     /**
@@ -45,7 +43,6 @@ public class RGBHistogram implements FeatureDescriptor{
         tonalValues = values;
         CHANNELS = 3;
         features = new int[CHANNELS*tonalValues];
-        calculated = false;
     }
     
     /**
@@ -53,7 +50,7 @@ public class RGBHistogram implements FeatureDescriptor{
      */      
     @Override
     public List<double[]> getFeatures() {
-        if (calculated) {
+        if (features != null) {
             List<double[]> result = new ArrayList<double[]>(1);
             result.add(Arrays2.convertToDouble(features));
             return result;
@@ -99,7 +96,6 @@ public class RGBHistogram implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-        calculated = true;
     }
     
     private void process() {
@@ -119,11 +115,6 @@ public class RGBHistogram implements FeatureDescriptor{
             int progress = (int)Math.round(i*(100.0/features.length));
             pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + features.length));
         }
-    }
- 
-    @Override
-    public boolean isCalculated(){
-        return calculated;
     }
 
     @Override

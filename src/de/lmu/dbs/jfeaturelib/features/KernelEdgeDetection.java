@@ -15,7 +15,6 @@ import java.util.List;
 public class KernelEdgeDetection implements FeatureDescriptor{
 
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-        private boolean calculated;
         private ByteProcessor image;
         private int imageWidth;
         private int imageHeight;
@@ -37,21 +36,18 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             float[] kernel = {0, 0, 0, 0, 0, 0, 0, 0, 0};
             this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = kernel;
-            calculated = false;
             
         }
         
         public KernelEdgeDetection(double[] kernel){
             this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = Arrays2.convertToFloat(kernel);
-            calculated = false;
         }
         
 	public KernelEdgeDetection(float[] kernel) {
             this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = kernel;
             this.kernelY = new float[kernelWidth*kernelWidth];
-            calculated = false;
 	}
         
         public void setKernel(float[] kernel){
@@ -108,7 +104,7 @@ public class KernelEdgeDetection implements FeatureDescriptor{
     */
     @Override
     public List<double[]> getFeatures() {
-        if (calculated) {
+        if (result != null) {
             ArrayList<double[]> thisResult = new ArrayList<double[]>(1);
             thisResult.add(Arrays2.convertToDouble(result));
             return thisResult;
@@ -158,12 +154,6 @@ public class KernelEdgeDetection implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-        calculated = true;
-    }
-
-    @Override
-    public boolean isCalculated(){
-        return calculated;
     }
 
     @Override

@@ -49,7 +49,6 @@ import java.util.List;
 public class Hough_Circles implements FeatureDescriptor {
     
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean calculated; 
     
     public int radiusMin;  // Find circles with radius grater or equal radiusMin
     public int radiusMax;  // Find circles with radius less or equal radiusMax
@@ -484,7 +483,7 @@ public class Hough_Circles implements FeatureDescriptor {
     // Begin of Code added by Benedikt Zierer
     @Override
     public List<double[]> getFeatures() {
-        if (calculated) {
+        if (imageValues != null) {
             ArrayList<double[]> result = new ArrayList<double[]>(1);
             result.add(Arrays2.convertToDouble(imageValues));
             return result;
@@ -506,11 +505,6 @@ public class Hough_Circles implements FeatureDescriptor {
     @Override
     public String getDescription() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isCalculated(){
-        return calculated;
     }
 
     @Override

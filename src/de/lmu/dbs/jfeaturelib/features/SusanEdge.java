@@ -19,7 +19,6 @@ import java.util.List;
 public class SusanEdge implements FeatureDescriptor{
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean calculated;
     int WIDTH;
     int HEIGHT;
     int radius;
@@ -34,13 +33,11 @@ public class SusanEdge implements FeatureDescriptor{
     public SusanEdge(){
         this.radius = 2;
         this.treshold = 15;
-        calculated = false;
     }
     
      public SusanEdge(int radius, int treshold){
         this.radius = radius;
         this.treshold = treshold;
-        calculated = false;
     
      }
      
@@ -49,7 +46,7 @@ public class SusanEdge implements FeatureDescriptor{
      */      
     @Override
     public List<double[]> getFeatures() {
-        if(calculated){
+        if(features != null){
             ArrayList<double[]> result = new ArrayList<double[]>(1);
             result.add(Arrays2.convertToDouble(features));
             return result;
@@ -88,7 +85,6 @@ public class SusanEdge implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-        calculated = true;
     }
     
    /* 
@@ -176,11 +172,6 @@ public class SusanEdge implements FeatureDescriptor{
         ColorProcessor cp = new ColorProcessor(result);
         features = (int[]) cp.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, WIDTH, HEIGHT, null);
         //TODO this is not very nice
-    }
-
-    @Override
-    public boolean isCalculated(){
-        return calculated;
     }
 
     @Override

@@ -17,7 +17,6 @@ import java.util.List;
 public class SusanCorner implements FeatureDescriptor{
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean calculated;
     double[] features;
 
     private ColorProcessor image;
@@ -26,13 +25,12 @@ public class SusanCorner implements FeatureDescriptor{
      * 
      */    
     public SusanCorner(){
-        calculated = false;
     }
     
     
     @Override
     public List<double[]> getFeatures() {
-        if(calculated){
+        if(features != null){
             ArrayList<double[]> result = new ArrayList<double[]>(1);
             result.add(features);
             return result;
@@ -70,16 +68,10 @@ public class SusanCorner implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-        calculated = true;
     }
     
     private void process() {
         //TODO implement ;)
-    }
-
-    @Override
-    public boolean isCalculated(){
-        return calculated;
     }
 
      @Override

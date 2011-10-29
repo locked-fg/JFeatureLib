@@ -47,8 +47,6 @@ import java.util.List;
 public class CannyEdgeDetector implements FeatureDescriptor {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean calculated;
-    private int progress;
     // statics
     private final static float GAUSSIAN_CUT_OFF = 0.005f;
     private final static float MAGNITUDE_SCALE = 100F;
@@ -82,8 +80,6 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         gaussianKernelRadius = 2f;
         gaussianKernelWidth = 16;
         contrastNormalized = false;
-        calculated = false;
-        progress = 0;
     }
 
     public CannyEdgeDetector(double[] args) {
@@ -589,7 +585,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      */
     @Override
     public List<double[]> getFeatures() {
-        if (calculated) {
+        if (data != null) {
             ArrayList<double[]> result = new ArrayList<double[]>(1);
             result.add(Arrays2.convertToDouble(data));
             return result;
@@ -636,14 +632,8 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-        calculated = true;
-
     }
 
-    @Override
-    public boolean isCalculated() {
-        return calculated;
-    }
 
     @Override
     public void setArgs(double[] args) {
