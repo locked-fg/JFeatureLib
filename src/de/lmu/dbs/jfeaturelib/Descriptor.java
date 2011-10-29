@@ -3,7 +3,6 @@ package de.lmu.dbs.jfeaturelib;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * @author graf

@@ -1,7 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.logging.Logger;
 
 /**
@@ -26,27 +25,10 @@ public abstract class FeatureDescriptorAdapter implements FeatureDescriptor {
         throw new UnsupportedOperationException("Use of deprecated API");
     }
 
-    @Override
-    @Deprecated
-    public final int getProgress() {
-        throw new UnsupportedOperationException("Use of deprecated API");
-    }
 
     @Override
     @Deprecated
     public final void setArgs(double[] args) {
-        throw new UnsupportedOperationException("Use of deprecated API");
-    }
-
-    @Override
-    @Deprecated
-    public final void addChangeListener(DescriptorChangeListener listener) {
-        throw new UnsupportedOperationException("Use of deprecated API");
-    }
-
-    @Override
-    @Deprecated
-    public final void fireStateChanged() {
         throw new UnsupportedOperationException("Use of deprecated API");
     }
 

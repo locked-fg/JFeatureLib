@@ -1,11 +1,8 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Descriptor;
-import de.lmu.dbs.jfeaturelib.Progress;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
-import java.util.EventListener;
-import java.util.EventObject;
 import java.util.List;
 
 /**
@@ -47,25 +44,12 @@ public interface FeatureDescriptor extends Descriptor {
     boolean isCalculated();
 
     /**
-     * Returns the progress of the calculation as int from 0 to 100
-     * 
-     * @return progress of the calculation int from 0 to 100
-     * @deprecated usee observers instead and fire the state from inside. 10/27/2011
-     */
-    int getProgress();
-
-    /**
      * Each descriptor must be able to take an empty constructor and pull args from a double array
      * 
      * @param args double array with arguments
      * @deprecated usage of reflection and BeanInfo Spec or Builder pattern is more appropriate in this case. 10/27/2011
      */
     void setArgs(double[] args);
-
-    /**
-     * @deprecated use {@link FeatureDescriptor#addPropertyChangeListener(PropertyChangeListener)} instead. 10/27/2011
-     */
-    public void addChangeListener(DescriptorChangeListener listener);
     
     /**
      * Adds a change listener to this descriptor. 
@@ -77,39 +61,4 @@ public interface FeatureDescriptor extends Descriptor {
      */
     public void addPropertyChangeListener(PropertyChangeListener listener);
 
-    /**
-     * This should be handeled by one of the
-     * PropertyChangeSupport.firePropertyChange(...)
-     * methods.
-     * 
-     * @deprecated 10/26/2011
-     */
-    public void fireStateChanged();
-
-    /**
-     * @deprecated use {@link PropertyChangeListener} instead. 10/27/2011
-     */
-    public interface DescriptorChangeListener extends EventListener {
-
-        public void valueChanged(DescriptorChangeEvent e);
-    }
-
-    /**
-     * @deprecated use {@link Progress} instead. 10/27/2011
-     */
-    public class DescriptorChangeEvent extends EventObject {
-
-        public DescriptorChangeEvent(FeatureDescriptor source) {
-            super(source);
-        }
-
-        public int getProgress() {
-            return ((FeatureDescriptor) source).getProgress();
-        }
-
-        @Override
-        public FeatureDescriptor getSource() {
-            return (FeatureDescriptor) source;
-        }
-    }
 }

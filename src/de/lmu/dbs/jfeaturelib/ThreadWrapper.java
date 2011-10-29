@@ -1,21 +1,19 @@
 package de.lmu.dbs.jfeaturelib;
 
 import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
-import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor.DescriptorChangeEvent;
-import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor.DescriptorChangeListener;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.SwingWorker;
 
 /**
  * FIXME add Documentation
  * @author Benedikt
  */
-public class ThreadWrapper extends SwingWorker<double[], Object> {
+public class ThreadWrapper extends SwingWorker<double[], Object> implements PropertyChangeListener{
     private FeatureDescriptor descriptor;
     private String descriptorName;
     private ImagePlus imp;
@@ -36,7 +34,7 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
         
         try{
             descriptor = (FeatureDescriptor) Class.forName(featurePackage+descriptorName).newInstance();
-            descriptor.setArgs(args);
+            //descriptor.setArgs(args);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -48,7 +46,7 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
     protected double[] doInBackground(){
 
         long start = System.currentTimeMillis();
-        descriptor.addChangeListener(new ProgressListener());
+        descriptor.addPropertyChangeListener(this);
         descriptor.run(new ColorProcessor(imp.getImage()));
         //FIXME there can be more than just asingle feature vector!
         time = (System.currentTimeMillis() - start);
@@ -65,11 +63,6 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
          return time;
      }
 
-     public int getCurrent(){
-         System.out.println(descriptor.getProgress());
-         return descriptor.getProgress();
-     }
-     
      public String getDescriptorName(){
          return descriptorName;
      }
@@ -77,20 +70,13 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
      public int getNumber(){
          return number;
      }
-     
-     /**
-     * ProgressListener listens to "progress" property
-     * changes in the SwingWorkers that search and load
-     * images.
-     */
-    class ProgressListener implements DescriptorChangeListener {
 
-          ProgressListener() {
-          }
-
-        @Override
-        public void valueChanged(DescriptorChangeEvent evt) {
-            setProgress(evt.getProgress());
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt.getNewValue().getClass().getSimpleName().equals("Progress")){
+            System.out.println(((Progress)evt.getNewValue()).getProgress());
+            setProgress(((Progress)evt.getNewValue()).getProgress());
+                    
         }
     }
 }

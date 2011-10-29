@@ -1,9 +1,11 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -12,9 +14,8 @@ import java.util.List;
 
 public class KernelEdgeDetection implements FeatureDescriptor{
 
-        private DescriptorChangeListener changeListener;
+        private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
         private boolean calculated;
-        private int progress; 
         private ByteProcessor image;
         private int imageWidth;
         private int imageHeight;
@@ -37,7 +38,6 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = kernel;
             calculated = false;
-            progress = 0;
             
         }
         
@@ -45,7 +45,6 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = Arrays2.convertToFloat(kernel);
             calculated = false;
-            progress = 0;
         }
         
 	public KernelEdgeDetection(float[] kernel) {
@@ -53,7 +52,6 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             this.kernelX = kernel;
             this.kernelY = new float[kernelWidth*kernelWidth];
             calculated = false;
-            progress = 0;
 	}
         
         public void setKernel(float[] kernel){
@@ -72,6 +70,7 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             result = new int[imageWidth*imageHeight];
             imageWidth = image.getWidth();
             imageHeight = image.getHeight();
+            pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "initialized"));
             
             float[][] kernelX2D = new float[kernelWidth][kernelWidth];
             kernelY = new float[kernelWidth*kernelWidth];
@@ -89,8 +88,8 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             for(int x = 0; x<kernelWidth; x++){
                 for(int y = 0; y<kernelWidth; y++){
                     kernelY[i] = kernelY2D[x][y];
-                    progress = (int)Math.round(i*(100.0/(double)(kernelWidth*kernelWidth)));
-                    fireStateChanged();
+                    int progress = (int)Math.round(i*(100.0/(double)(kernelWidth*kernelWidth)));
+                    pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + kernelWidth*kernelWidth));
                     i++;
                 }                
             }
@@ -99,8 +98,7 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             image.convolve(kernelY, kernelWidth, kernelWidth);
             
             result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, imageWidth, imageHeight, null);
-            progress = 100;
-            fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
 
 	}
 
@@ -157,19 +155,15 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
-        fireStateChanged();
-        this.process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
+        process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
         calculated = true;
     }
 
     @Override
     public boolean isCalculated(){
         return calculated;
-    }
-
-    @Override
-    public int getProgress() {
-        return progress;
     }
 
     @Override
@@ -185,19 +179,9 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
     }
-    
-    @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
-
+ 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 }

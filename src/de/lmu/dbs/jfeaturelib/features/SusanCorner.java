@@ -1,8 +1,10 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -14,9 +16,8 @@ import java.util.List;
  */
 public class SusanCorner implements FeatureDescriptor{
 
-    private DescriptorChangeListener changeListener;
-    private boolean calculated; 
-    private int progress;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private boolean calculated;
     double[] features;
 
     private ColorProcessor image;
@@ -26,7 +27,6 @@ public class SusanCorner implements FeatureDescriptor{
      */    
     public SusanCorner(){
         calculated = false;
-        progress = 0;
     }
     
     
@@ -67,8 +67,9 @@ public class SusanCorner implements FeatureDescriptor{
     @Override
     public void run(ImageProcessor ip) {
         this.image = (ColorProcessor)ip;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
         calculated = true;
     }
     
@@ -81,12 +82,7 @@ public class SusanCorner implements FeatureDescriptor{
         return calculated;
     }
 
-    @Override
-    public int getProgress() {
-        return progress;
-    }
-
-    @Override
+     @Override
     public void setArgs(double[] args) {
         if(args == null){
             
@@ -95,20 +91,10 @@ public class SusanCorner implements FeatureDescriptor{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
     }
-    
-    @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
-
+ 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 
     @Override

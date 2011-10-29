@@ -1,12 +1,13 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -17,9 +18,8 @@ import java.util.List;
  */
 public class SusanEdge implements FeatureDescriptor{
 
-    private DescriptorChangeListener changeListener;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean calculated;
-    private int progress;
     int WIDTH;
     int HEIGHT;
     int radius;
@@ -41,7 +41,6 @@ public class SusanEdge implements FeatureDescriptor{
         this.radius = radius;
         this.treshold = treshold;
         calculated = false;
-        progress = 0;
     
      }
      
@@ -86,8 +85,9 @@ public class SusanEdge implements FeatureDescriptor{
     @Override
     public void run(ImageProcessor ip) {
         this.image = (ColorProcessor)ip;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
         calculated = true;
     }
     
@@ -170,8 +170,8 @@ public class SusanEdge implements FeatureDescriptor{
                 i++;
                 //System.out.println("Int: " + picture[x][y] + ", converted: " + de.lmu.dbs.jfeaturelib.utils.RGBtoGray.ARGB_NTSC(picture[x][y]));
             }
-        progress = (int)Math.round(i*(100.0/(double)(WIDTH*HEIGHT)));
-        fireStateChanged();
+        int progress = (int)Math.round(i*(100.0/(double)(WIDTH*HEIGHT)));
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + WIDTH*HEIGHT));
         }
         ColorProcessor cp = new ColorProcessor(result);
         features = (int[]) cp.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, WIDTH, HEIGHT, null);
@@ -181,11 +181,6 @@ public class SusanEdge implements FeatureDescriptor{
     @Override
     public boolean isCalculated(){
         return calculated;
-    }
-
-    @Override
-    public int getProgress() {
-        return progress;
     }
 
     @Override
@@ -201,20 +196,10 @@ public class SusanEdge implements FeatureDescriptor{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
     }
-    
-    @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 
     @Override

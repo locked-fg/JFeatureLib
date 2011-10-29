@@ -24,6 +24,7 @@ package de.lmu.dbs.jfeaturelib.features;
 //package sigus.templateMatching;
 //import sigus.*;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.*;
 import ij.process.*;
@@ -31,6 +32,7 @@ import ij.gui.*;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -46,8 +48,7 @@ import java.util.List;
  */
 public class Hough_Circles implements FeatureDescriptor {
     
-    private DescriptorChangeListener changeListener;
-    private int progress = 0;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean calculated; 
     
     public int radiusMin;  // Find circles with radius grater or equal radiusMin
@@ -95,11 +96,9 @@ public class Hough_Circles implements FeatureDescriptor {
         width = r.width;
         height = r.height;
         offset = ip.getWidth();
-        
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
-        progress = 100;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
 
         private void process() {
@@ -515,11 +514,6 @@ public class Hough_Circles implements FeatureDescriptor {
     }
 
     @Override
-    public int getProgress() {
-        return progress;
-    }
-
-    @Override
     public void setArgs(double[] args) {
         if(args == null){
             
@@ -531,18 +525,8 @@ public class Hough_Circles implements FeatureDescriptor {
     }
 
     @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 }
 

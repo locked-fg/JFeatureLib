@@ -1,10 +1,12 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -16,9 +18,8 @@ import java.util.List;
  */
 public class RGBHistogram implements FeatureDescriptor{
 
-    private DescriptorChangeListener changeListener;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean calculated;
-    private int progress;    
     private int tonalValues;
     private final int CHANNELS;
     private int[] features;
@@ -33,7 +34,6 @@ public class RGBHistogram implements FeatureDescriptor{
         CHANNELS = 3;
         features = new int[CHANNELS*tonalValues];
         calculated = false;
-        progress = 0;
     }
     
     /**
@@ -96,8 +96,9 @@ public class RGBHistogram implements FeatureDescriptor{
     @Override
     public void run(ImageProcessor ip) {
         this.image = (ColorProcessor)ip;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
         calculated = true;
     }
     
@@ -115,19 +116,14 @@ public class RGBHistogram implements FeatureDescriptor{
             if(i<tonalValues)features[i] = r[i];
             else if(i<tonalValues*2)features[i] = g[i%tonalValues];
             else features[i] = b[i%tonalValues];
-            progress = (int)Math.round(i*(100.0/features.length));
-            fireStateChanged();
+            int progress = (int)Math.round(i*(100.0/features.length));
+            pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + features.length));
         }
     }
  
     @Override
     public boolean isCalculated(){
         return calculated;
-    }
-
-    @Override
-    public int getProgress() {
-        return progress;
     }
 
     @Override
@@ -145,17 +141,7 @@ public class RGBHistogram implements FeatureDescriptor{
     }
     
     @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 }

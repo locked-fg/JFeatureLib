@@ -1,10 +1,12 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -15,10 +17,9 @@ import java.util.List;
  * @author Benedikt
  */
 public class GrayHistogram implements FeatureDescriptor{
-
-    private DescriptorChangeListener changeListener;
+    
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean calculated;
-    private int progress; 
     private int tonalValues;
     private int[] features;
     private ByteProcessor image;
@@ -31,7 +32,7 @@ public class GrayHistogram implements FeatureDescriptor{
         tonalValues = 256;
         features = new int[tonalValues];
         calculated = false;
-        progress = 0;
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "getting started"));
     }
     
     /**
@@ -86,8 +87,9 @@ public class GrayHistogram implements FeatureDescriptor{
             ip = ip.convertToByte(true);
         }
         this.image = (ByteProcessor) ip;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
         calculated = true;
     }
     
@@ -102,18 +104,12 @@ public class GrayHistogram implements FeatureDescriptor{
     
     private void process() {
         features = image.getHistogram();
-        progress = 100;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
     
     @Override
     public boolean isCalculated(){
         return calculated;
-    }
-
-    @Override
-    public int getProgress() {
-        return progress;
     }
 
     @Override
@@ -131,17 +127,8 @@ public class GrayHistogram implements FeatureDescriptor{
     }
 
     @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
+
 }

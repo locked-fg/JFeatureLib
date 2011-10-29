@@ -1,9 +1,11 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -14,9 +16,8 @@ import java.util.List;
  */
 public class Marr_Hildreth implements FeatureDescriptor{
 
-        private DescriptorChangeListener changeListener;
+        private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
         private boolean calculated;
-        private int progress; 
         private ColorProcessor image;
         private float[] kernel = null;
 	
@@ -39,7 +40,6 @@ public class Marr_Hildreth implements FeatureDescriptor{
             this.kernelSize = kernelSize;
             this.times = times;
             calculated = false;
-            progress = 0;
 	
 	}
         
@@ -76,8 +76,8 @@ public class Marr_Hildreth implements FeatureDescriptor{
                 }
                 for (int i = 0; i < times; i++) {
                     image.convolve(kernel, kernelSize, kernelSize);
-                    progress = (int)Math.round(i*(100.0/(double)times));
-                    fireStateChanged();
+                    int progress = (int)Math.round(i*(100.0/(double)times));
+                    pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + times));
                 }
 	}
 
@@ -135,10 +135,9 @@ public class Marr_Hildreth implements FeatureDescriptor{
     @Override
     public void run(ImageProcessor ip) {
         image = (ColorProcessor) ip;
-        fireStateChanged();
-        this.process();
-        progress = 100;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
+        process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
         calculated = true;
     }
 
@@ -147,10 +146,6 @@ public class Marr_Hildreth implements FeatureDescriptor{
         return calculated;
     }
 
-    @Override
-    public int getProgress() {
-        return progress;
-    }
 
     @Override
     public void setArgs(double[] args) {
@@ -166,19 +161,9 @@ public class Marr_Hildreth implements FeatureDescriptor{
             throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
         }
     }
-    
-    @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 }

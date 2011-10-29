@@ -1,10 +1,12 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +46,7 @@ import java.util.List;
  */
 public class CannyEdgeDetector implements FeatureDescriptor {
 
-    private DescriptorChangeListener changeListener;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean calculated;
     private int progress;
     // statics
@@ -257,37 +259,27 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         width = sourceImage.getWidth();
         height = sourceImage.getHeight();
         picsize = width * height;
-        progress = 10;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(10, "properties initialized"));
         initArrays();
-        progress = 20;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(20, "arrays initialized"));
         readLuminance();
-        progress = 30;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(30, "luminance read"));
         if (contrastNormalized) {
             normalizeContrast();
         }
-        progress = 40;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(40, "contrast normalized"));
         computeGradients(gaussianKernelRadius, gaussianKernelWidth);
-        progress = 50;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(10, "gradients computed"));
         int low = Math.round(lowThreshold * MAGNITUDE_SCALE);
-        progress = 60;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(60, "low rounded"));
         int high = Math.round(highThreshold * MAGNITUDE_SCALE);
-        progress = 70;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(70, "high rounded"));
         performHysteresis(low, high);
-        progress = 80;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(80, "hysteresis performed"));
         thresholdEdges();
-        progress = 90;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(90, "edges tresholded"));
         writeEdges(data);
-        progress = 100;
-        fireStateChanged();
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "edges written"));
     }
 
     // private utility methods
@@ -641,8 +633,9 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     public void run(ImageProcessor ip) {
         ColorProcessor cp = (ColorProcessor) ip;
         setSourceImage(cp.getBufferedImage());
-        fireStateChanged();
-        this.process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
+        process();
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
         calculated = true;
 
     }
@@ -650,11 +643,6 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     @Override
     public boolean isCalculated() {
         return calculated;
-    }
-
-    @Override
-    public int getProgress() {
-        return progress;
     }
 
     @Override
@@ -671,17 +659,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     }
 
     @Override
-    public void addChangeListener(DescriptorChangeListener l) {
-        changeListener = l;
-        l.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
-    public void fireStateChanged() {
-        changeListener.valueChanged(new DescriptorChangeEvent(this));
-    }
-
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 }
