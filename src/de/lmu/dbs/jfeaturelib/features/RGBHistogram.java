@@ -17,7 +17,6 @@ import java.util.List;
 public class RGBHistogram implements FeatureDescriptor{
 
     private DescriptorChangeListener changeListener;
-    private long time;
     private boolean calculated;
     private int progress;    
     private int tonalValues;
@@ -96,12 +95,10 @@ public class RGBHistogram implements FeatureDescriptor{
      */    
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
         fireStateChanged();
         process();
         calculated = true;
-        time = (System.currentTimeMillis() - start);
     }
     
     private void process() {
@@ -122,12 +119,7 @@ public class RGBHistogram implements FeatureDescriptor{
             fireStateChanged();
         }
     }
-    
-    @Override
-     public long getTime(){
-         return time;
-     }
-     
+ 
     @Override
     public boolean isCalculated(){
         return calculated;

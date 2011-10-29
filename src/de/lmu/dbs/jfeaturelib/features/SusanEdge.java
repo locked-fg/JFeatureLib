@@ -18,7 +18,6 @@ import java.util.List;
 public class SusanEdge implements FeatureDescriptor{
 
     private DescriptorChangeListener changeListener;
-    private long time;
     private boolean calculated;
     private int progress;
     int WIDTH;
@@ -86,12 +85,10 @@ public class SusanEdge implements FeatureDescriptor{
      */    
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
         fireStateChanged();
         process();
         calculated = true;
-        time = (System.currentTimeMillis() - start);
     }
     
    /* 
@@ -180,11 +177,6 @@ public class SusanEdge implements FeatureDescriptor{
         features = (int[]) cp.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, WIDTH, HEIGHT, null);
         //TODO this is not very nice
     }
-    
-    @Override
-     public long getTime(){
-         return time;
-     }
 
     @Override
     public boolean isCalculated(){

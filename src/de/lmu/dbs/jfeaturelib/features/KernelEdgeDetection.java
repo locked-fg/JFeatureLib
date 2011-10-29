@@ -13,7 +13,6 @@ import java.util.List;
 public class KernelEdgeDetection implements FeatureDescriptor{
 
         private DescriptorChangeListener changeListener;
-        private long time;
         private boolean calculated;
         private int progress; 
         private ByteProcessor image;
@@ -154,7 +153,6 @@ public class KernelEdgeDetection implements FeatureDescriptor{
      */ 
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
             ip = ip.convertToByte(true);
         }
@@ -162,14 +160,8 @@ public class KernelEdgeDetection implements FeatureDescriptor{
         fireStateChanged();
         this.process();
         calculated = true;
-        time = (System.currentTimeMillis() - start);
     }
 
-    @Override
-    public long getTime(){
-         return time;
-    }
-    
     @Override
     public boolean isCalculated(){
         return calculated;

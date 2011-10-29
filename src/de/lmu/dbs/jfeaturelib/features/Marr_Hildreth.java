@@ -15,7 +15,6 @@ import java.util.List;
 public class Marr_Hildreth implements FeatureDescriptor{
 
         private DescriptorChangeListener changeListener;
-        private long time;
         private boolean calculated;
         private int progress; 
         private ColorProcessor image;
@@ -135,19 +134,12 @@ public class Marr_Hildreth implements FeatureDescriptor{
      */ 
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         image = (ColorProcessor) ip;
         fireStateChanged();
         this.process();
         progress = 100;
         fireStateChanged();
         calculated = true;
-        time = (System.currentTimeMillis() - start);
-    }
-
-    @Override
-    public long getTime(){
-         return time;
     }
 
     @Override

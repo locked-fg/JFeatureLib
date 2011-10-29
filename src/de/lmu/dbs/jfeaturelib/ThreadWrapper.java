@@ -46,23 +46,20 @@ public class ThreadWrapper extends SwingWorker<double[], Object> {
 
     @Override
     protected double[] doInBackground(){
-        //For evaluation
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ThreadWrapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        long start = System.currentTimeMillis();
         descriptor.addChangeListener(new ProgressListener());
         descriptor.run(new ColorProcessor(imp.getImage()));
-        time = descriptor.getTime();
-        // Fixme, there can be more than just asingle feature vector!
+        //FIXME there can be more than just asingle feature vector!
+        time = (System.currentTimeMillis() - start);
         return descriptor.getFeatures().get(0);
     }
     
+
     /**
      * Returns the time for opening and processing an image.
      * 
-     * @return 
+     * @return Time for execution in milliseconds
      */ 
      public long getTime(){
          return time;

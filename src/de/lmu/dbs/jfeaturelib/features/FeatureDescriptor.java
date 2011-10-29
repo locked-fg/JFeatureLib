@@ -39,14 +39,6 @@ public interface FeatureDescriptor extends Descriptor {
     String getDescription();
 
     /**
-     * Returns the time for opening and processing an image.
-     * 
-     * @return Time for execution in milliseconds
-     * @deprecated time measurements should be done by a delegate or wrapper class if needed. 10/27/2011
-     */
-    long getTime();
-
-    /**
      * Checks wether this instance was calculated
      * 
      * @return Boolean if instance was calculated

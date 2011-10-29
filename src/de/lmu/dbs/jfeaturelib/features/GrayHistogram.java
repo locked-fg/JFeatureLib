@@ -17,7 +17,6 @@ import java.util.List;
 public class GrayHistogram implements FeatureDescriptor{
 
     private DescriptorChangeListener changeListener;
-    private long time;
     private boolean calculated;
     private int progress; 
     private int tonalValues;
@@ -83,7 +82,6 @@ public class GrayHistogram implements FeatureDescriptor{
      */ 
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
             ip = ip.convertToByte(true);
         }
@@ -91,7 +89,6 @@ public class GrayHistogram implements FeatureDescriptor{
         fireStateChanged();
         process();
         calculated = true;
-        time = (System.currentTimeMillis() - start);
     }
     
     /**
@@ -108,11 +105,6 @@ public class GrayHistogram implements FeatureDescriptor{
         progress = 100;
         fireStateChanged();
     }
-    
-    @Override
-    public long getTime(){
-         return time;
-     }
     
     @Override
     public boolean isCalculated(){

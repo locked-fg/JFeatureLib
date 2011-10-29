@@ -45,7 +45,6 @@ import java.util.List;
 public class CannyEdgeDetector implements FeatureDescriptor {
 
     private DescriptorChangeListener changeListener;
-    private long time;
     private boolean calculated;
     private int progress;
     // statics
@@ -640,19 +639,12 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      */
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         ColorProcessor cp = (ColorProcessor) ip;
         setSourceImage(cp.getBufferedImage());
         fireStateChanged();
         this.process();
         calculated = true;
-        time = (System.currentTimeMillis() - start);
 
-    }
-
-    @Override
-    public long getTime() {
-        return time;
     }
 
     @Override

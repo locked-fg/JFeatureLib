@@ -15,7 +15,6 @@ import java.util.List;
 public class SusanCorner implements FeatureDescriptor{
 
     private DescriptorChangeListener changeListener;
-    private long time;
     private boolean calculated; 
     private int progress;
     double[] features;
@@ -67,22 +66,15 @@ public class SusanCorner implements FeatureDescriptor{
      */    
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         this.image = (ColorProcessor)ip;
         fireStateChanged();
         process();
         calculated = true;
-        time = (System.currentTimeMillis() - start);
     }
     
     private void process() {
         //TODO implement ;)
     }
-    
-    @Override
-     public long getTime(){
-         return time;
-     }
 
     @Override
     public boolean isCalculated(){

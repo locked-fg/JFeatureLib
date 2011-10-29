@@ -48,7 +48,6 @@ public class Hough_Circles implements FeatureDescriptor {
     
     private DescriptorChangeListener changeListener;
     private int progress = 0;
-    private long time;
     private boolean calculated; 
     
     public int radiusMin;  // Find circles with radius grater or equal radiusMin
@@ -83,7 +82,6 @@ public class Hough_Circles implements FeatureDescriptor {
     
     @Override
     public void run(ImageProcessor ip) {
-        long start = System.currentTimeMillis();
         //imageValues = (byte[])ip.getPixels();
         
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
@@ -102,8 +100,6 @@ public class Hough_Circles implements FeatureDescriptor {
         process();
         progress = 100;
         fireStateChanged();
-        
-        time = (System.currentTimeMillis() - start);
     }
 
         private void process() {
@@ -511,11 +507,6 @@ public class Hough_Circles implements FeatureDescriptor {
     @Override
     public String getDescription() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public long getTime(){
-         return time;
     }
 
     @Override
