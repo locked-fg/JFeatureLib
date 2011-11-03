@@ -34,14 +34,6 @@ public interface FeatureDescriptor extends Descriptor {
      * @return semantic description of getFeatures or null.
      */
     String getDescription();
-
-    /**
-     * Each descriptor must be able to take an empty constructor and pull args from a double array
-     * 
-     * @param args double array with arguments
-     * @deprecated usage of reflection and BeanInfo Spec or Builder pattern is more appropriate in this case. 10/27/2011
-     */
-    void setArgs(double[] args);
     
     /**
      * Adds a change listener to this descriptor. 

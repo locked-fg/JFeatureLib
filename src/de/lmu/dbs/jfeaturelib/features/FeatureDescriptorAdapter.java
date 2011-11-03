@@ -20,12 +20,6 @@ public abstract class FeatureDescriptorAdapter implements FeatureDescriptor {
     }
 
     @Override
-    @Deprecated
-    public final void setArgs(double[] args) {
-        throw new UnsupportedOperationException("Use of deprecated API");
-    }
-
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         log.fine("Property Change support not implemented in this Descriptor");
     }

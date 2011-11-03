@@ -20,7 +20,7 @@ public class RGBHistogram implements FeatureDescriptor{
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private int tonalValues;
-    private final int CHANNELS;
+    private int channels;
     private int[] features;
     private ColorProcessor image;
     
@@ -30,8 +30,8 @@ public class RGBHistogram implements FeatureDescriptor{
     public RGBHistogram(){
         //assuming 8bit RGB image
         tonalValues = 256;
-        CHANNELS = 3;
-        features = new int[CHANNELS*tonalValues];
+        channels = 3;
+        features = new int[channels*tonalValues];
     }
     
     /**
@@ -41,8 +41,42 @@ public class RGBHistogram implements FeatureDescriptor{
     public RGBHistogram(int values){
         //assuming 8bit RGB image
         tonalValues = values;
-        CHANNELS = 3;
-        features = new int[CHANNELS*tonalValues];
+        channels = 3;
+        features = new int[channels*tonalValues];
+    }
+    
+    /**
+     * Setter for tonal Values (defaults to 256)
+     * @param tonalValues Number of tonal values, i.e. 256 for 8bit jpeg
+     */
+    public void setTonalValues(int tonalValues){
+        this.tonalValues = tonalValues;
+        features = new int[channels*tonalValues];
+    }
+    
+   /**
+     * Getter for tonal Values
+     * @return tonalValues Number of tonal values, i.e. 256 for 8bit jpeg
+     */    
+    public int getTonalValues(){
+        return tonalValues;
+    }
+    
+    /**
+     * Setter for number of channels
+     * @param channels number of channels, i.e. three for RGB
+     */
+    public void setChannels(int channels){
+        this.channels = channels;
+        features = new int[channels*tonalValues];
+    }
+    
+   /**
+     * Getter for number of channels
+     * @return channels number of channels, i.e. three for RGB
+     */    
+    public int getChannels(){
+        return channels;
     }
     
     /**
@@ -115,20 +149,6 @@ public class RGBHistogram implements FeatureDescriptor{
             int progress = (int)Math.round(i*(100.0/features.length));
             pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + features.length));
         }
-    }
-
-    @Override
-    public void setArgs(double[] args) {
-        if(args == null){
-            this.tonalValues = 256;
-        }
-        else if(args.length == 1){
-            this.tonalValues = Integer.valueOf((int)args[0]);
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
-        
     }
     
     @Override

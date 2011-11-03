@@ -484,7 +484,7 @@ public class Hough_Circles implements FeatureDescriptor {
     @Override
     public List<double[]> getFeatures() {
         if (imageValues != null) {
-            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            ArrayList<double[]> result = new ArrayList<>(1);
             result.add(Arrays2.convertToDouble(imageValues));
             return result;
         } else {
@@ -505,17 +505,6 @@ public class Hough_Circles implements FeatureDescriptor {
     @Override
     public String getDescription() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setArgs(double[] args) {
-        if(args == null){
-            
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
-        
     }
 
     @Override

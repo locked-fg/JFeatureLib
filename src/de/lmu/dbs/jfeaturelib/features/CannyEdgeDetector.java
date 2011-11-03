@@ -33,9 +33,9 @@ import java.util.List;
  * detector.setLowThreshold(0.5f);
  * detector.setHighThreshold(1f);
  * //apply it to an image
- * detector.setSourceImage(frame);
+ * detector.sSourceImage(frame);
  * detector.process();
- * BufferedImage edges = detector.getEdgesImage();
+ * BufferedImage edges = detector.gEdgesImage();
  * </code></pre>
  * 
  * <p>For a more complete understanding of this edge detector's parameters
@@ -96,7 +96,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * 
      * @return the source image, or null
      */
-    public BufferedImage getSourceImage() {
+    public BufferedImage gSourceImage() {
         return sourceImage;
     }
 
@@ -107,7 +107,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      *  
      * @param image a source of luminance data
      */
-    public void setSourceImage(BufferedImage image) {
+    public void sSourceImage(BufferedImage image) {
         sourceImage = image;
     }
 
@@ -120,7 +120,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * @return an image containing the detected edges, or null if the process
      * method has not yet been called.
      */
-    public BufferedImage getEdgesImage() {
+    public BufferedImage gEdgesImage() {
         return edgesImage;
     }
 
@@ -131,7 +131,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * 
      * @param edgesImage expected (though not required) to be null
      */
-    public void setEdgesImage(BufferedImage edgesImage) {
+    public void sEdgesImage(BufferedImage edgesImage) {
         this.edgesImage = edgesImage;
     }
 
@@ -246,7 +246,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * @param contrastNormalized true if the contrast should be normalized,
      * false otherwise
      */
-    public void setContrastNormalized(boolean contrastNormalized) {
+    public void sContrastNormalized(boolean contrastNormalized) {
         this.contrastNormalized = contrastNormalized;
     }
 
@@ -586,7 +586,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     @Override
     public List<double[]> getFeatures() {
         if (data != null) {
-            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            ArrayList<double[]> result = new ArrayList<>(1);
             result.add(Arrays2.convertToDouble(data));
             return result;
         } else {
@@ -628,24 +628,10 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     @Override
     public void run(ImageProcessor ip) {
         ColorProcessor cp = (ColorProcessor) ip;
-        setSourceImage(cp.getBufferedImage());
+        sSourceImage(cp.getBufferedImage());
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-    }
-
-
-    @Override
-    public void setArgs(double[] args) {
-        if (args == null) {
-        } else if (args.length == 4) {
-            this.lowThreshold = (float) args[0];
-            this.highThreshold = (float) args[1];
-            this.gaussianKernelRadius = (float) args[2];
-            this.gaussianKernelWidth = (int) args[3];
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
     }
 
     @Override

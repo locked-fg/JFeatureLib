@@ -12,6 +12,10 @@ import java.util.EnumSet;
 import java.util.List;
 
 
+/**
+ * 
+ * @author Administrator
+ */
 public class KernelEdgeDetection implements FeatureDescriptor{
 
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -27,9 +31,7 @@ public class KernelEdgeDetection implements FeatureDescriptor{
         // constructors
 
 	/**
-	 * Constructs a new detector.
-         * @param kernel The kernel for x-convolution
-         * @param kernelWidth Dimension of the kernel matrix
+	 * Constructs a new detector
 	 */
 	
         public KernelEdgeDetection(){
@@ -39,29 +41,61 @@ public class KernelEdgeDetection implements FeatureDescriptor{
             
         }
         
+        /**
+         * Constructs a new detector with given double[] kernel (not advised)
+         * @param kernel double[] with kernel
+         */
         public KernelEdgeDetection(double[] kernel){
             this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = Arrays2.convertToFloat(kernel);
         }
         
-	public KernelEdgeDetection(float[] kernel) {
+        /**
+         * Constructs a new detector with given float[] kernel
+         * @param kernel float[] with kernel
+         */
+        public KernelEdgeDetection(float[] kernel) {
             this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = kernel;
             this.kernelY = new float[kernelWidth*kernelWidth];
 	}
-        
+        /**
+         * Return the convolution kernel before transformation
+         * @return float[] with kernel
+         */
+        public float[] getKernel(){
+            return kernelX;
+        }
+                    
+        /**
+         * Sets the convolution kernel
+         * @param kernel float[] with kernel
+         */
         public void setKernel(float[] kernel){
             this.kernelX = kernel;
             this.kernelY = new float[kernelWidth*kernelWidth];
         }
                 
+        /**
+         * Returns width of the kernel
+         * @return int with width of kernel
+         */
+        public int getKernelDimension(){
+            return kernelWidth;
+        }
+        
+        /**
+         * Setter for width of the kernel
+         * @param kernelWidth int with width
+         */
         public void setKernelDimension(int kernelWidth){
              this.kernelWidth = kernelWidth;
         }
         
-       /*
+       /**
         * Proceses the image applying the kernel in x- and y-direction
         */
+
         public void process() {
             result = new int[imageWidth*imageHeight];
             imageWidth = image.getWidth();
@@ -98,14 +132,14 @@ public class KernelEdgeDetection implements FeatureDescriptor{
 
 	}
 
-    /**
+   /**
     * Returns the image edges as INT_ARGB array.
     * This can be used to create a buffered image, if the dimensions are known.
     */
     @Override
     public List<double[]> getFeatures() {
         if (result != null) {
-            ArrayList<double[]> thisResult = new ArrayList<double[]>(1);
+            ArrayList<double[]> thisResult = new ArrayList<>(1);
             thisResult.add(Arrays2.convertToDouble(result));
             return thisResult;
         } else {
@@ -154,20 +188,6 @@ public class KernelEdgeDetection implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-    }
-
-    @Override
-    public void setArgs(double[] args) {
-        if(args == null){
-            
-        }
-        else if(args.length % 2 == 0 || args.length % 3 == 0 || args.length % 4 == 0){
-            this.kernelWidth = Math.round((float)Math.sqrt(args.length+1.0f));
-            this.kernelX = Arrays2.convertToFloat(args);
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
     }
  
     @Override

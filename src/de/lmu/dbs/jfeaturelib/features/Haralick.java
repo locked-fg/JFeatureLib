@@ -73,6 +73,22 @@ public class Haralick extends FeatureDescriptorAdapter {
     }
 
     /**
+     * Getter for haralick distributions
+     * @return haralick distributions
+     */
+    public int getHaralickDist(){
+        return haralickDist;
+    }
+    
+    /**
+     * Setter for haralick distributions
+     * @param haralickDist int for haralick distributions
+     */
+    public void setHaralickDist(int haralickDist){
+        this.haralickDist = haralickDist;
+    }
+    
+    /**
      * Defines the capability of the algorithm.
      * 
      * @see PlugInFilter
@@ -105,7 +121,7 @@ public class Haralick extends FeatureDescriptorAdapter {
      */
     @Override
     public List<double[]> getFeatures() {
-        ArrayList<double[]> result = new ArrayList<double[]>(1);
+        ArrayList<double[]> result = new ArrayList<>(1);
         if (features != null) {
             result.add(features);
         }

@@ -27,19 +27,76 @@ public class Marr_Hildreth implements FeatureDescriptor{
         /** How many times to apply laplacian gaussian operation */
         private int times;
             
+        /**
+         * Creates Marr Hildreth edge detection with default parameters
+         */
         public Marr_Hildreth() {
             this.deviation = 0.6;
             this.kernelSize = 7;
             this.times = 1;
         }
         
-	public Marr_Hildreth(double deviation, int kernelSize, int times) {
+        /**
+         * Creates Marr Hildreth edge detection
+         * @param deviation
+         * @param kernelSize
+         * @param times
+         */
+        public Marr_Hildreth(double deviation, int kernelSize, int times) {
             this.deviation = deviation;
             this.kernelSize = kernelSize;
             this.times = times;
 	
 	}
         
+        /**
+         * Return deviation
+         * @return
+         */
+        public double getDeviation(){
+            return deviation;
+        }
+        
+        /**
+         * Sets deviation
+         * @param deviation
+         */
+        public void setDeviation(double deviation){
+            this.deviation = deviation;
+        }
+        
+        /**
+         * Returns size of kernel
+         * @return
+         */
+        public int getKernelSize(){
+            return kernelSize;
+        }
+        
+        /**
+         * Sets size of kernel
+         * @param kernelSize
+         */
+        public void setKernelSize(int kernelSize){
+            this.kernelSize = kernelSize;
+        }
+        
+        /**
+         * Returns number of iterations
+         * @return
+         */
+        public int getIterations(){
+            return times;
+        }  
+        
+        /**
+         * Sets number of iterations
+         * @param times
+         */
+        public void setIterations(int times){
+            this.times = times;
+        }
+                
            /*
             * @author Giovane.Kuhn - brain@netuno.com.br
             * http://www.java2s.com/Open-Source/Java-Document/Graphic-Library/apollo/org/apollo/effect/LaplacianGaussianEffect.java.htm
@@ -66,7 +123,7 @@ public class Marr_Hildreth implements FeatureDescriptor{
                 return data;
             }
         
-	public void process() {
+            public void process() {
             // laplacian gaussian operation
                 if (kernel == null) {
                     kernel = createLoGOp();
@@ -135,21 +192,6 @@ public class Marr_Hildreth implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-    }
-
-    @Override
-    public void setArgs(double[] args) {
-        if(args == null){
-            
-        }
-        else if(args.length == 3){
-            this.deviation = args[0];
-            this.kernelSize = Integer.valueOf((int)args[1]);
-            this.times = Integer.valueOf((int)args[2]);
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
     }
 
     @Override

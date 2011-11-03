@@ -31,7 +31,7 @@ public class SusanCorner implements FeatureDescriptor{
     @Override
     public List<double[]> getFeatures() {
         if(features != null){
-            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            ArrayList<double[]> result = new ArrayList<>(1);
             result.add(features);
             return result;
         }
@@ -74,16 +74,6 @@ public class SusanCorner implements FeatureDescriptor{
         //TODO implement ;)
     }
 
-     @Override
-    public void setArgs(double[] args) {
-        if(args == null){
-            
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
-    }
- 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);

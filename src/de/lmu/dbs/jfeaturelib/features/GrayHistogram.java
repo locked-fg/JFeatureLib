@@ -119,22 +119,6 @@ public class GrayHistogram implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
 
-
-    
-    @Override
-    public void setArgs(double[] args) {
-        if(args == null){
-            this.tonalValues = 256;
-        }
-        else if(args.length == 1){
-            this.tonalValues = Integer.valueOf((int)args[0]);
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
-        
-    }
-
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);

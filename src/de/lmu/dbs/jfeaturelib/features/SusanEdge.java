@@ -22,32 +22,43 @@ public class SusanEdge implements FeatureDescriptor{
     int WIDTH;
     int HEIGHT;
     int radius;
-    int treshold;
+    int threshold;
     int[] features;
     int[][] picture;
     private ColorProcessor image;
     
-    /**
-     * 
-     */    
+  
     public SusanEdge(){
         this.radius = 2;
-        this.treshold = 15;
+        this.threshold = 15;
     }
     
-     public SusanEdge(int radius, int treshold){
+     public SusanEdge(int radius, int threshold){
         this.radius = radius;
-        this.treshold = treshold;
+        this.threshold = threshold;
     
      }
      
-    /**
-     * 
-     */      
+     public int getRadius(){
+         return radius;
+     }
+     
+     public void setRadius(int radius){
+         this.radius = radius;
+     }
+     
+     public int getThreshold(){
+         return threshold;
+     }
+     
+     public void setThreshold(int threshold){
+         this.threshold = threshold;
+     }
+     
     @Override
     public List<double[]> getFeatures() {
         if(features != null){
-            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            ArrayList<double[]> result = new ArrayList<>(1);
             result.add(Arrays2.convertToDouble(features));
             return result;
         }
@@ -72,8 +83,7 @@ public class SusanEdge implements FeatureDescriptor{
         );
         //set.addAll(DOES_ALL);
         return set;
-    }
-    
+    }    
  
     /**
      * 
@@ -122,7 +132,7 @@ public class SusanEdge implements FeatureDescriptor{
                     boolean edge = true;
                     for(int maskX = 0; maskX <= radius*2; maskX++){
                         for(int maskY = 0; maskY <= radius; maskY++){
-                            if(edge && Math.abs(mask[maskX][maskY]-mask[radius][radius]) < treshold){
+                            if(edge && Math.abs(mask[maskX][maskY]-mask[radius][radius]) < threshold){
                                 edge = true;
                             }
                             else{
@@ -143,7 +153,7 @@ public class SusanEdge implements FeatureDescriptor{
                     edge = true;
                     for(int maskX = 0; maskX <= radius; maskX++){
                         for(int maskY = 0; maskY <= radius*2; maskY++){
-                            if(edge && Math.abs(mask[maskX][maskY]-mask[radius][radius]) < treshold){
+                            if(edge && Math.abs(mask[maskX][maskY]-mask[radius][radius]) < threshold){
                                 edge = true;
                             }
                             else{
@@ -172,20 +182,6 @@ public class SusanEdge implements FeatureDescriptor{
         ColorProcessor cp = new ColorProcessor(result);
         features = (int[]) cp.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, WIDTH, HEIGHT, null);
         //TODO this is not very nice
-    }
-
-    @Override
-    public void setArgs(double[] args) {
-        if(args == null){
-            
-        }
-        else if(args.length == 2){
-            this.radius = Integer.valueOf((int)args[0]);
-            this.treshold = Integer.valueOf((int)args[1]);
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Arguments array is not formatted correctly");
-        }
     }
 
     @Override
