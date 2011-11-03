@@ -13,28 +13,27 @@ import javax.swing.SwingWorker;
  */
 public class ThreadWrapper extends SwingWorker<double[], Object> implements PropertyChangeListener{
     private FeatureDescriptor descriptor;
-    private String descriptorName;
+    private Class descriptorClass;
     private ImagePlus imp;
     private double[] args;
     private int number;
     private long time;
-    private final String featurePackage = "de.lmu.dbs.jfeaturelib.features.";
         
-    public ThreadWrapper(String descriptorName, ImagePlus imp, double[] args){
-        this(descriptorName, imp, args, -1);
+    public ThreadWrapper(Class descriptorClass, ImagePlus imp, double[] args){
+        this(descriptorClass, imp, args, -1);
     }
     
-        public ThreadWrapper(String descriptorName, ImagePlus imp, double[] args, int number){
-        this.descriptorName = descriptorName;
+        public ThreadWrapper(Class descriptorClass, ImagePlus imp, double[] args, int number){
+        this.descriptorClass = descriptorClass;
         this.imp = imp;
         this.args = args;
         this.number = number;
         
         try{
-            descriptor = (FeatureDescriptor) Class.forName(featurePackage+descriptorName).newInstance();
+            descriptor = (FeatureDescriptor) descriptorClass.newInstance();
             //descriptor.setArgs(args);
         }
-        catch(Exception e){
+        catch(InstantiationException | IllegalAccessException e){
             e.printStackTrace();
         }
 
@@ -62,7 +61,7 @@ public class ThreadWrapper extends SwingWorker<double[], Object> implements Prop
      }
 
      public String getDescriptorName(){
-         return descriptorName;
+         return descriptorClass.getName();
      }
      
      public int getNumber(){

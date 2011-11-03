@@ -29,7 +29,6 @@ public class GrayHistogram implements FeatureDescriptor{
     public GrayHistogram(){
         //assuming 8bit image
         tonalValues = 256;
-        features = new int[tonalValues];
         pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "getting started"));
     }
     
@@ -40,16 +39,31 @@ public class GrayHistogram implements FeatureDescriptor{
     
     public GrayHistogram(int values){
         tonalValues = values;
-        features = new int[tonalValues];
     }
-        
+    
+    /**
+     * Setter for tonal Values (defaults to 256)
+     * @param tonalValues Number of tonal values, i.e. 256 for 8bit jpeg
+     */
+    public void setTonalValues(int tonalValues){
+        this.tonalValues = tonalValues;
+    }
+    
+   /**
+     * Getter for tonal Values
+     * @return tonalValues Number of tonal values, i.e. 256 for 8bit jpeg
+     */    
+    public int getTonalValues(){
+        return tonalValues;
+    }
+    
     /**
     * Returns the histogram as int array.
     */    
     @Override
     public List<double[]> getFeatures() {
         if (features != null) {
-            ArrayList<double[]> result = new ArrayList<double[]>(1);
+            ArrayList<double[]> result = new ArrayList<>(1);
             result.add(Arrays2.convertToDouble(features));
             return result;
         } else {
@@ -84,6 +98,7 @@ public class GrayHistogram implements FeatureDescriptor{
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
             ip = ip.convertToByte(true);
         }
+        features = new int[tonalValues];
         this.image = (ByteProcessor) ip;
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
@@ -104,6 +119,8 @@ public class GrayHistogram implements FeatureDescriptor{
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
 
+
+    
     @Override
     public void setArgs(double[] args) {
         if(args == null){
