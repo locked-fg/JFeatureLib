@@ -84,7 +84,7 @@ public class Interpolated1DHistogram {
      * @param value 
      */
     public void add(double pos, double value) {
-        if (pos < min || pos >= max) {
+        if (pos < min || pos >= max || Double.isNaN(pos)) {
             throw new IllegalArgumentException("value must be in [" + min + ", " + max + "[ but was: " + pos);
         }
 
