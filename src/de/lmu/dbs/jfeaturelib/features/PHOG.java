@@ -17,6 +17,9 @@ import java.util.List;
  * first introduced in "Representing shape with a spatial pyramid kernel" (2007).
  * By Anna Bosch, Andrew Zisserman, Xavier Munoz
  * 
+ * See also http://www.robots.ox.ac.uk/~vgg/publications/2007/Bosch07/ and 
+ * http://dl.acm.org/citation.cfm?id=1282340 for further information.
+ * 
  * @author graf
  * @since 11/4/2011
  **/
