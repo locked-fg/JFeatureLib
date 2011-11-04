@@ -34,6 +34,7 @@ public class ThreadWrapper extends SwingWorker<double[], Object> implements Prop
             //descriptor.setArgs(args);
         }
         catch(InstantiationException | IllegalAccessException e){
+            //FIXME Fix this or little kittens will die!
             e.printStackTrace();
         }
 
@@ -61,11 +62,19 @@ public class ThreadWrapper extends SwingWorker<double[], Object> implements Prop
      }
 
      public String getDescriptorName(){
-         return descriptorClass.getName();
+         return descriptorClass.getSimpleName();
+     }
+     
+     public Class getDescriptorClass(){
+         return descriptorClass;
      }
      
      public int getNumber(){
          return number;
+     }
+     
+     public FeatureDescriptor getInstance(){
+         return descriptor;
      }
 
     @Override
