@@ -12,6 +12,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
+ * Haralick texture features
+ * 
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
  * @article{haralick1973textural,
