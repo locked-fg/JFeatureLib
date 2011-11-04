@@ -3,7 +3,10 @@ package de.lmu.dbs.jfeaturelib.utils;
 import ij.process.ImageProcessor;
 
 /**
- * Defines a class from which image gradients can be obtained
+ * Defines a class from which image gradients can be obtained.
+ * 
+ * Implementations could be simply sobel-filtered images or canny edge processed
+ * images
  * 
  * @author graf
  */
