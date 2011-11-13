@@ -13,8 +13,8 @@ import java.util.List;
 
 
 /**
- * 
- * @author Administrator
+ * Performs convolution with givne Kernel in X- and Y-direction on the image
+ * @author Benedikt
  */
 public class KernelEdgeDetection implements FeatureDescriptor{
 
@@ -25,17 +25,14 @@ public class KernelEdgeDetection implements FeatureDescriptor{
         private float[] kernelX;
         private float[] kernelY;
         private int kernelWidth;
-        private double direction;
         private int[] result;
 	
-        // constructors
-
 	/**
-	 * Constructs a new detector
+	 * Constructs a new detector with standart Sobel kernel
 	 */
 	
         public KernelEdgeDetection(){
-            float[] kernel = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+            float[] kernel = {1, 0, -1, 2, 0, -2, 1, 0, -1};
             this.kernelWidth = Math.round((float)Math.sqrt(kernel.length+1.0f));
             this.kernelX = kernel;
             

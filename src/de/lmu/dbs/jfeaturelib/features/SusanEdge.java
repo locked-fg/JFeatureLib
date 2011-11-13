@@ -13,7 +13,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * 
+ * FIXME docu
  * @author Benedikt
  */
 public class SusanEdge implements FeatureDescriptor{
@@ -28,29 +28,53 @@ public class SusanEdge implements FeatureDescriptor{
     private ColorProcessor image;
     
   
+    /**
+     * Standart constructor with radius 2 and threshold 15
+     */
     public SusanEdge(){
         this.radius = 2;
         this.threshold = 15;
     }
     
-     public SusanEdge(int radius, int threshold){
+    /**
+     * Custom constructor
+     * @param radius Radius in which the image is looked at
+     * @param threshold Threshold for difference in luminosity
+     */
+    public SusanEdge(int radius, int threshold){
         this.radius = radius;
         this.threshold = threshold;
     
      }
      
+     /**
+      * 
+      * @return Radius in which the image is looked at
+      */
      public int getRadius(){
          return radius;
      }
      
+     /**
+      * 
+      * @param radius Radius in which the image is looked at
+      */
      public void setRadius(int radius){
          this.radius = radius;
      }
      
+     /**
+      * 
+      * @return Threshold for difference in luminosity
+      */
      public int getThreshold(){
          return threshold;
      }
      
+     /**
+      * 
+      * @param threshold Threshold for difference in luminosity
+      */
      public void setThreshold(int threshold){
          this.threshold = threshold;
      }

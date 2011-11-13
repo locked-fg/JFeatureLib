@@ -29,7 +29,6 @@ public class GrayHistogram implements FeatureDescriptor{
     public GrayHistogram(){
         //assuming 8bit image
         tonalValues = 256;
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "getting started"));
     }
     
     /**

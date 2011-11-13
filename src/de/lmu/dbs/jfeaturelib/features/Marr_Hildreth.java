@@ -145,7 +145,7 @@ public class Marr_Hildreth implements FeatureDescriptor{
     public List<double[]> getFeatures() {
         if(image != null){
             int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
-            ArrayList<double[]> list = new ArrayList<double[]>(1);
+            ArrayList<double[]> list = new ArrayList<>(1);
             list.add(Arrays2.convertToDouble(data));
             return list;
         }

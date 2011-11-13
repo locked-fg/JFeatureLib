@@ -85,7 +85,7 @@ public class RGBHistogram implements FeatureDescriptor{
     @Override
     public List<double[]> getFeatures() {
         if (features != null) {
-            List<double[]> result = new ArrayList<double[]>(1);
+            List<double[]> result = new ArrayList<>(1);
             result.add(Arrays2.convertToDouble(features));
             return result;
         } else {

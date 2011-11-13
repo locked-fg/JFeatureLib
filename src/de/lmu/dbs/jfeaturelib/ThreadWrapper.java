@@ -5,50 +5,66 @@ import ij.ImagePlus;
 import ij.process.ColorProcessor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 import javax.swing.SwingWorker;
 
 /**
- * FIXME add Documentation
+ * Threadwrapper extends Swingworker and thus is used to instantiate a feature descriptor and calculate its results for a given image.
+ * There is no limit on how many Threadwrappers may work at a time, and using it will prevent the GUI from freezing.
+ * A PropertyChangeListener can be used to track the status of the computation, the values range from 0 to 100.
+ * 
  * @author Benedikt
  */
-public class ThreadWrapper extends SwingWorker<double[], Object> implements PropertyChangeListener{
+public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implements PropertyChangeListener{
     private FeatureDescriptor descriptor;
     private Class descriptorClass;
     private ImagePlus imp;
-    private double[] args;
     private int number;
     private long time;
         
-    public ThreadWrapper(Class descriptorClass, ImagePlus imp, double[] args){
-        this(descriptorClass, imp, args, -1);
+    /**
+     * Constructs a new ThreadWrapper
+     * @param descriptorClass Class of the descriptor to be applied
+     * @param imp Image on which the descriptor should work
+     */
+    public ThreadWrapper(Class descriptorClass, ImagePlus imp){
+        this(descriptorClass, imp, -1);
+        instantiate();
     }
     
-        public ThreadWrapper(Class descriptorClass, ImagePlus imp, double[] args, int number){
+    /**
+     * Constructs a new ThreadWrapper with explicit ID
+     * @param descriptorClass Class of the descriptor to be applied
+     * @param imp Image on which the descriptor should work
+     * @param number Explicit ID for identifying parallel ThreadWrappers
+     */
+    public ThreadWrapper(Class descriptorClass, ImagePlus imp, int number){
         this.descriptorClass = descriptorClass;
         this.imp = imp;
-        this.args = args;
         this.number = number;
-        
+        instantiate();
+    }
+    
+    private void instantiate(){
         try{
             descriptor = (FeatureDescriptor) descriptorClass.newInstance();
-            //descriptor.setArgs(args);
         }
         catch(InstantiationException | IllegalAccessException e){
             //FIXME Fix this or little kittens will die!
+            System.out.println("Error during instantiation");
             e.printStackTrace();
         }
-
+        
     }
 
     @Override
-    protected double[] doInBackground(){
-
+    protected List<double[]> doInBackground(){
         long start = System.currentTimeMillis();
         descriptor.addPropertyChangeListener(this);
         descriptor.run(new ColorProcessor(imp.getImage()));
         //FIXME there can be more than just asingle feature vector!
         time = (System.currentTimeMillis() - start);
-        return descriptor.getFeatures().get(0);
+        return descriptor.getFeatures();
     }
     
 
@@ -61,18 +77,34 @@ public class ThreadWrapper extends SwingWorker<double[], Object> implements Prop
          return time;
      }
 
+     /**
+      * 
+      * @return Name of descriptor contained in this ThreadWrapper
+      */
      public String getDescriptorName(){
          return descriptorClass.getSimpleName();
      }
      
+     /**
+      * 
+      * @return Class of descriptor contained in this ThreadWrapper
+      */
      public Class getDescriptorClass(){
          return descriptorClass;
      }
      
+     /**
+      * 
+      * @return Number of this ThreadWrapper, used for parallel computation
+      */
      public int getNumber(){
          return number;
      }
      
+     /**
+      * 
+      * @return The actual Descriptor contained in this ThreadWrapper
+      */
      public FeatureDescriptor getInstance(){
          return descriptor;
      }

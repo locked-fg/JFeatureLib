@@ -1,5 +1,11 @@
 package de.lmu.dbs.jfeaturelib;
 
+import de.lmu.dbs.jfeaturelib.features.surf.InterestPoint;
+import de.lmu.dbs.jfeaturelib.features.surf.Matcher;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author Benedikt
@@ -134,6 +140,31 @@ public class FeatureComparator {
         //Throw some exception
         }        
         
+        return similarity;
+    }
+    
+    public double compareSurf(List<double[]> compIpts, List<double[]> resultIpts){
+        similarity = 0;
+        
+        List<InterestPoint> ipts1 = new ArrayList<>();
+        List<InterestPoint> ipts2 = new ArrayList<>();
+        for(int i = 0; i<compIpts.size(); i++){
+            ipts1.add(de.lmu.dbs.jfeaturelib.features.SURF.doubleArrayToInterestPoint(compIpts.get(i)));
+        }
+        for(int i = 0; i<resultIpts.size(); i++){
+            ipts2.add(de.lmu.dbs.jfeaturelib.features.SURF.doubleArrayToInterestPoint(resultIpts.get(i)));
+        }
+             
+        Map<InterestPoint, InterestPoint> matchedPoints = Matcher.findMathes(ipts1, ipts2);
+        
+        if(matchedPoints.isEmpty()){
+            return 0.0;
+        }
+        else{
+            //only comparing how many points from the orignal image were found
+            similarity = 100.0*(double)matchedPoints.size()/(double)ipts1.size();
+        }
+                
         return similarity;
     }
 
