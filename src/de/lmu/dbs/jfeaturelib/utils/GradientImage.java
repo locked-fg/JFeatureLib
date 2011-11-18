@@ -12,7 +12,7 @@ import ij.process.FloatProcessor;
  * 
  * @author graf
  */
-public class GradientImage implements GradientSource {
+public class GradientImage {
 
     /**
      * The kernel mask used for derivation in x-direction
