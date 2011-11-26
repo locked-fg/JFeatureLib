@@ -246,16 +246,6 @@ public class SURF implements FeatureDescriptor{
     }
     
     @Override
-    public List<double[]> getFeatures() {
-        
-        results = new ArrayList<>();
-        for(int i=0; i < ipts.size(); i++){
-            results.add(interestPoinToDoubleArray(ipts.get(i)));
-        }
-        return results;
-    }
-    
-    @Override
     public void run(ImageProcessor ip) {
         this.image = ip;
         
@@ -268,6 +258,16 @@ public class SURF implements FeatureDescriptor{
 
     private void process() {
         ipts = IJFacade.detectAndDescribeInterestPoints(intImg, params);
+    }
+        
+    @Override
+    public List<double[]> getFeatures() {
+        
+        results = new ArrayList<>();
+        for(int i=0; i < ipts.size(); i++){
+            results.add(interestPoinToDoubleArray(ipts.get(i)));
+        }
+        return results;
     }
     
     /**

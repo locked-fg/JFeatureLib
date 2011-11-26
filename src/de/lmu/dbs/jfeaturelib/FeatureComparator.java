@@ -5,6 +5,7 @@ import de.lmu.dbs.jfeaturelib.features.surf.Matcher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
 /**
  *
@@ -40,7 +41,7 @@ public class FeatureComparator {
         
         normalizedCompResult = compResult;
         normalizedResult = results;   
-        similarity = 0;
+        similarity = 0.0;
         
         if (eval == HIST_SAME){
         // 100% fit
@@ -144,7 +145,7 @@ public class FeatureComparator {
     }
     
     public double compareSurf(List<double[]> compIpts, List<double[]> resultIpts){
-        similarity = 0;
+        similarity = 0.0;
         
         List<InterestPoint> ipts1 = new ArrayList<>();
         List<InterestPoint> ipts2 = new ArrayList<>();
@@ -167,5 +168,74 @@ public class FeatureComparator {
                 
         return similarity;
     }
+    
+    
+    
+    //@FIXME Lire comparation not working as intended, max. distance is just guessed
+    //lineare similarity/distance is used, maybe include exponential options?
+    public double compareLireCeddFCTH(double[] compResult, double[] results){
+        similarity = 0.0;
+        
+        double[] data2 = compResult;
+        double[] data1 = results;        
+        double distance = 0.0;
+        
+        // Taken from net.semanticmetadata.lire.imageanalysis.CEDD
+        double Temp1 = 0;
+        double Temp2 = 0;
 
+        double TempCount1 = 0, TempCount2 = 0, TempCount3 = 0;
+
+        for (int i = 0; i < data2.length; i++) {
+            Temp1 += data2[i];
+            Temp2 += data1[i];
+        }
+
+        if (Temp1 == 0 || Temp2 == 0) similarity = 100;
+        if (Temp1 == 0 && Temp2 == 0) similarity = 0;
+
+        if (Temp1 > 0 && Temp2 > 0) {
+            for (int i = 0; i < data2.length; i++) {
+                TempCount1 += (data2[i] / Temp1) * (data1[i] / Temp2);
+                TempCount2 += (data1[i] / Temp2) * (data1[i] / Temp2);
+                TempCount3 += (data2[i] / Temp1) * (data2[i] / Temp1);
+
+            }
+
+            distance = (100 - 100 * (TempCount1 / (TempCount2 + TempCount3 - TempCount1))); 
+        }
+        System.out.println("Distance: " + distance);
+        similarity = 100*(1.0-(distance/100.0));
+        return similarity;
+    }
+    
+    public double compareLireGabor(double[] compResult, double[] results, int M, int N){
+        similarity = 0.0;
+        
+        double[] queryFeatureVector = compResult;
+        double[] targetFeatureVector = results;        
+        double distance = 0.0;
+        for (int m = 0; m < M; m++) {
+            for (int n = 0; n < N; n++) {
+                distance += Math.sqrt(Math.pow(queryFeatureVector[m * N + n * 2] - targetFeatureVector[m * N + n * 2], 2) + Math.pow(queryFeatureVector[m * N + n * 2 + 1] - targetFeatureVector[m * N + n * 2 + 1], 2));
+            }
+        }
+        System.out.println("Distance: " + distance);
+        similarity = 100*(1.0-(distance/618.0));
+        return similarity;
+    }
+            
+    public double compareLireTamura(double[] compResult, double[] results){
+        similarity = 0.0;
+        
+        double[] queryFeature = compResult;
+        double[] targetFeature = results;  
+        double distance = 0.0;
+        for (int i = 2; i < targetFeature.length; i ++) {
+            distance += Math.pow(targetFeature[i] - queryFeature[i], 2);
+        }
+        System.out.println("Distance: " + distance);
+        similarity = 100*(1.0-(distance/6000.0));
+        return similarity;
+    }
 }
