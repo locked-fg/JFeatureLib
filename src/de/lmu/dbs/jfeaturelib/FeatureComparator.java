@@ -164,8 +164,7 @@ public class FeatureComparator {
         else{
             //only comparing how many points from the orignal image were found
             similarity = 100.0*(double)matchedPoints.size()/(double)ipts1.size();
-        }
-                
+        }        
         return similarity;
     }
     
@@ -221,7 +220,7 @@ public class FeatureComparator {
             }
         }
         System.out.println("Distance: " + distance);
-        similarity = 100*(1.0-(distance/618.0));
+        similarity = 100*(1.0-(distance/1000.0));
         return similarity;
     }
             
@@ -235,7 +234,7 @@ public class FeatureComparator {
             distance += Math.pow(targetFeature[i] - queryFeature[i], 2);
         }
         System.out.println("Distance: " + distance);
-        similarity = 100*(1.0-(distance/6000.0));
+        similarity = 100*(1.0-(distance/1000000.0));
         return similarity;
     }
 }

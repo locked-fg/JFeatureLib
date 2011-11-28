@@ -2,9 +2,11 @@ package de.lmu.dbs.jfeaturelib;
 
 import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
 import ij.ImagePlus;
+import ij.io.Opener;
 import ij.process.ColorProcessor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.List;
 import javax.swing.SwingWorker;
 
@@ -18,6 +20,7 @@ import javax.swing.SwingWorker;
 public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implements PropertyChangeListener{
     private FeatureDescriptor descriptor;
     private Class descriptorClass;
+    private File file;
     private ImagePlus imp;
     private int number;
     private long time;
@@ -27,8 +30,8 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
      * @param descriptorClass Class of the descriptor to be applied
      * @param imp Image on which the descriptor should work
      */
-    public ThreadWrapper(Class descriptorClass, ImagePlus imp){
-        this(descriptorClass, imp, -1);
+    public ThreadWrapper(Class descriptorClass, File file){
+        this(descriptorClass, file, -1);
         instantiate();
     }
     
@@ -38,15 +41,18 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
      * @param imp Image on which the descriptor should work
      * @param number Explicit ID for identifying parallel ThreadWrappers
      */
-    public ThreadWrapper(Class descriptorClass, ImagePlus imp, int number){
+    public ThreadWrapper(Class descriptorClass, File file, int number){
         this.descriptorClass = descriptorClass;
-        this.imp = imp;
+        this.file = file;
         this.number = number;
         instantiate();
     }
     
     private void instantiate(){
         try{
+            Opener opener = new Opener();
+            opener.getFileType(file.getAbsolutePath());
+            imp = opener.openImage(file.getAbsolutePath());
             descriptor = (FeatureDescriptor) descriptorClass.newInstance();
         }
         catch(InstantiationException | IllegalAccessException e){
@@ -103,6 +109,15 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
      
      /**
       * 
+      * @return Image file which is processed
+      */     
+     
+     public File getFile(){
+         return file;
+     }     
+     
+     /**
+      * 
       * @return The actual Descriptor contained in this ThreadWrapper
       */
      public FeatureDescriptor getInstance(){
@@ -112,7 +127,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if(evt.getNewValue().getClass().getSimpleName().equals("Progress")){
-            System.out.println(((Progress)evt.getNewValue()).getProgress());
+            //System.out.println(((Progress)evt.getNewValue()).getProgress());
             setProgress(((Progress)evt.getNewValue()).getProgress());
                     
         }
