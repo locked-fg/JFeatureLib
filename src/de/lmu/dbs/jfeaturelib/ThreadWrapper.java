@@ -70,6 +70,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
         descriptor.run(new ColorProcessor(imp.getImage()));
         //FIXME there can be more than just asingle feature vector!
         time = (System.currentTimeMillis() - start);
+        imp = null;
         return descriptor.getFeatures();
     }
     
