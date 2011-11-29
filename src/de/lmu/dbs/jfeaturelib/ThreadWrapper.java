@@ -21,7 +21,6 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
     private FeatureDescriptor descriptor;
     private Class descriptorClass;
     private File file;
-    private ImagePlus imp;
     private int number;
     private long time;
         
@@ -50,9 +49,6 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
     
     private void instantiate(){
         try{
-            Opener opener = new Opener();
-            opener.getFileType(file.getAbsolutePath());
-            imp = opener.openImage(file.getAbsolutePath());
             descriptor = (FeatureDescriptor) descriptorClass.newInstance();
         }
         catch(InstantiationException | IllegalAccessException e){
@@ -66,9 +62,11 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
     @Override
     protected List<double[]> doInBackground(){
         long start = System.currentTimeMillis();
+        Opener opener = new Opener();
+        opener.getFileType(file.getAbsolutePath());
+        ImagePlus imp = opener.openImage(file.getAbsolutePath());
         descriptor.addPropertyChangeListener(this);
         descriptor.run(new ColorProcessor(imp.getImage()));
-        //FIXME there can be more than just asingle feature vector!
         time = (System.currentTimeMillis() - start);
         imp = null;
         return descriptor.getFeatures();
