@@ -10,7 +10,11 @@ import ij.process.FloatProcessor;
  * to create the derivates. Afterwards, the gradient orientation
  * and length is computed for each pixel.
  * 
+ * If the task is just to create a derivation of the image 
+ * {@link DerivativeImage} might be more useful.
+ * 
  * @author graf
+ * @see DerivativeImage
  */
 public class GradientImage implements GradientSource {
 
