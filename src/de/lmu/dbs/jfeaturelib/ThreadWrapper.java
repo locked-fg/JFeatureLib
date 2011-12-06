@@ -9,6 +9,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
 import javax.swing.SwingWorker;
+import org.apache.log4j.Logger;
 
 /**
  * Threadwrapper extends Swingworker and thus is used to instantiate a feature descriptor and calculate its results for a given image.
@@ -18,6 +19,7 @@ import javax.swing.SwingWorker;
  * @author Benedikt
  */
 public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implements PropertyChangeListener{
+    private Logger logger;
     private FeatureDescriptor descriptor;
     private Class descriptorClass;
     private File file;
@@ -29,8 +31,8 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
      * @param descriptorClass Class of the descriptor to be applied
      * @param imp Image on which the descriptor should work
      */
-    public ThreadWrapper(Class descriptorClass, File file){
-        this(descriptorClass, file, -1);
+    public ThreadWrapper(Logger logger, Class descriptorClass, File file){
+        this(logger, descriptorClass, file, -1);
         instantiate();
     }
     
@@ -40,7 +42,8 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
      * @param imp Image on which the descriptor should work
      * @param number Explicit ID for identifying parallel ThreadWrappers
      */
-    public ThreadWrapper(Class descriptorClass, File file, int number){
+    public ThreadWrapper(Logger logger, Class descriptorClass, File file, int number){
+        this.logger = logger;
         this.descriptorClass = descriptorClass;
         this.file = file;
         this.number = number;
@@ -52,9 +55,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
             descriptor = (FeatureDescriptor) descriptorClass.newInstance();
         }
         catch(InstantiationException | IllegalAccessException e){
-            //FIXME Fix this or little kittens will die!
-            System.out.println("Error during instantiation");
-            e.printStackTrace();
+            logger.error(e);
         }
         
     }

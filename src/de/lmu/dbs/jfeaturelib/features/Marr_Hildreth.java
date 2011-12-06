@@ -12,7 +12,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 /** 
- * FIXME doc!
+ * The Marr Hildreth edge detector uses the Laplacian of the Gaussian function to detect edges.
+ * Faster runtimes could by achieved by using Difference of Gaussians instead.
  */
 public class Marr_Hildreth implements FeatureDescriptor{
 
