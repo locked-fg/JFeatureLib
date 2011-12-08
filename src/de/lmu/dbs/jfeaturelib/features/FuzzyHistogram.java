@@ -1,7 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.lire.FuzzyColorHistogram;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
@@ -15,14 +14,14 @@ import java.util.List;
  * Fuzzy Color Histogram.
  */
 
-public class LireFuzzy implements FeatureDescriptor {
+public class FuzzyHistogram implements FeatureDescriptor {
     protected double[] data = null;
-    private FuzzyColorHistogram fuzzy;
+    private de.lmu.dbs.jfeaturelib.features.lire.FuzzyColorHistogram fuzzy;
     private BufferedImage bi;    
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public LireFuzzy(){
-        fuzzy = new FuzzyColorHistogram();
+    public FuzzyHistogram(){
+        fuzzy = new de.lmu.dbs.jfeaturelib.features.lire.FuzzyColorHistogram();
         
     }
     

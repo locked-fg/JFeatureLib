@@ -1,7 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.lire.JCD;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
@@ -15,14 +14,14 @@ import java.util.List;
  * A joint descriptor joining CEDD and FCTH in one histogram by Savvas A. Chatzichristofis.
  */
 
-public class LireJCD implements FeatureDescriptor {
+public class JCD implements FeatureDescriptor {
     protected double[] data = null;
-    private JCD jcd;
+    private de.lmu.dbs.jfeaturelib.features.lire.JCD jcd;
     private BufferedImage bi;    
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public LireJCD(){
-        jcd = new JCD();
+    public JCD(){
+        jcd = new de.lmu.dbs.jfeaturelib.features.lire.JCD();
         
     }
     

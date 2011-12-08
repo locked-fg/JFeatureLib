@@ -8,8 +8,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.SwingWorker;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 /**
  * Threadwrapper extends Swingworker and thus is used to instantiate a feature descriptor and calculate its results for a given image.
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author Benedikt
  */
 public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implements PropertyChangeListener{
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(ThreadWrapper.class.getName());
     private FeatureDescriptor descriptor;
     private Class descriptorClass;
     private File file;
@@ -31,9 +32,8 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
      * @param descriptorClass Class of the descriptor to be applied
      * @param imp Image on which the descriptor should work
      */
-    public ThreadWrapper(Logger logger, Class descriptorClass, File file){
-        this(logger, descriptorClass, file, -1);
-        instantiate();
+    public ThreadWrapper(Class descriptorClass, File file){
+        this(descriptorClass, file, -1);
     }
     
     /**
@@ -42,11 +42,12 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
      * @param imp Image on which the descriptor should work
      * @param number Explicit ID for identifying parallel ThreadWrappers
      */
-    public ThreadWrapper(Logger logger, Class descriptorClass, File file, int number){
-        this.logger = logger;
+    public ThreadWrapper(Class descriptorClass, File file, int number){
         this.descriptorClass = descriptorClass;
         this.file = file;
-        this.number = number;
+        this.number = number;        
+        logger.setLevel(Level.FINEST);
+        
         instantiate();
     }
     
@@ -55,7 +56,9 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object> implement
             descriptor = (FeatureDescriptor) descriptorClass.newInstance();
         }
         catch(InstantiationException | IllegalAccessException e){
-            logger.error(e);
+            String msg = "Error during instantiation of " + descriptorClass.getSimpleName();
+            logger.severe(msg);
+            throw new IllegalStateException(msg);
         }
         
     }

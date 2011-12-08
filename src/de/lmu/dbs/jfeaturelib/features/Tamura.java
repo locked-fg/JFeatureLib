@@ -1,7 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.lire.FCTH;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
@@ -12,31 +11,33 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * The FCTH feature was created, implemented and provided by Savvas A. Chatzichristofis<br/>
- * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis,
- * <i>FCTH: Fuzzy Color and Texture Histogram - A Low Level Feature for Accurate Image
- * Retrieval</i>, in Proceedings of the Ninth International Workshop on Image Analysis for
- * Multimedia Interactive Services, IEEE, Klagenfurt, May, 2008.
+ * Implementation of (three) Tamura features done by  Marko Keuschnig & Christian Penz<br>
+ * Changes by
+ * <ul>
+ * <li> Ankit Jain (jankit87@gmail.com): histogram length in set string
+ * <li> shen72@users.sourceforge.net: bugfixes in math (casting and brackets)
+ * </ul>
+ * Date: 28.05.2008
+ * Time: 11:52:03
  */
 
-public class LireFCTH implements FeatureDescriptor {
-
+public class Tamura implements FeatureDescriptor {
     protected double[] data = null;
-    private FCTH fcth;
+    private de.lmu.dbs.jfeaturelib.features.lire.Tamura tamura;
     private BufferedImage bi;    
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    // Constructor
-    public LireFCTH() {
-        fcth = new FCTH();
+    public Tamura(){
+        tamura = new de.lmu.dbs.jfeaturelib.features.lire.Tamura();
+        
     }
     
     @Override
     public void run(ImageProcessor ip) {
         bi = ip.getBufferedImage();
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
-        fcth.extract(bi);
-        data = fcth.getData();
+        tamura.extract(bi);
+        data = tamura.getData();
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
     
@@ -53,7 +54,7 @@ public class LireFCTH implements FeatureDescriptor {
 
     @Override
     public String getDescription() {
-        return fcth.getStringRepresentation();
+        return tamura.getStringRepresentation();
     }
     
     @Override

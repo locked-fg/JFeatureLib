@@ -2,7 +2,6 @@ package de.lmu.dbs.jfeaturelib.features;
 
 
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.lire.CEDD;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.util.EnumSet;
@@ -19,32 +18,32 @@ import java.util.Collections;
  * Descriptor for Image Indexing and Retrieval</i>, A. Gasteratos, M. Vincze, and J.K.
  * Tsotsos (Eds.): ICVS 2008, LNCS 5008, pp. 312-322, 2008.
  */
-public class LireCEDD implements FeatureDescriptor {
+public class CEDD implements FeatureDescriptor {
     public double T0;
     public double T1;
     public double T2;
     public double T3;
     public boolean Compact = false;
     protected double[] data = null;
-    private CEDD cedd;
+    private de.lmu.dbs.jfeaturelib.features.lire.CEDD cedd;
     private BufferedImage bi;    
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public LireCEDD(double Th0, double Th1, double Th2, double Th3, boolean CompactDescriptor) {
+    public CEDD(double Th0, double Th1, double Th2, double Th3, boolean CompactDescriptor) {
         this.T0 = Th0;
         this.T1 = Th1;
         this.T2 = Th2;
         this.T3 = Th3;
         this.Compact = CompactDescriptor;
-        cedd = new CEDD(T0, T1, T2, T3, Compact);
+        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, Compact);
     }
 
-    public LireCEDD() {
+    public CEDD() {
         this.T0 = 14;
         this.T1 = 0.68;
         this.T2 = 0.98;
         this.T3 = 0.98;
-        cedd = new CEDD(T0, T1, T2, T3, Compact);
+        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, Compact);
     }
 
     @Override

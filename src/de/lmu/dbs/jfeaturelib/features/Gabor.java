@@ -1,7 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.lire.Gabor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
@@ -15,14 +14,14 @@ import java.util.List;
  * Implementation of a Gabor texture features done by  Marko Keuschnig & Christian Penz<br>
  */
 
-public class LireGabor implements FeatureDescriptor {
+public class Gabor implements FeatureDescriptor {
     protected double[] data = null;
-    private Gabor gabor;
+    private de.lmu.dbs.jfeaturelib.features.lire.Gabor gabor;
     private BufferedImage bi;    
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public LireGabor(){
-        gabor = new Gabor();
+    public Gabor(){
+        gabor = new de.lmu.dbs.jfeaturelib.features.lire.Gabor();
         
     }
     
