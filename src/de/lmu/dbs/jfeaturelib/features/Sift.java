@@ -1,5 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.LibProperties;
 import de.lmu.dbs.jfeaturelib.features.sift.SiftWrapper;
 import ij.process.ImageProcessor;
 import java.io.File;
@@ -38,13 +39,27 @@ public class Sift extends FeatureDescriptorAdapter {
     private List<double[]> features = Collections.EMPTY_LIST;
 
     /**
-     * Initialize the Sift wrapper with the sift Binary file.
+     * Initialize the Sift wrapper with the sift binary file given in the
+     * jfeaturelib.properties file.
+     * 
+     * @see LibProperties#SIFT_BINARY
+     * @throws IOException 
+     */
+    public Sift() throws IOException {
+        this(new File(LibProperties.SIFT_BINARY.getValue().toString()));
+    }
+
+    /**
+     * Initialize the Sift wrapper with the sift binary file.
      * This file is called by a java process that wraps the call and parses 
      * the output.
      * 
      * @param siftBinary 
      */
-    public Sift(File siftBinary) {
+    public Sift(File siftBinary) throws IOException {
+        if (!siftBinary.canExecute()) {
+            throw new IOException("Cannot execute sift binary at: "+siftBinary.getAbsolutePath());
+        }
         this.siftBinary = siftBinary;
     }
 

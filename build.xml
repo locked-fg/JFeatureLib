@@ -71,4 +71,8 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+    <target name="-post-jar">
+        <copy file="jfeaturelib.properties" todir="${dist.dir}"/>
+    </target>
 </project>
