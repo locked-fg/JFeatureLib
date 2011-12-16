@@ -25,6 +25,6 @@ public class RGBtoGray {
     }
     
     public static int MeanRGBtoGray(int r, int g, int b){
-        return (int)(r+b+g)/3;
+        return (r+b+g)/3;
     }
 }
