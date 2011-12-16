@@ -93,7 +93,7 @@ public class SiftWrapper {
      * Converts a list of Sift Feature Vectors into a list of plain arrays
      */
     private List<double[]> convertToArray(List<SiftFeatureVector> sifts) {
-        List<double[]> arrays = new ArrayList<double[]>(sifts.size());
+        List<double[]> arrays = new ArrayList<>(sifts.size());
         for (SiftFeatureVector vector : sifts) {
             arrays.add(vector.asArray());
         }
@@ -136,7 +136,7 @@ public class SiftWrapper {
      */
     List<SiftFeatureVector> extractFeatures(InputStreamReader isr)
             throws IOException {
-        List<SiftFeatureVector> vectors = new ArrayList<SiftFeatureVector>(
+        List<SiftFeatureVector> vectors = new ArrayList<>(
                 100);
 
         BufferedReader inR = new BufferedReader(isr);
@@ -145,7 +145,7 @@ public class SiftWrapper {
 
         // parse stream
         int linecount = 0;
-        ArrayList<Double> dataList = new ArrayList<Double>(NUMBER_OF_GRADIENTS);
+        ArrayList<Double> dataList = new ArrayList<>(NUMBER_OF_GRADIENTS);
 
         while (null != (inLine = inR.readLine())) {
             linecount++;
@@ -210,14 +210,14 @@ public class SiftWrapper {
      */
     private void dataToProcess(OutputStream os, InputStream in)
             throws IOException {
-        BufferedOutputStream outS = new BufferedOutputStream(os);
-        BufferedInputStream inS = new BufferedInputStream(in);
-
-        int data;
-        while ((data = inS.read()) != -1) {
-            outS.write(data);
+        BufferedInputStream inS;
+        try (BufferedOutputStream outS = new BufferedOutputStream(os)) {
+            inS = new BufferedInputStream(in);
+            int data;
+            while ((data = inS.read()) != -1) {
+                outS.write(data);
+            }
         }
-        outS.close();
         inS.close();
     }
 }
