@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.lmu.dbs.jfeaturelib.pointDetector;
 
 import de.lmu.dbs.jfeaturelib.ImagePoint;
@@ -16,9 +12,9 @@ import java.util.List;
 import java.awt.Image;
 
 /**
- * FIXME add doc
- * FIXME learn italian
- * @author rob
+ * Harris Corner Detection
+ * @author Mariagrazia Messina - mariagraziamess@libero.it
+ * http://svg.dmi.unict.it/iplab/imagej/Plugins/Feature%20Point%20Detectors/Harris/harris.htm
  */
 public class Harris implements PointDetector {
 
@@ -37,7 +33,9 @@ public class Harris implements PointDetector {
     GradientVector gradient = new GradientVector();
     //matrice dei corners
     int matriceCorner[][];
-    
+    /**
+     * Creates Harris Corner detection with default parameters
+     */
     public Harris() {        
         this.gaussiansigma = 1.4f;
         this.minMeasure = 10;
@@ -45,6 +43,13 @@ public class Harris implements PointDetector {
         this.piramidi = 1;
     }
     
+    /**
+     * Creates Harris Corner Detection
+     * @param gaussianSigma Gaussian Variance (Default: 1.4f)
+     * @param minDistance Distance Threshold (Default: 10)
+     * @param minMeasure Value Threshold (Default: 80)
+     * @param iteractions Number of Iteractions (Default: 1)
+     */
     public Harris(float gaussianSigma, int minDistance, int minMeasure, int iteractions) {
         this.gaussiansigma = gaussianSigma;
         this.minMeasure = minMeasure;
@@ -52,11 +57,21 @@ public class Harris implements PointDetector {
         this.piramidi = iteractions;
     }
     
+    /**
+     * Returns the Corners as an ImagePoint List
+     * @return ImagePoint List
+     */
     @Override
     public List<ImagePoint> getPoints() {
         return resultingCorners;
     }
     
+    /**
+     * Defines the capability of the algorithm.
+     * 
+     * @see PlugInFilter
+     * @see #supports() 
+     */
     @Override
     public EnumSet<Supports> supports() {
         EnumSet set = EnumSet.of(
@@ -64,7 +79,10 @@ public class Harris implements PointDetector {
                 Supports.DOES_8G);
         return set;
     }
-    
+    /**
+     * Starts the Harris Corner Detection
+     * @param ip ImageProcessor of the source image
+     */ 
     @Override
     public void run(ImageProcessor ip) {
         ByteProcessor bp = Supporto.copyByteProcessor(ip);        
@@ -103,7 +121,7 @@ public class Harris implements PointDetector {
      * @param minMeasure saglio sul valore minimo che assume il corner
      * @param minDistance soglia sulla distanza minima tra 2 corners
      */
-    public void filter(ByteProcessor c, int minMeasure, int minDistance, int factor) {
+    private void filter(ByteProcessor c, int minMeasure, int minDistance, int factor) {
         
         int width = c.getWidth();
         int height = c.getHeight();
