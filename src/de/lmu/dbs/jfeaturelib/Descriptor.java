@@ -50,6 +50,9 @@ public interface Descriptor {
     }
     /**
      * Convenience field for "support all kinds of images".
+     *
+     * USE WITH EXTREME CAUTION: This may cause problems if a current algorithm
+     * uses DOES_ALL and new types for SUPPORT are added.
      */
     public final EnumSet<Supports> DOES_ALL = EnumSet.of(
             Supports.DOES_16,
