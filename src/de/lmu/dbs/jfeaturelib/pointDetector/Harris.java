@@ -1,15 +1,15 @@
 package de.lmu.dbs.jfeaturelib.pointDetector;
 
 import de.lmu.dbs.jfeaturelib.ImagePoint;
-import java.util.EnumSet;
 import ij.plugin.filter.Convolver;
 import ij.process.ByteProcessor;
-import ij.process.ImageProcessor;
 import ij.process.ColorProcessor;
+import ij.process.ImageProcessor;
+import java.awt.Image;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import java.awt.Image;
 
 /**
  * Harris Corner Detection
