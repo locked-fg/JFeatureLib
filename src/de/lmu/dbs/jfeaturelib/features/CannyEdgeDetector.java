@@ -262,7 +262,6 @@ public class CannyEdgeDetector implements FeatureDescriptor {
                  * variable (3) and reused in the mirror case (4).
                  *
                  */
-                // x = a==b ? true : false;
                 if (xGrad * yGrad <= (float) 0 /*(1)*/
                         ? Math.abs(xGrad) >= Math.abs(yGrad) /*(2)*/
                                 ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /*(3)*/
