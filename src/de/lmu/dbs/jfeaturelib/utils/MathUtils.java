@@ -3,8 +3,8 @@ package de.lmu.dbs.jfeaturelib.utils;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 
 /**
- *
  * @author Benedikt
+ * @deprecated since 1.3.2012
  */
 public class MathUtils {
 
