@@ -15,12 +15,44 @@ import java.util.EnumSet;
  *
  * Basiacally it is just a wrapper for ImageJ's ImageProcessor.convolve().
  *
+ * Predefined masks are SOBEL, SCHARR, PREWITT
+ * 
  * @see ImageProcessor#convolve(float[], int, int)
  * @author Benedikt
  * @author Franz
  */
 public class Kernel implements Descriptor {
 
+    /**
+     * Standard 3x3 SOBEL mask (1 0 -1, 2, 0, -2, 1, 0, -1 )
+     *
+     * @see http://en.wikipedia.org/wiki/Sobel_operator
+     */
+    public static final float[] SOBEL = new float[]{
+        1, 0, -1,
+        2, 0, -2,
+        1, 0, -1
+    };
+    /**
+     * Standard 3x3 SCHARR mask (1 0 -1, 2, 0, -2, 1, 0, -1 )
+     *
+     * @see http://en.wikipedia.org/wiki/Sobel_operator
+     */
+    public static final float[] SCHARR = new float[]{
+        3, 0, -3,
+        10, 0, -10,
+        3, 0, -3
+    };
+    /**
+     * 3x3 PREWITT mask (-1, 0, 1, ...)
+     *
+     * @see http://en.wikipedia.org/wiki/Prewitt_operator
+     */
+    public static final float[] PREWITT = new float[]{
+        -1, 0, 1,
+        -1, 0, 1,
+        -1, 0, 1
+    };
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private float[] kernel;
     private int kernelWidth;
@@ -29,8 +61,7 @@ public class Kernel implements Descriptor {
      * Constructs a new detector with standart Sobel kernel
      */
     public Kernel() {
-        this.kernelWidth = 3;
-        this.kernel = new float[]{1, 0, -1, 2, 0, -2, 1, 0, -1};
+        this(SOBEL, 3);
     }
 
     /**
