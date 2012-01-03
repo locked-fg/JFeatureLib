@@ -94,7 +94,6 @@ public class Kernel implements Descriptor {
     @Override
     public EnumSet<Supports> supports() {
         EnumSet set = EnumSet.of(
-                Supports.NoChanges,
                 Supports.DOES_8C,
                 Supports.DOES_8G,
                 Supports.DOES_RGB,
