@@ -262,17 +262,19 @@ public class CannyEdgeDetector implements FeatureDescriptor {
                  * variable (3) and reused in the mirror case (4).
                  *
                  */
+                // x = a==b ? true : false;
                 if (xGrad * yGrad <= (float) 0 /*(1)*/
-                        ? Math.abs(xGrad) >= Math.abs(yGrad) /* (2) */
-                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /* (3) */
-                        && tmp > Math.abs(yGrad * swMag - (xGrad + yGrad) * wMag) /* (4) */
-                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * neMag - (yGrad + xGrad) * nMag) /* (3) */
-                        && tmp > Math.abs(xGrad * swMag - (yGrad + xGrad) * sMag) /* (4) */
-                        : Math.abs(xGrad) >= Math.abs(yGrad) /* (2) */
-                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * seMag + (xGrad - yGrad) * eMag) /* (3) */
-                        && tmp > Math.abs(yGrad * nwMag + (xGrad - yGrad) * wMag) /* (4) */
-                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * seMag + (yGrad - xGrad) * sMag) /* (3) */
-                        && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /* (4) */) {
+                        ? Math.abs(xGrad) >= Math.abs(yGrad) /*(2)*/
+                                ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /*(3)*/
+                                        && tmp > Math.abs(yGrad * swMag - (xGrad + yGrad) * wMag) /*(4)*/
+                                : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * neMag - (yGrad + xGrad) * nMag) /*(3)*/
+                                        && tmp > Math.abs(xGrad * swMag - (yGrad + xGrad) * sMag) /*(4)*/
+                        : Math.abs(xGrad) >= Math.abs(yGrad) /*(2)*/
+                                ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * seMag + (xGrad - yGrad) * eMag) /*(3)*/
+                                        && tmp > Math.abs(yGrad * nwMag + (xGrad - yGrad) * wMag) /*(4)*/
+                                : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * seMag + (yGrad - xGrad) * sMag) /*(3)*/
+                                        && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /*(4)*/
+                        ) {
                     magnitude[index] = gradMag >= MAGNITUDE_LIMIT ? MAGNITUDE_MAX : (int) (MAGNITUDE_SCALE * gradMag);
                     //NOTE: The orientation of the edge is not employed by this
                     //implementation. It is a simple matter to compute it at
