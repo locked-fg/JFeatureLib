@@ -34,15 +34,5 @@ public interface FeatureDescriptor extends Descriptor {
      * @return semantic description of getFeatures or null.
      */
     String getDescription();
-    
-    /**
-     * Adds a change listener to this descriptor. 
-     * The descriptor might fire status change events which can be used to track 
-     * the progress. Keep in mind that no implementation is forced to fire any 
-     * events at all.
-     * 
-     * @param listener 
-     */
-    public void addPropertyChangeListener(PropertyChangeListener listener);
 
 }

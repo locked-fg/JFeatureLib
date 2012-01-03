@@ -1,11 +1,14 @@
 package de.lmu.dbs.jfeaturelib.pointDetector;
 
 import de.lmu.dbs.jfeaturelib.ImagePoint;
+import de.lmu.dbs.jfeaturelib.Progress;
 import ij.plugin.filter.Convolver;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.Image;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -13,14 +16,16 @@ import java.util.List;
 
 /**
  * Harris Corner Detection
+ *
  * @author Mariagrazia Messina - mariagraziamess@libero.it
  * http://svg.dmi.unict.it/iplab/imagej/Plugins/Feature%20Point%20Detectors/Harris/harris.htm
  */
 public class Harris implements PointDetector {
 
-    List<ImagePoint> resultingCorners;
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private List<ImagePoint> resultingCorners;
     // lista che conterr‡  i conrner ad agni iterazione
-    List<int[]> corners;
+    private List<int[]> corners;
     //dimensioni di mezza finestra
     private int halfwindow = 1;
     // varianza della gaussiana
@@ -30,21 +35,23 @@ public class Harris implements PointDetector {
     private int minMeasure = 0;
     private int piramidi = 0;
     // oggetto utilizzato per il calcolo del gradiente
-    GradientVector gradient = new GradientVector();
+    private GradientVector gradient = new GradientVector();
     //matrice dei corners
     int matriceCorner[][];
+
     /**
      * Creates Harris Corner detection with default parameters
      */
-    public Harris() {        
+    public Harris() {
         this.gaussiansigma = 1.4f;
         this.minMeasure = 10;
         this.minDistance = 80;
         this.piramidi = 1;
     }
-    
+
     /**
      * Creates Harris Corner Detection
+     *
      * @param gaussianSigma Gaussian Variance (Default: 1.4f)
      * @param minDistance Distance Threshold (Default: 10)
      * @param minMeasure Value Threshold (Default: 80)
@@ -56,21 +63,22 @@ public class Harris implements PointDetector {
         this.minDistance = minDistance;
         this.piramidi = iteractions;
     }
-    
+
     /**
      * Returns the Corners as an ImagePoint List
+     *
      * @return ImagePoint List
      */
     @Override
     public List<ImagePoint> getPoints() {
         return resultingCorners;
     }
-    
+
     /**
      * Defines the capability of the algorithm.
-     * 
+     *
      * @see PlugInFilter
-     * @see #supports() 
+     * @see #supports()
      */
     @Override
     public EnumSet<Supports> supports() {
@@ -79,50 +87,53 @@ public class Harris implements PointDetector {
                 Supports.DOES_8G);
         return set;
     }
+
     /**
      * Starts the Harris Corner Detection
+     *
      * @param ip ImageProcessor of the source image
-     */ 
+     */
     @Override
     public void run(ImageProcessor ip) {
-        ByteProcessor bp = Supporto.copyByteProcessor(ip);        
-        ByteProcessor bp2 = Supporto.copyByteProcessor(ip);        
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
+
+        ByteProcessor bp = Supporto.copyByteProcessor(ip);
         int width = bp.getWidth();
-        int height = bp.getHeight();        
+        int height = bp.getHeight();
         int potenza = (int) Math.pow(2, piramidi - 1);
         if ((width / potenza < 8) || (height / potenza < 8)) {
             piramidi = 1;
         }
-        
+
         ByteProcessor newbp;
         List<int[]> tmp = new ArrayList<>();
         int[] numero = new int[this.piramidi];
-        
+
         for (int i = 0; i < this.piramidi; i++) {
             corners = new ArrayList<>();
-            resultingCorners =  new ArrayList<>();
+            resultingCorners = new ArrayList<>();
             filter(bp, this.minMeasure, this.minDistance, i);
             for (int[] n : corners) {
                 tmp.add(n);
             }
             numero[i] = corners.size();
-            
+
             bp = Supporto.smussaEsottocampiona(bp, 3, this.gaussiansigma);
-            
         }
-        
+
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     /**
-     *Harris Corner Detection
+     * Harris Corner Detection
      *
      * @param c immagine
      * @param minMeasure saglio sul valore minimo che assume il corner
      * @param minDistance soglia sulla distanza minima tra 2 corners
      */
     private void filter(ByteProcessor c, int minMeasure, int minDistance, int factor) {
-        
+
         int width = c.getWidth();
         int height = c.getHeight();
 
@@ -133,23 +144,23 @@ public class Harris implements PointDetector {
                 c2.set(x, y, (int) (c.get(x, y) * 0.80));
             }
         }
-        
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 // harris response(-1 se il pixel non Ë un massimo locale)
                 int h = (int) spatialMaximaofHarrisMeasure(c, x, y);
 
                 // aggiunge il corner alla lista se supera un valore di soglia
-                if (h >= minMeasure) {                    
+                if (h >= minMeasure) {
                     if (factor != 0) {
                         int XY[] = mappatura(x, y, factor);
                         x = XY[0];
                         y = XY[1];
                     }
-                    
+
                     corners.add(new int[]{x, y, h});
                     resultingCorners.add(new ImagePoint(x, y));
-                    
+
                 }
             }
         }
@@ -173,12 +184,13 @@ public class Harris implements PointDetector {
                 break;
             }
         }
-        
-        
+
+
     }
 
     /**
-     * reatituisce il valore del pixel (x,y) se Ë un massimo, altrimenti restituisce -1
+     * reatituisce il valore del pixel (x,y) se Ë un massimo, altrimenti
+     * restituisce -1
      *
      * @param c immagine
      * @param x coordinata x
@@ -218,7 +230,7 @@ public class Harris implements PointDetector {
         // k = det(A) - lambda * trace(A)^2
         // A matrice del secondo momento
         // lambda generalmente Ë tra 0.04 e 0.06. qui Ë stato fissato a 0.06
-        
+
         for (int dy = -halfwindow; dy <= halfwindow; dy++) {
             for (int dx = -halfwindow; dx <= halfwindow; dx++) {
                 int xk = x + dx;
@@ -272,7 +284,8 @@ public class Harris implements PointDetector {
     }
 
     /**
-     * Funzione che realizza la mappatura dei pixel dell'immagine sottocampionata, nell'immagine originale
+     * Funzione che realizza la mappatura dei pixel dell'immagine
+     * sottocampionata, nell'immagine originale
      *
      * @param x coordinata x
      * @param y coordinata y
@@ -282,21 +295,26 @@ public class Harris implements PointDetector {
     public int[] mappatura(int x, int y, int fact) {
         int nuoviXY[] = new int[2];
         nuoviXY[0] = x * (2 * fact);
-        nuoviXY[1] = y * (2 * fact);        
+        nuoviXY[1] = y * (2 * fact);
         return nuoviXY;
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 }
 
 /**
- * Gradient vector
- * classe che effettua il calcolo del gradiente smussato,
- *  effetturando le derivate x e y di una gaussiana
+ * Gradient vector classe che effettua il calcolo del gradiente smussato,
+ * effetturando le derivate x e y di una gaussiana
+ *
  * @author Messina Mariagrazia
  *
  */
 class GradientVector {
-    
-    int halfwindow = 1;    
+
+    int halfwindow = 1;
     double sigma2 = 1.2;
     double[][] kernelGx = new double[2 * halfwindow + 1][2 * halfwindow + 1];
     double[][] kernelGy = new double[2 * halfwindow + 1][2 * halfwindow + 1];
@@ -315,7 +333,8 @@ class GradientVector {
     }
 
     /**
-     * Funzione che realizza lo smussamento dell'immagine mediante una gaussiana per poi calcolarne la derivata x (operatore Drog)
+     * Funzione che realizza lo smussamento dell'immagine mediante una gaussiana
+     * per poi calcolarne la derivata x (operatore Drog)
      *
      * @param x coordinata x
      * @param y coordinata y
@@ -329,7 +348,8 @@ class GradientVector {
     }
 
     /**
-     * Funzione che realizza lo smussamento dell'immagine mediante una gaussiana per poi calcolarne la derivata y (operatore Drog)
+     * Funzione che realizza lo smussamento dell'immagine mediante una gaussiana
+     * per poi calcolarne la derivata y (operatore Drog)
      *
      * @param x coordinata x
      * @param y coordinata y
@@ -344,7 +364,8 @@ class GradientVector {
 
     // restituisce  il vettore del Gradient per il pixel(x,y)
     /**
-     * Funzione che inserisce in un vettore il valore del gradiente dei punti appartenenti ad una finestre
+     * Funzione che inserisce in un vettore il valore del gradiente dei punti
+     * appartenenti ad una finestre
      *
      * @param x coordinata x
      * @param y coordinata y
@@ -362,16 +383,17 @@ class GradientVector {
                 gy += kernelGy[halfwindow - dy][halfwindow - dx] * vk;
             }
         }
-        
+
         double[] gradientVector = new double[]{gx, gy};
-        
+
         return gradientVector;
     }
 }
 
 class Supporto {
-    
-    public static ByteProcessor smussaEsottocampiona(ByteProcessor input, int window, float sigma) throws IllegalArgumentException {
+
+    public static ByteProcessor smussaEsottocampiona(ByteProcessor input, int window, float sigma)
+            throws IllegalArgumentException {
         ByteProcessor prepocessing = copyByteProcessor(input);
         float gauss[] = initGaussianKernel(window, sigma);
         Convolver convolver = new Convolver();
@@ -380,7 +402,7 @@ class Supporto {
         prepocessing = copyByteProcessor(temp);
         int prepocessingWidth = prepocessing.getWidth();
         int prepocessingHeight = prepocessing.getHeight();
-        ByteProcessor out = new ByteProcessor((int) (prepocessingWidth / 2), (int) (prepocessingHeight / 2));
+        ByteProcessor out = new ByteProcessor(prepocessingWidth / 2, prepocessingHeight / 2);
         if (prepocessingWidth % 2 != 0) {
             prepocessingWidth--;
         }
@@ -396,17 +418,21 @@ class Supporto {
         }
         return out;
     }
-    
+
     public static ColorProcessor cambioColore(ByteProcessor image) {
         Image im = image.createImage();
         return new ColorProcessor(im);
     }
 
-    /*********************************************** METODI MIEI*****************************************************/
+    /**
+     * ********************************************* METODI
+     * MIEI****************************************************
+     */
     /**
      *
      * Metodo che copia un ImageProcessor in un ByteProcessor.
-     * @param ip  input ImageProcessor.
+     *
+     * @param ip input ImageProcessor.
      * @return ByteProcessor.
      */
     public static ByteProcessor copyByteProcessor(ImageProcessor ip) {
@@ -421,13 +447,16 @@ class Supporto {
 
     /**
      * Realizza la gaussiana e ne inserisce i valori in un array
-     * @param window numero di righi e colonne della matrice gaussiana. Deve essere dispari
-     * @param sigma 
+     *
+     * @param window numero di righi e colonne della matrice gaussiana. Deve
+     * essere dispari
+     * @param sigma
      * @return array della gaussiana
      * @throws IllegalArgumentException se la finestra Ë negativa, zero o pari.
-     *                                  se sigma Ë zero o negativa.
+     * se sigma Ë zero o negativa.
      */
-    public static float[] initGaussianKernel(int window, float sigma) throws IllegalArgumentException {
+    public static float[] initGaussianKernel(int window, float sigma) throws
+            IllegalArgumentException {
         controlInput(window, sigma);
         short aperture = (short) (window / 2);
         float[][] gaussianKernel = new float[2 * aperture + 1][2 * aperture + 1];
@@ -450,12 +479,14 @@ class Supporto {
 
     /**
      * controllo dei valori della gaussiana
+     *
      * @param window la finestra della gaussiana.
      * @param sigma il valore di sigma della gaussiana
-     * @throws IllegalArgumentException se la finestra Ë negativa, zero o non Ë dispari.
-     *                                  se sigma Ë zero o negativa.
+     * @throws IllegalArgumentException se la finestra Ë negativa, zero o non Ë
+     * dispari. se sigma Ë zero o negativa.
      */
-    private static void controlInput(int window, float sigma) throws IllegalArgumentException {
+    private static void controlInput(int window, float sigma) throws
+            IllegalArgumentException {
         if (window % 2 == 0) {
             throw new IllegalArgumentException("Window isn't an odd.");
         }
@@ -469,10 +500,13 @@ class Supporto {
 
     /**
      * metodo che disegna i corners nell'immagine
+     *
      * @param corn lista di tutti i corners trvati
      * @param i immagine su cui disegnare i corners
-     * @param colori array che specifica il numero di corners trovati ad ogni iterazione
-     * @return immagine a colori con i corners identificati da delle piccole croci colorate
+     * @param colori array che specifica il numero di corners trovati ad ogni
+     * iterazione
+     * @return immagine a colori con i corners identificati da delle piccole
+     * croci colorate
      */
     public static ColorProcessor disegna(List<int[]> corn, ColorProcessor i, int[] colori) {
         int width = i.getWidth();
@@ -487,9 +521,9 @@ class Supporto {
         boolean esiste = true;
         int tuttiColori[] = new int[colori.length];
         tuttiColori[0] = colore;
-        
+
         for (int[] p : corn) {
-            
+
             if (conta > colori[j]) {
                 conta = 1;
                 esiste = true;
@@ -499,43 +533,43 @@ class Supporto {
                         R = (int) (Math.random() * 256);
                         G = (int) (Math.random() * 256);
                         B = (int) (Math.random() * 256);
-                        
+
                         colore = (R << 16) | (G << 8) | B;
                         esiste = false;
-                        
+
                         for (int k = 0; k < tuttiColori.length; k++) {
                             if (colore == tuttiColori[k]) {
                                 esiste = true;
                             }
                         }
                     }
-                    
+
                     tuttiColori[j] = colore;
-                    
+
                     colore = (R << 16) | (G << 8) | B;
                 }
             }
-            
+
             for (int dx = -2; dx <= 2; dx++) {
                 if (p[0] + dx < 0 || p[0] + dx >= width) {
                     continue;
                 }
                 i.set(p[0] + dx, p[1], colore);
-                
+
             }
 
             //crea le linee verticali
             for (int dy = -2; dy <= 2; dy++) {
-                
+
                 if (p[1] + dy < 0 || p[1] + dy >= height) {
                     continue;
                 }
-                
+
                 i.set(p[0], p[1] + dy, colore);
             }
             ++conta;
         }
-        
+
         return i;
     }
 }
