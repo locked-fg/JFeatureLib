@@ -1,7 +1,9 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
+import de.lmu.dbs.jfeaturelib.utils.RotateArrays;
 import de.lmu.ifi.dbs.utilities.Arrays2;
+import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
@@ -110,7 +112,7 @@ public class KernelEdgeDetection implements FeatureDescriptor{
                     i++;
                 }
             }
-            float[][] kernelY2D = de.lmu.dbs.jfeaturelib.utils.RotateArrays.rotateFloatCW(kernelX2D);
+            float[][] kernelY2D = RotateArrays.rotateFloatCW(kernelX2D);
             i = 0;
             for(int x = 0; x<kernelWidth; x++){
                 for(int y = 0; y<kernelWidth; y++){
