@@ -1,6 +1,7 @@
-package de.lmu.dbs.jfeaturelib.features;
+package de.lmu.dbs.jfeaturelib.edgeDetector;
 
 import de.lmu.dbs.jfeaturelib.Progress;
+import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
@@ -19,7 +20,7 @@ import java.util.*;
  *
  * <pre><code>
  * //create the detector
- * CannyEdgeDetector detector = new CannyEdgeDetector();
+ * Canny detector = new Canny();
  * //adjust its parameters as desired
  * detector.setLowThreshold(0.5f);
  * detector.setHighThreshold(1f);
@@ -35,7 +36,7 @@ import java.util.*;
  * @author Tom Gibara
  * @see http://www.tomgibara.com/computer-vision/canny-edge-detector
  */
-public class CannyEdgeDetector implements FeatureDescriptor {
+public class Canny implements FeatureDescriptor {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     // statics
@@ -64,7 +65,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     /**
      * Constructs a new detector with default parameters.
      */
-    public CannyEdgeDetector() {
+    public Canny() {
         lowThreshold = 2.5f;
         highThreshold = 7.5f;
         gaussianKernelRadius = 2f;
@@ -77,7 +78,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * @deprecated since 3.1.2012
      */
     @Deprecated
-    public CannyEdgeDetector(double[] args) {
+    public Canny(double[] args) {
         lowThreshold = (float) args[0];
         highThreshold = (float) args[1];
         gaussianKernelRadius = (float) args[2];

@@ -1,6 +1,7 @@
-package de.lmu.dbs.jfeaturelib.features;
+package de.lmu.dbs.jfeaturelib.edgeDetector;
 
 import de.lmu.dbs.jfeaturelib.Progress;
+import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -15,7 +16,7 @@ import java.util.List;
  * The Marr Hildreth edge detector uses the Laplacian of the Gaussian function to detect edges.
  * Faster runtimes could by achieved by using Difference of Gaussians instead.
  */
-public class Marr_Hildreth implements FeatureDescriptor {
+public class MarrHildreth implements FeatureDescriptor {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private ColorProcessor image;
@@ -30,7 +31,7 @@ public class Marr_Hildreth implements FeatureDescriptor {
     /**
      * Creates Marr Hildreth edge detection with default parameters
      */
-    public Marr_Hildreth() {
+    public MarrHildreth() {
         this.deviation = 0.6;
         this.kernelSize = 7;
         this.times = 1;
@@ -42,7 +43,7 @@ public class Marr_Hildreth implements FeatureDescriptor {
      * @param kernelSize
      * @param times
      */
-    public Marr_Hildreth(double deviation, int kernelSize, int times) {
+    public MarrHildreth(double deviation, int kernelSize, int times) {
         this.deviation = deviation;
         this.kernelSize = kernelSize;
         this.times = times;

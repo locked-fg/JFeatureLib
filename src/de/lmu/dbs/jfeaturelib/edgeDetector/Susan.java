@@ -1,6 +1,7 @@
-package de.lmu.dbs.jfeaturelib.features;
+package de.lmu.dbs.jfeaturelib.edgeDetector;
 
 import de.lmu.dbs.jfeaturelib.Progress;
+import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
 import de.lmu.dbs.jfeaturelib.utils.RGBtoGray;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
@@ -17,7 +18,7 @@ import java.util.List;
  * FIXME docu
  * @author Benedikt
  */
-public class SusanEdge implements FeatureDescriptor {
+public class Susan implements FeatureDescriptor {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private int radius;
@@ -28,7 +29,7 @@ public class SusanEdge implements FeatureDescriptor {
     /**
      * Standart constructor with radius 2 and threshold 15
      */
-    public SusanEdge() {
+    public Susan() {
         this.radius = 2;
         this.threshold = 15;
     }
@@ -38,7 +39,7 @@ public class SusanEdge implements FeatureDescriptor {
      * @param radius Radius in which the image is looked at
      * @param threshold Threshold for difference in luminosity
      */
-    public SusanEdge(int radius, int threshold) {
+    public Susan(int radius, int threshold) {
         this.radius = radius;
         this.threshold = threshold;
 
