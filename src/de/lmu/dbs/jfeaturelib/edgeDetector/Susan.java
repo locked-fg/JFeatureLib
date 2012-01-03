@@ -4,7 +4,6 @@ import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.dbs.jfeaturelib.utils.RGBtoGray;
 import ij.plugin.filter.PlugInFilter;
-import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
@@ -62,7 +61,7 @@ public class Susan implements Descriptor {
         }
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
 
-        this.image = (ColorProcessor) oip;
+        this.image = (ColorProcessor) ip;
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
