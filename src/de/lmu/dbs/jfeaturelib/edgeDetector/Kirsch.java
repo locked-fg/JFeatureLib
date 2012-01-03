@@ -84,6 +84,8 @@ public class Kirsch implements Descriptor {
             pcs.firePropertyChange(Progress.getName(), null, new Progress((int) step));
         }
 
+        // set the data back into the incoming object
+        ip.setPixels(result.getPixels());
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
 
