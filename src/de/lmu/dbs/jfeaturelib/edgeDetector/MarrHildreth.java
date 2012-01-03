@@ -3,16 +3,12 @@ package de.lmu.dbs.jfeaturelib.edgeDetector;
 import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * The Marr Hildreth edge detector uses the Laplacian of the Gaussian function
@@ -102,11 +98,7 @@ public class MarrHildreth implements Descriptor {
      */
     @Override
     public EnumSet<Supports> supports() {
-        EnumSet set = EnumSet.of(
-                Supports.DOES_8C,
-                Supports.DOES_8G,
-                Supports.DOES_RGB,
-                Supports.DOES_16);
+        EnumSet set = EnumSet.of(Supports.DOES_RGB);
         return set;
     }
 
@@ -117,6 +109,9 @@ public class MarrHildreth implements Descriptor {
      */
     @Override
     public void run(ImageProcessor ip) {
+        if (!ip.getClass().isAssignableFrom(ColorProcessor.class)) {
+            throw new IllegalArgumentException("incompatible processor");
+        }
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         image = (ColorProcessor) ip;
         process();
