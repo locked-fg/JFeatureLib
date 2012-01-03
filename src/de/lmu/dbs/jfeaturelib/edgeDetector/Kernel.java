@@ -4,7 +4,6 @@ import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
-import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -16,7 +15,7 @@ import java.util.EnumSet;
  * Basiacally it is just a wrapper for ImageJ's ImageProcessor.convolve().
  *
  * Predefined masks are SOBEL, SCHARR, PREWITT
- * 
+ *
  * @see ImageProcessor#convolve(float[], int, int)
  * @author Benedikt
  * @author Franz
@@ -65,7 +64,8 @@ public class Kernel implements Descriptor {
     }
 
     /**
-     * Constructs a new detector with given double[] kernel
+     * Constructs a new detector with given double[] kernel. The double array is
+     * converted immediately to a float array.
      *
      * @param kernel double[] with kernel
      * @param width width of kernel
@@ -75,7 +75,7 @@ public class Kernel implements Descriptor {
     }
 
     /**
-     * Constructs a new detector with given float[] kernel
+     * Constructs a new detector with given float[] kernel and according width.
      *
      * @param kernel float[] with kernel
      * @param width width of kernel
@@ -85,12 +85,6 @@ public class Kernel implements Descriptor {
         this.kernel = kernel;
     }
 
-    /**
-     * Defines the capability of the algorithm.
-     *
-     * @see PlugInFilter
-     * @see #supports()
-     */
     @Override
     public EnumSet<Supports> supports() {
         EnumSet set = EnumSet.of(
