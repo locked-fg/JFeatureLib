@@ -4,6 +4,7 @@ import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.dbs.jfeaturelib.utils.RGBtoGray;
 import ij.plugin.filter.PlugInFilter;
+import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
@@ -11,9 +12,11 @@ import java.beans.PropertyChangeSupport;
 import java.util.EnumSet;
 
 /**
- * FIXME docu
+ * Implementation of the SUSAN (Smallest Univalue Segment Assimilating Nucleus)
+ * edge detector.
  *
  * @author Benedikt
+ * @see http://en.wikipedia.org/wiki/Corner_detection#The_SUSAN_corner_detector
  */
 public class Susan implements Descriptor {
 
@@ -40,7 +43,6 @@ public class Susan implements Descriptor {
 
     }
 
-
     /**
      * Defines the capability of the algorithm.
      *
@@ -49,22 +51,18 @@ public class Susan implements Descriptor {
      */
     @Override
     public EnumSet<Supports> supports() {
-        EnumSet set = EnumSet.of(
-                Supports.DOES_8C,
-                Supports.DOES_8G,
-                Supports.DOES_RGB);
+        EnumSet set = EnumSet.of(Supports.DOES_RGB);
         return set;
     }
 
-    /**
-     *
-     * @param ip ImageProcessor of the source image
-     */
     @Override
     public void run(ImageProcessor ip) {
+        if (!ip.getClass().isAssignableFrom(ColorProcessor.class)) {
+            throw new IllegalArgumentException("incompatible processor");
+        }
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
 
-        this.image = (ColorProcessor) ip;
+        this.image = (ColorProcessor) oip;
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
@@ -83,7 +81,7 @@ public class Susan implements Descriptor {
         int WIDTH = image.getWidth();
         int HEIGHT = image.getHeight();
         int[][] picture = image.getIntArray();
-        
+
         ColorProcessor result = new ColorProcessor(WIDTH, HEIGHT);
         int[][] mask = new int[radius * 2 + 1][radius * 2 + 1];
         int i = 0;
@@ -147,8 +145,7 @@ public class Susan implements Descriptor {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
-    
-    
+
     //<editor-fold defaultstate="collapsed" desc="accessors">
     /**
      * @return Radius in which the image is investigated
@@ -156,7 +153,7 @@ public class Susan implements Descriptor {
     public int getRadius() {
         return radius;
     }
-    
+
     /**
      *
      * @param radius Radius in which the image is investigated
@@ -164,7 +161,7 @@ public class Susan implements Descriptor {
     public void setRadius(int radius) {
         this.radius = radius;
     }
-    
+
     /**
      *
      * @return Threshold for difference in luminosity
@@ -172,7 +169,7 @@ public class Susan implements Descriptor {
     public int getThreshold() {
         return threshold;
     }
-    
+
     /**
      *
      * @param threshold Threshold for difference in luminosity
