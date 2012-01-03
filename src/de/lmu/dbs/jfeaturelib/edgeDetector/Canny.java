@@ -391,11 +391,7 @@ public class Canny implements Descriptor {
      */
     @Override
     public EnumSet<Supports> supports() {
-        EnumSet set = EnumSet.of(
-                Supports.DOES_8C,
-                Supports.DOES_8G,
-                Supports.DOES_RGB,
-                Supports.DOES_16);
+        EnumSet set = EnumSet.of(Supports.DOES_RGB);
         return set;
     }
 
