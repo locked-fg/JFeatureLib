@@ -6,6 +6,7 @@ import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
 import java.util.EnumSet;
 
 /**
@@ -68,18 +69,16 @@ public class Kirsch implements Descriptor {
             throw new IllegalArgumentException("incompatible processor");
         }
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
-        double step = 12.5;
+        double step = 0;
 
-        // convolve with the first mask
-        ByteProcessor result = (ByteProcessor) ip.duplicate();
-        new Kernel(g1, 3).run(result);
-        pcs.firePropertyChange(Progress.getName(), null, new Progress((int) step));
+        // initialize output array with absolute minimum
+        ByteProcessor result = new ByteProcessor(ip.getWidth(), ip.getHeight());
+        Arrays.fill((byte[]) result.getPixels(), Byte.MIN_VALUE);
 
-        // convolve subsequent masks and find max
-        float[][] kernels = new float[][]{g2, g3, g4, g5, g6, g7, g8};
+        // convolve masks and find max
+        float[][] kernels = new float[][]{g1, g2, g3, g4, g5, g6, g7, g8};
         for (float[] k : kernels) {
             convolveAndCompare(k, ip, result);
-
             step += 12.5;
             pcs.firePropertyChange(Progress.getName(), null, new Progress((int) step));
         }
@@ -89,6 +88,16 @@ public class Kirsch implements Descriptor {
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
 
+    /**
+     * Duplicates the incoming ip, convolves it with the given kernel and
+     * compares the outcome with the data in the result processor. Afterwards
+     * the maximum-operation is performed so that the largest values of both
+     * processor will retain in the result.
+     *
+     * @param k
+     * @param ip
+     * @param result
+     */
     private void convolveAndCompare(float[] k, ImageProcessor ip, ByteProcessor result) {
         ByteProcessor compare = (ByteProcessor) ip.duplicate();
         new Kernel(k, 3).run(compare);
