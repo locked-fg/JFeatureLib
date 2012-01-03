@@ -2,30 +2,26 @@ package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
+import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
-/** 
- * from http://www.tomgibara.com/computer-vision/canny-edge-detector
- * <p><em>This software has been released into the public domain.
- * <strong>Please read the notes in this source file for additional information.
+/**
+ * <p><em>This software has been released into the public domain. <strong>Please
+ * read the notes in this source file for additional information.
  * </strong></em></p>
- * 
+ *
  * <p>This class provides a configurable implementation of the Canny edge
- * detection algorithm. This classic algorithm has a number of shortcomings,
- * but remains an effective tool in many scenarios. <em>This class is designed
- * for single threaded use only.</em></p>
- * 
+ * detection algorithm. This classic algorithm has a number of shortcomings, but
+ * remains an effective tool in many scenarios. <em>This class is designed for
+ * single threaded use only.</em></p>
+ *
  * <p>Sample usage:</p>
- * 
+ *
  * <pre><code>
  * //create the detector
  * CannyEdgeDetector detector = new CannyEdgeDetector();
@@ -37,11 +33,12 @@ import java.util.List;
  * detector.process();
  * BufferedImage edges = detector.gEdgesImage();
  * </code></pre>
- * 
+ *
  * <p>For a more complete understanding of this edge detector's parameters
  * consult an explanation of the algorithm.</p>
- * 
+ *
  * @author Tom Gibara
+ * http://www.tomgibara.com/computer-vision/canny-edge-detector
  *
  */
 public class CannyEdgeDetector implements FeatureDescriptor {
@@ -93,7 +90,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     /**
      * The image that provides the luminance data used by this detector to
      * generate edges.
-     * 
+     *
      * @return the source image, or null
      */
     public BufferedImage gSourceImage() {
@@ -102,9 +99,9 @@ public class CannyEdgeDetector implements FeatureDescriptor {
 
     /**
      * Specifies the image that will provide the luminance data in which edges
-     * will be detected. A source image must be set before the process method
-     * is called.
-     *  
+     * will be detected. A source image must be set before the process method is
+     * called.
+     *
      * @param image a source of luminance data
      */
     public void sSourceImage(BufferedImage image) {
@@ -116,7 +113,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * the process method. The buffered image is an opaque image of type
      * BufferedImage.TYPE_INT_ARGB in which edge pixels are white and all other
      * pixels are black.
-     * 
+     *
      * @return an image containing the detected edges, or null if the process
      * method has not yet been called.
      */
@@ -128,7 +125,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * Sets the edges image. Calling this method will not change the operation
      * of the edge detector in any way. It is intended to provide a means by
      * which the memory referenced by the detector object may be reduced.
-     * 
+     *
      * @param edgesImage expected (though not required) to be null
      */
     public void sEdgesImage(BufferedImage edgesImage) {
@@ -137,7 +134,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
 
     /**
      * The low threshold for hysteresis. The default value is 2.5.
-     * 
+     *
      * @return the low hysteresis threshold
      */
     public float getLowThreshold() {
@@ -147,8 +144,9 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     /**
      * Sets the low threshold for hysteresis. Suitable values for this parameter
      * must be determined experimentally for each application. It is nonsensical
-     * (though not prohibited) for this value to exceed the high threshold value.
-     * 
+     * (though not prohibited) for this value to exceed the high threshold
+     * value.
+     *
      * @param threshold a low hysteresis threshold
      */
     public void setLowThreshold(float threshold) {
@@ -160,7 +158,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
 
     /**
      * The high threshold for hysteresis. The default value is 7.5.
-     * 
+     *
      * @return the high hysteresis threshold
      */
     public float getHighThreshold() {
@@ -172,7 +170,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * parameter must be determined experimentally for each application. It is
      * nonsensical (though not prohibited) for this value to be less than the
      * low threshold value.
-     * 
+     *
      * @param threshold a high hysteresis threshold
      */
     public void setHighThreshold(float threshold) {
@@ -183,9 +181,9 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     }
 
     /**
-     * The number of pixels across which the Gaussian kernel is applied.
-     * The default value is 16.
-     * 
+     * The number of pixels across which the Gaussian kernel is applied. The
+     * default value is 16.
+     *
      * @return the radius of the convolution operation in pixels
      */
     public int getGaussianKernelWidth() {
@@ -193,10 +191,10 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     }
 
     /**
-     * The number of pixels across which the Gaussian kernel is applied.
-     * This implementation will reduce the radius if the contribution of pixel
-     * values is deemed negligable, so this is actually a maximum radius.
-     * 
+     * The number of pixels across which the Gaussian kernel is applied. This
+     * implementation will reduce the radius if the contribution of pixel values
+     * is deemed negligable, so this is actually a maximum radius.
+     *
      * @param gaussianKernelWidth a radius for the convolution operation in
      * pixels, at least 2.
      */
@@ -210,7 +208,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     /**
      * The radius of the Gaussian convolution kernel used to smooth the source
      * image prior to gradient calculation. The default value is 16.
-     * 
+     *
      * @return the Gaussian kernel radius in pixels
      */
     public float getGaussianKernelRadius() {
@@ -220,7 +218,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     /**
      * Sets the radius of the Gaussian convolution kernel used to smooth the
      * source image prior to gradient calculation.
-     * 
+     *
      * @return a Gaussian kernel radius in pixels, must exceed 0.1f.
      */
     public void setGaussianKernelRadius(float gaussianKernelRadius) {
@@ -234,7 +232,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      * Whether the luminance data extracted from the source image is normalized
      * by linearizing its histogram prior to edge extraction. The default value
      * is false.
-     * 
+     *
      * @return whether the contrast is normalized
      */
     public boolean isContrastNormalized() {
@@ -243,6 +241,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
 
     /**
      * Sets whether the contrast is normalized
+     *
      * @param contrastNormalized true if the contrast should be normalized,
      * false otherwise
      */
@@ -409,38 +408,60 @@ public class CannyEdgeDetector implements FeatureDescriptor {
                  * need to compare the gradient magnitude to that in the
                  * direction of the gradient; only if the value is a local
                  * maximum do we consider the point as an edge candidate.
-                 * 
+                 *
                  * We need to break the comparison into a number of different
                  * cases depending on the gradient direction so that the
                  * appropriate values can be used. To avoid computing the
                  * gradient direction, we use two simple comparisons: first we
-                 * check that the partial derivatives have the same sign (1)
-                 * and then we check which is larger (2). As a consequence, we
-                 * have reduced the problem to one of four identical cases that
-                 * each test the central gradient magnitude against the values at
-                 * two points with 'identical support'; what this means is that
-                 * the geometry required to accurately interpolate the magnitude
-                 * of gradient function at those points has an identical
-                 * geometry (upto right-angled-rotation/reflection).
-                 * 
+                 * check that the partial derivatives have the same sign (1) and
+                 * then we check which is larger (2). As a consequence, we have
+                 * reduced the problem to one of four identical cases that each
+                 * test the central gradient magnitude against the values at two
+                 * points with 'identical support'; what this means is that the
+                 * geometry required to accurately interpolate the magnitude of
+                 * gradient function at those points has an identical geometry
+                 * (upto right-angled-rotation/reflection).
+                 *
                  * When comparing the central gradient to the two interpolated
                  * values, we avoid performing any divisions by multiplying both
                  * sides of each inequality by the greater of the two partial
                  * derivatives. The common comparand is stored in a temporary
                  * variable (3) and reused in the mirror case (4).
-                 * 
+                 *
                  */
-                if (xGrad * yGrad <= (float) 0 /*(1)*/
-                        ? Math.abs(xGrad) >= Math.abs(yGrad) /*(2)*/
-                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /*(3)*/
-                        && tmp > Math.abs(yGrad * swMag - (xGrad + yGrad) * wMag) /*(4)*/
-                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * neMag - (yGrad + xGrad) * nMag) /*(3)*/
-                        && tmp > Math.abs(xGrad * swMag - (yGrad + xGrad) * sMag) /*(4)*/
-                        : Math.abs(xGrad) >= Math.abs(yGrad) /*(2)*/
-                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * seMag + (xGrad - yGrad) * eMag) /*(3)*/
-                        && tmp > Math.abs(yGrad * nwMag + (xGrad - yGrad) * wMag) /*(4)*/
-                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * seMag + (yGrad - xGrad) * sMag) /*(3)*/
-                        && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /*(4)*/) {
+                if (xGrad * yGrad <= (float) 0 /*
+                         * (1)
+                         */
+                        ? Math.abs(xGrad) >= Math.abs(yGrad) /*
+                         * (2)
+                         */
+                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /*
+                         * (3)
+                         */
+                        && tmp > Math.abs(yGrad * swMag - (xGrad + yGrad) * wMag) /*
+                         * (4)
+                         */
+                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * neMag - (yGrad + xGrad) * nMag) /*
+                         * (3)
+                         */
+                        && tmp > Math.abs(xGrad * swMag - (yGrad + xGrad) * sMag) /*
+                         * (4)
+                         */
+                        : Math.abs(xGrad) >= Math.abs(yGrad) /*
+                         * (2)
+                         */
+                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * seMag + (xGrad - yGrad) * eMag) /*
+                         * (3)
+                         */
+                        && tmp > Math.abs(yGrad * nwMag + (xGrad - yGrad) * wMag) /*
+                         * (4)
+                         */
+                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * seMag + (yGrad - xGrad) * sMag) /*
+                         * (3)
+                         */
+                        && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /*
+                         * (4)
+                         */) {
                     magnitude[index] = gradMag >= MAGNITUDE_LIMIT ? MAGNITUDE_MAX : (int) (MAGNITUDE_SCALE * gradMag);
                     //NOTE: The orientation of the edge is not employed by this
                     //implementation. It is a simple matter to compute it at
@@ -580,8 +601,8 @@ public class CannyEdgeDetector implements FeatureDescriptor {
 
     // Begin of Code added by Benedikt Zierer
     /**
-     * Returns the image edges as INT_ARGB array.
-     * This can be used to create a buffered image, if the dimensions are known.
+     * Returns the image edges as INT_ARGB array. This can be used to create a
+     * buffered image, if the dimensions are known.
      */
     @Override
     public List<double[]> getFeatures() {
@@ -605,9 +626,9 @@ public class CannyEdgeDetector implements FeatureDescriptor {
 
     /**
      * Defines the capability of the algorithm.
-     * 
+     *
      * @see PlugInFilter
-     * @see #supports() 
+     * @see #supports()
      */
     @Override
     public EnumSet<Supports> supports() {
@@ -623,6 +644,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
 
     /**
      * Starts the canny edge detection.
+     *
      * @param ip ImageProcessor of the source image
      */
     @Override
