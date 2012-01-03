@@ -3,6 +3,7 @@ package de.lmu.dbs.jfeaturelib.utils;
 /**
  * Rotates 2D arrays like matrices
  * @author Benedikt
+ * @deprecated since 1.3.2012
  */
 public class RotateArrays {
     
