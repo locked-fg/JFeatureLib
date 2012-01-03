@@ -1,24 +1,26 @@
 package de.lmu.dbs.jfeaturelib.features;
 
-
 import de.lmu.dbs.jfeaturelib.Progress;
 import ij.process.ImageProcessor;
-import java.beans.PropertyChangeListener;
-import java.util.EnumSet;
-import java.util.List;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
- * The CEDD feature was created, implemented and provided by Savvas A. Chatzichristofis<br/>
- * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis,
- * <i>CEDD: Color and Edge Directivity Descriptor. A Compact
- * Descriptor for Image Indexing and Retrieval</i>, A. Gasteratos, M. Vincze, and J.K.
- * Tsotsos (Eds.): ICVS 2008, LNCS 5008, pp. 312-322, 2008.
+ * The CEDD feature was created, implemented and provided by Savvas A.
+ * Chatzichristofis<br/> More information can be found in: Savvas A.
+ * Chatzichristofis and Yiannis S. Boutalis,
+ *
+ * <i>CEDD: Color and Edge Directivity Descriptor. A Compact Descriptor for
+ * Image Indexing and Retrieval</i>, A. Gasteratos, M. Vincze, and J.K. Tsotsos
+ * (Eds.): ICVS 2008, LNCS 5008, pp. 312-322, 2008.
  */
 public class CEDD implements FeatureDescriptor {
+
     public double T0;
     public double T1;
     public double T2;
@@ -26,7 +28,7 @@ public class CEDD implements FeatureDescriptor {
     public boolean Compact = false;
     protected double[] data = null;
     private de.lmu.dbs.jfeaturelib.features.lire.CEDD cedd;
-    private BufferedImage bi;    
+    private BufferedImage bi;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public CEDD(double Th0, double Th1, double Th2, double Th3, boolean CompactDescriptor) {
@@ -54,7 +56,7 @@ public class CEDD implements FeatureDescriptor {
         data = cedd.getData();
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
-    
+
     @Override
     public List<double[]> getFeatures() {
         if (data != null) {
@@ -77,13 +79,12 @@ public class CEDD implements FeatureDescriptor {
     }
 
     @Override
-    public EnumSet<Supports> supports() {        
+    public EnumSet<Supports> supports() {
         EnumSet set = EnumSet.of(
-            Supports.NoChanges,
-            Supports.DOES_8C,
-            Supports.DOES_8G,
-            Supports.DOES_RGB
-        );
+                Supports.NoChanges,
+                Supports.DOES_8C,
+                Supports.DOES_8G,
+                Supports.DOES_RGB);
         //set.addAll(DOES_ALL);
         return set;
     }
