@@ -1,34 +1,21 @@
 package de.lmu.dbs.jfeaturelib.edgeDetector;
 
+import de.lmu.dbs.jfeaturelib.Descriptor;
+import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
-import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumSet;
 
 /**
  * A configurable implementation of the Canny edge detection algorithm. This
  * classic algorithm has a number of shortcomings, but remains an effective tool
  * in many scenarios.
- *
- * Sample usage:
- *
- * <pre><code>
- * //create the detector
- * Canny detector = new Canny();
- * //adjust its parameters as desired
- * detector.setLowThreshold(0.5f);
- * detector.setHighThreshold(1f);
- * //apply it to an image
- * detector.setSourceImage(frame);
- * detector.process();
- * BufferedImage edges = detector.getEdgesImage();
- * </code></pre>
  *
  * The original source code was provided by Tom Gibara who rekleased the code to
  * the public domain.
@@ -36,7 +23,7 @@ import java.util.*;
  * @author Tom Gibara
  * @see http://www.tomgibara.com/computer-vision/canny-edge-detector
  */
-public class Canny implements FeatureDescriptor {
+public class Canny implements Descriptor {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     // statics
@@ -73,19 +60,7 @@ public class Canny implements FeatureDescriptor {
         contrastNormalized = false;
     }
 
-    /**
-     * @param args [lowthreshold, highThreshold, kernelRadius, kernelwidth]
-     * @deprecated since 3.1.2012
-     */
-    @Deprecated
-    public Canny(double[] args) {
-        lowThreshold = (float) args[0];
-        highThreshold = (float) args[1];
-        gaussianKernelRadius = (float) args[2];
-        gaussianKernelWidth = (int) args[3];
-    }
-
-    public void process() {
+    private void process() {
         width = sourceImage.getWidth();
         height = sourceImage.getHeight();
         picsize = width * height;
@@ -99,7 +74,7 @@ public class Canny implements FeatureDescriptor {
         }
         pcs.firePropertyChange(Progress.getName(), null, new Progress(40, "contrast normalized"));
         computeGradients(gaussianKernelRadius, gaussianKernelWidth);
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(10, "gradients computed"));
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(50, "gradients computed"));
         int low = Math.round(lowThreshold * MAGNITUDE_SCALE);
         pcs.firePropertyChange(Progress.getName(), null, new Progress(60, "low rounded"));
         int high = Math.round(highThreshold * MAGNITUDE_SCALE);
@@ -409,29 +384,6 @@ public class Canny implements FeatureDescriptor {
     }
 
     /**
-     * Returns the image edges as INT_ARGB array. This can be used to create a
-     * buffered image, if the dimensions are known.
-     */
-    @Override
-    public List<double[]> getFeatures() {
-        if (data != null) {
-            ArrayList<double[]> result = new ArrayList<>(1);
-            result.add(Arrays2.convertToDouble(data));
-            return result;
-        } else {
-            return Collections.EMPTY_LIST;
-        }
-    }
-
-    /**
-     * Returns information about the getFeauture returns in a String array.
-     */
-    @Override
-    public String getDescription() {
-        return "Canny edge detection algorithm";
-    }
-
-    /**
      * Defines the capability of the algorithm.
      *
      * @see PlugInFilter
@@ -440,12 +392,10 @@ public class Canny implements FeatureDescriptor {
     @Override
     public EnumSet<Supports> supports() {
         EnumSet set = EnumSet.of(
-                Supports.NoChanges,
                 Supports.DOES_8C,
                 Supports.DOES_8G,
                 Supports.DOES_RGB,
                 Supports.DOES_16);
-        //set.addAll(DOES_ALL);
         return set;
     }
 
@@ -456,11 +406,17 @@ public class Canny implements FeatureDescriptor {
      */
     @Override
     public void run(ImageProcessor ip) {
-        ColorProcessor cp = (ColorProcessor) ip;
-        setSourceImage(cp.getBufferedImage());
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
+
+        setSourceImage(ip.getBufferedImage());
         process();
+        writeResult(ip);
+
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
+    }
+
+    private void writeResult(ImageProcessor ip) {
+        ip.insert(new ColorProcessor(edgesImage), 0, 0);
     }
 
     @Override
@@ -469,39 +425,6 @@ public class Canny implements FeatureDescriptor {
     }
 
     //<editor-fold defaultstate="collapsed" desc="accessor methods">
-    /**
-     * The image that provides the luminance data used by this detector to
-     * generate edges.
-     *
-     * @return the source image, or null
-     */
-    public BufferedImage getSourceImage() {
-        return sourceImage;
-    }
-
-    /**
-     * Specifies the image that will provide the luminance data in which edges
-     * will be detected.
-     *
-     * @param image a source of luminance data
-     */
-    public void setSourceImage(BufferedImage image) {
-        sourceImage = image;
-    }
-
-    /**
-     * Obtains an image containing the edges detected during the last call to
-     * the process method.
-     *
-     * The image is an opaque image of type BufferedImage.TYPE_INT_ARGB in which
-     * edge pixels are white and all other pixels are black.
-     *
-     * @return an image containing the detected edges, or null
-     */
-    public BufferedImage getEdgesImage() {
-        return edgesImage;
-    }
-
     /**
      * Get the low threshold for hysteresis.
      *
@@ -619,6 +542,10 @@ public class Canny implements FeatureDescriptor {
      */
     public void sContrastNormalized(boolean contrastNormalized) {
         this.contrastNormalized = contrastNormalized;
+    }
+
+    private void setSourceImage(BufferedImage srcImage) {
+        this.sourceImage = srcImage;
     }
     //</editor-fold>
 }
