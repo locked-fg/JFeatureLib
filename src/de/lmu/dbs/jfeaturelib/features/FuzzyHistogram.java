@@ -31,7 +31,7 @@ public class FuzzyHistogram implements FeatureDescriptor {
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         fuzzy.extract(bi);
         data = fuzzy.getData();
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
     
     @Override
