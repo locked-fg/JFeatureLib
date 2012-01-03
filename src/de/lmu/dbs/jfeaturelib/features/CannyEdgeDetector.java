@@ -11,16 +11,11 @@ import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 /**
- * <p><em>This software has been released into the public domain. <strong>Please
- * read the notes in this source file for additional information.
- * </strong></em></p>
+ * A configurable implementation of the Canny edge detection algorithm. This
+ * classic algorithm has a number of shortcomings, but remains an effective tool
+ * in many scenarios.
  *
- * <p>This class provides a configurable implementation of the Canny edge
- * detection algorithm. This classic algorithm has a number of shortcomings, but
- * remains an effective tool in many scenarios. <em>This class is designed for
- * single threaded use only.</em></p>
- *
- * <p>Sample usage:</p>
+ * Sample usage:
  *
  * <pre><code>
  * //create the detector
@@ -29,17 +24,16 @@ import java.util.*;
  * detector.setLowThreshold(0.5f);
  * detector.setHighThreshold(1f);
  * //apply it to an image
- * detector.sSourceImage(frame);
+ * detector.setSourceImage(frame);
  * detector.process();
- * BufferedImage edges = detector.gEdgesImage();
+ * BufferedImage edges = detector.getEdgesImage();
  * </code></pre>
  *
- * <p>For a more complete understanding of this edge detector's parameters
- * consult an explanation of the algorithm.</p>
+ * The original source code was provided by Tom Gibara who rekleased the code to
+ * the public domain.
  *
  * @author Tom Gibara
- * http://www.tomgibara.com/computer-vision/canny-edge-detector
- *
+ * @see http://www.tomgibara.com/computer-vision/canny-edge-detector
  */
 public class CannyEdgeDetector implements FeatureDescriptor {
 
@@ -67,7 +61,6 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     private float[] xGradient;
     private float[] yGradient;
 
-    // constructors
     /**
      * Constructs a new detector with default parameters.
      */
@@ -79,6 +72,11 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         contrastNormalized = false;
     }
 
+    /**
+     * @param args [lowthreshold, highThreshold, kernelRadius, kernelwidth]
+     * @deprecated since 3.1.2012
+     */
+    @Deprecated
     public CannyEdgeDetector(double[] args) {
         lowThreshold = (float) args[0];
         highThreshold = (float) args[1];
@@ -86,176 +84,12 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         gaussianKernelWidth = (int) args[3];
     }
 
-    // accessors
-    /**
-     * The image that provides the luminance data used by this detector to
-     * generate edges.
-     *
-     * @return the source image, or null
-     */
-    public BufferedImage gSourceImage() {
-        return sourceImage;
-    }
-
-    /**
-     * Specifies the image that will provide the luminance data in which edges
-     * will be detected. A source image must be set before the process method is
-     * called.
-     *
-     * @param image a source of luminance data
-     */
-    public void sSourceImage(BufferedImage image) {
-        sourceImage = image;
-    }
-
-    /**
-     * Obtains an image containing the edges detected during the last call to
-     * the process method. The buffered image is an opaque image of type
-     * BufferedImage.TYPE_INT_ARGB in which edge pixels are white and all other
-     * pixels are black.
-     *
-     * @return an image containing the detected edges, or null if the process
-     * method has not yet been called.
-     */
-    public BufferedImage gEdgesImage() {
-        return edgesImage;
-    }
-
-    /**
-     * Sets the edges image. Calling this method will not change the operation
-     * of the edge detector in any way. It is intended to provide a means by
-     * which the memory referenced by the detector object may be reduced.
-     *
-     * @param edgesImage expected (though not required) to be null
-     */
-    public void sEdgesImage(BufferedImage edgesImage) {
-        this.edgesImage = edgesImage;
-    }
-
-    /**
-     * The low threshold for hysteresis. The default value is 2.5.
-     *
-     * @return the low hysteresis threshold
-     */
-    public float getLowThreshold() {
-        return lowThreshold;
-    }
-
-    /**
-     * Sets the low threshold for hysteresis. Suitable values for this parameter
-     * must be determined experimentally for each application. It is nonsensical
-     * (though not prohibited) for this value to exceed the high threshold
-     * value.
-     *
-     * @param threshold a low hysteresis threshold
-     */
-    public void setLowThreshold(float threshold) {
-        if (threshold < 0) {
-            throw new IllegalArgumentException();
-        }
-        lowThreshold = threshold;
-    }
-
-    /**
-     * The high threshold for hysteresis. The default value is 7.5.
-     *
-     * @return the high hysteresis threshold
-     */
-    public float getHighThreshold() {
-        return highThreshold;
-    }
-
-    /**
-     * Sets the high threshold for hysteresis. Suitable values for this
-     * parameter must be determined experimentally for each application. It is
-     * nonsensical (though not prohibited) for this value to be less than the
-     * low threshold value.
-     *
-     * @param threshold a high hysteresis threshold
-     */
-    public void setHighThreshold(float threshold) {
-        if (threshold < 0) {
-            throw new IllegalArgumentException();
-        }
-        highThreshold = threshold;
-    }
-
-    /**
-     * The number of pixels across which the Gaussian kernel is applied. The
-     * default value is 16.
-     *
-     * @return the radius of the convolution operation in pixels
-     */
-    public int getGaussianKernelWidth() {
-        return gaussianKernelWidth;
-    }
-
-    /**
-     * The number of pixels across which the Gaussian kernel is applied. This
-     * implementation will reduce the radius if the contribution of pixel values
-     * is deemed negligable, so this is actually a maximum radius.
-     *
-     * @param gaussianKernelWidth a radius for the convolution operation in
-     * pixels, at least 2.
-     */
-    public void setGaussianKernelWidth(int gaussianKernelWidth) {
-        if (gaussianKernelWidth < 2) {
-            throw new IllegalArgumentException();
-        }
-        this.gaussianKernelWidth = gaussianKernelWidth;
-    }
-
-    /**
-     * The radius of the Gaussian convolution kernel used to smooth the source
-     * image prior to gradient calculation. The default value is 16.
-     *
-     * @return the Gaussian kernel radius in pixels
-     */
-    public float getGaussianKernelRadius() {
-        return gaussianKernelRadius;
-    }
-
-    /**
-     * Sets the radius of the Gaussian convolution kernel used to smooth the
-     * source image prior to gradient calculation.
-     *
-     * @return a Gaussian kernel radius in pixels, must exceed 0.1f.
-     */
-    public void setGaussianKernelRadius(float gaussianKernelRadius) {
-        if (gaussianKernelRadius < 0.1f) {
-            throw new IllegalArgumentException();
-        }
-        this.gaussianKernelRadius = gaussianKernelRadius;
-    }
-
-    /**
-     * Whether the luminance data extracted from the source image is normalized
-     * by linearizing its histogram prior to edge extraction. The default value
-     * is false.
-     *
-     * @return whether the contrast is normalized
-     */
-    public boolean isContrastNormalized() {
-        return contrastNormalized;
-    }
-
-    /**
-     * Sets whether the contrast is normalized
-     *
-     * @param contrastNormalized true if the contrast should be normalized,
-     * false otherwise
-     */
-    public void sContrastNormalized(boolean contrastNormalized) {
-        this.contrastNormalized = contrastNormalized;
-    }
-
-    // methods
     public void process() {
         width = sourceImage.getWidth();
         height = sourceImage.getHeight();
         picsize = width * height;
         pcs.firePropertyChange(Progress.getName(), null, new Progress(10, "properties initialized"));
-        initArrays();
+        initialize();
         pcs.firePropertyChange(Progress.getName(), null, new Progress(20, "arrays initialized"));
         readLuminance();
         pcs.firePropertyChange(Progress.getName(), null, new Progress(30, "luminance read"));
@@ -277,8 +111,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "edges written"));
     }
 
-    // private utility methods
-    private void initArrays() {
+    private void initialize() {
         if (data == null || picsize != data.length) {
             data = new int[picsize];
             magnitude = new int[picsize];
@@ -429,39 +262,17 @@ public class CannyEdgeDetector implements FeatureDescriptor {
                  * variable (3) and reused in the mirror case (4).
                  *
                  */
-                if (xGrad * yGrad <= (float) 0 /*
-                         * (1)
-                         */
-                        ? Math.abs(xGrad) >= Math.abs(yGrad) /*
-                         * (2)
-                         */
-                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /*
-                         * (3)
-                         */
-                        && tmp > Math.abs(yGrad * swMag - (xGrad + yGrad) * wMag) /*
-                         * (4)
-                         */
-                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * neMag - (yGrad + xGrad) * nMag) /*
-                         * (3)
-                         */
-                        && tmp > Math.abs(xGrad * swMag - (yGrad + xGrad) * sMag) /*
-                         * (4)
-                         */
-                        : Math.abs(xGrad) >= Math.abs(yGrad) /*
-                         * (2)
-                         */
-                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * seMag + (xGrad - yGrad) * eMag) /*
-                         * (3)
-                         */
-                        && tmp > Math.abs(yGrad * nwMag + (xGrad - yGrad) * wMag) /*
-                         * (4)
-                         */
-                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * seMag + (yGrad - xGrad) * sMag) /*
-                         * (3)
-                         */
-                        && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /*
-                         * (4)
-                         */) {
+                if (xGrad * yGrad <= (float) 0 /*(1)*/
+                        ? Math.abs(xGrad) >= Math.abs(yGrad) /* (2) */
+                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /* (3) */
+                        && tmp > Math.abs(yGrad * swMag - (xGrad + yGrad) * wMag) /* (4) */
+                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * neMag - (yGrad + xGrad) * nMag) /* (3) */
+                        && tmp > Math.abs(xGrad * swMag - (yGrad + xGrad) * sMag) /* (4) */
+                        : Math.abs(xGrad) >= Math.abs(yGrad) /* (2) */
+                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * seMag + (xGrad - yGrad) * eMag) /* (3) */
+                        && tmp > Math.abs(yGrad * nwMag + (xGrad - yGrad) * wMag) /* (4) */
+                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * seMag + (yGrad - xGrad) * sMag) /* (3) */
+                        && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /* (4) */) {
                     magnitude[index] = gradMag >= MAGNITUDE_LIMIT ? MAGNITUDE_MAX : (int) (MAGNITUDE_SCALE * gradMag);
                     //NOTE: The orientation of the edge is not employed by this
                     //implementation. It is a simple matter to compute it at
@@ -485,10 +296,6 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     }
 
     private void performHysteresis(int low, int high) {
-        //NOTE: this implementation reuses the data array to store both
-        //luminance data from the image, and edge intensity from the processing.
-        //This is done for memory efficiency, other implementations may wish
-        //to separate these functions.
         Arrays.fill(data, 0);
 
         int offset = 0;
@@ -599,7 +406,6 @@ public class CannyEdgeDetector implements FeatureDescriptor {
         edgesImage.getWritableTile(0, 0).setDataElements(0, 0, width, height, pixels);
     }
 
-    // Begin of Code added by Benedikt Zierer
     /**
      * Returns the image edges as INT_ARGB array. This can be used to create a
      * buffered image, if the dimensions are known.
@@ -620,8 +426,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
      */
     @Override
     public String getDescription() {
-        String info = "Each pixel value";
-        return info;
+        return "Canny edge detection algorithm";
     }
 
     /**
@@ -650,7 +455,7 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     @Override
     public void run(ImageProcessor ip) {
         ColorProcessor cp = (ColorProcessor) ip;
-        sSourceImage(cp.getBufferedImage());
+        setSourceImage(cp.getBufferedImage());
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
@@ -660,4 +465,158 @@ public class CannyEdgeDetector implements FeatureDescriptor {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="accessor methods">
+    /**
+     * The image that provides the luminance data used by this detector to
+     * generate edges.
+     *
+     * @return the source image, or null
+     */
+    public BufferedImage getSourceImage() {
+        return sourceImage;
+    }
+
+    /**
+     * Specifies the image that will provide the luminance data in which edges
+     * will be detected.
+     *
+     * @param image a source of luminance data
+     */
+    public void setSourceImage(BufferedImage image) {
+        sourceImage = image;
+    }
+
+    /**
+     * Obtains an image containing the edges detected during the last call to
+     * the process method.
+     *
+     * The image is an opaque image of type BufferedImage.TYPE_INT_ARGB in which
+     * edge pixels are white and all other pixels are black.
+     *
+     * @return an image containing the detected edges, or null
+     */
+    public BufferedImage getEdgesImage() {
+        return edgesImage;
+    }
+
+    /**
+     * Get the low threshold for hysteresis.
+     *
+     * @return the low hysteresis threshold
+     */
+    public float getLowThreshold() {
+        return lowThreshold;
+    }
+
+    /**
+     * Sets the low threshold for hysteresis.
+     *
+     * Suitable values for this parameter must be determined experimentally for
+     * each application. It is nonsensical (though not prohibited) for this
+     * value to exceed the high threshold value.
+     *
+     * @param threshold a low hysteresis threshold
+     */
+    public void setLowThreshold(float threshold) {
+        if (threshold < 0) {
+            throw new IllegalArgumentException("threshold must be >= 0");
+        }
+        lowThreshold = threshold;
+    }
+
+    /**
+     * Return the high threshold for hysteresis.
+     *
+     * @return the high hysteresis threshold
+     */
+    public float getHighThreshold() {
+        return highThreshold;
+    }
+
+    /**
+     * Sets the high threshold for hysteresis.
+     *
+     * Suitable values for this parameter must be determined experimentally for
+     * each application. It is nonsensical (though not prohibited) for this
+     * value to be less than the low threshold value.
+     *
+     * @param threshold a high hysteresis threshold
+     */
+    public void setHighThreshold(float threshold) {
+        if (threshold < 0) {
+            throw new IllegalArgumentException("threshold must be >= 0");
+        }
+        highThreshold = threshold;
+    }
+
+    /**
+     * The number of pixels across which the Gaussian kernel is applied.
+     *
+     * @return the radius of the convolution operation in pixels
+     */
+    public int getGaussianKernelWidth() {
+        return gaussianKernelWidth;
+    }
+
+    /**
+     * The number of pixels across which the Gaussian kernel is applied.
+     *
+     * This implementation will reduce the radius if the contribution of pixel
+     * values is deemed negligable, so this is actually a maximum radius.
+     *
+     * @param gaussianKernelWidth a radius for the convolution operation in
+     * pixels, at least 2.
+     */
+    public void setGaussianKernelWidth(int gaussianKernelWidth) {
+        if (gaussianKernelWidth < 2) {
+            throw new IllegalArgumentException("gaussian kernel width must be >= 2");
+        }
+        this.gaussianKernelWidth = gaussianKernelWidth;
+    }
+
+    /**
+     * The radius of the Gaussian convolution kernel used to smooth the source
+     * image prior to gradient calculation. The default value is 16.
+     *
+     * @return the Gaussian kernel radius in pixels
+     */
+    public float getGaussianKernelRadius() {
+        return gaussianKernelRadius;
+    }
+
+    /**
+     * Sets the radius of the Gaussian convolution kernel used to smooth the
+     * source image prior to gradient calculation.
+     *
+     * @return a Gaussian kernel radius in pixels, must exceed 0.1f.
+     */
+    public void setGaussianKernelRadius(float gaussianKernelRadius) {
+        if (gaussianKernelRadius < 0.1f) {
+            throw new IllegalArgumentException("radius must be >= 0.1");
+        }
+        this.gaussianKernelRadius = gaussianKernelRadius;
+    }
+
+    /**
+     * Whether the luminance data extracted from the source image is normalized
+     * by linearizing its histogram prior to edge extraction. The default value
+     * is false.
+     *
+     * @return whether the contrast is normalized
+     */
+    public boolean isContrastNormalized() {
+        return contrastNormalized;
+    }
+
+    /**
+     * Sets whether the contrast should be normalized
+     *
+     * @param contrastNormalized true if the contrast should be normalized,
+     * false otherwise
+     */
+    public void sContrastNormalized(boolean contrastNormalized) {
+        this.contrastNormalized = contrastNormalized;
+    }
+    //</editor-fold>
 }
