@@ -82,12 +82,7 @@ public class DroG implements Descriptor {
 
     @Override
     public EnumSet<Supports> supports() {
-        return EnumSet.of(
-                Supports.DOES_16,
-                Supports.DOES_32,
-                Supports.DOES_8C,
-                Supports.DOES_8G,
-                Supports.DOES_RGB);
+        return DOES_ALL;
     }
 
     @Override
