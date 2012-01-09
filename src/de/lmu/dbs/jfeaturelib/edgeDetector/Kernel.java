@@ -4,9 +4,8 @@ import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
 import de.lmu.ifi.dbs.utilities.Arrays2;
-import ij.process.ColorProcessor;
+import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
-import java.awt.image.PixelGrabber;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 
-    /**
+/**
  * Performs convolution with a given Kernel directly on this image.
  *
  * Basiacally it is just a wrapper for ImageJ's ImageProcessor.convolve().
@@ -60,7 +59,7 @@ public class Kernel implements FeatureDescriptor{
         -1, 0, 1
     };
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private ColorProcessor image;
+    private ByteProcessor image;
     private int width;
     private int height;
     private float[] kernel;
@@ -152,6 +151,48 @@ public class Kernel implements FeatureDescriptor{
 
        pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "initialized"));
        
+       ByteProcessor imgX = new ByteProcessor(image.createImage());
+       ByteProcessor imgY = new ByteProcessor(image.createImage());
+       float[] kernelX = kernel;
+       float[] kernelY = new float[kernelWidth*kernelWidth];
+       float[][] kernelX2D = new float[kernelWidth][kernelWidth];
+       int i = 0;
+       for(int x = 0; x<kernelWidth; x++){
+           for(int y = 0; y<kernelWidth; y++){
+               kernelX2D[x][y] = kernelX[i];
+               i++;
+           }
+       }
+       float[][] kernelY2D = de.lmu.dbs.jfeaturelib.utils.RotateArrays.rotateFloatCW(kernelX2D);
+       i = 0;
+       for(int x = 0; x<kernelWidth; x++){
+           for(int y = 0; y<kernelWidth; y++){
+               kernelY[i] = kernelY2D[x][y];
+               int progress = (int)Math.round(i*(100.0/(double)(kernelWidth*kernelWidth)));
+               pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + kernelWidth*kernelWidth));
+               i++;
+           }                
+       }       
+       imgX.convolve(kernelX, kernelWidth, kernelWidth);
+       imgY.convolve(kernelY, kernelWidth, kernelWidth);
+       int[][] imgXa = imgX.getIntArray();
+       int[][] imgYa = imgY.getIntArray();
+       int[][] imgA = new int[image.getWidth()][image.getHeight()];
+       for(int x = 0; x < image.getWidth();x++){
+           for(int y = 0; y < image.getHeight(); y++){
+               if((int)Math.round(Math.sqrt(imgXa[x][y]*imgXa[x][y]+imgYa[x][y]*imgYa[x][y])) > 255){
+                   imgA[x][y] = 255;
+               }
+               else{
+               imgA[x][y] = (int)Math.round(Math.sqrt(imgXa[x][y]*imgXa[x][y]+imgYa[x][y]*imgYa[x][y]));                   
+               }
+           }           
+       }
+       image.setIntArray(imgA);
+       result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
+       
+       
+       /*
         //inspired by http://users.ecs.soton.ac.uk/msn/book/new_demo/sobel/
         width = image.getWidth();
         height = image.getHeight();
@@ -215,6 +256,7 @@ public class Kernel implements FeatureDescriptor{
         }
 
        result = output;
+        */
        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
     
@@ -267,10 +309,10 @@ public class Kernel implements FeatureDescriptor{
      */
     @Override
     public void run(ImageProcessor ip) {
-        if (!ColorProcessor.class.isAssignableFrom(ip.getClass())) {
-            ip = ip.convertToRGB();
+        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
+            ip = ip.convertToByte(true);
         }
-        this.image = (ColorProcessor) ip;
+        this.image = (ByteProcessor) ip;
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
