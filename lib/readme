@@ -8,11 +8,11 @@ API and sources (if possible).
   Source: http://example.com/source
   API:    http://example.com/api
 
-# ij141.jar
-  Version: 1.41o
+# ij145.jar
+  Version: 1.45
   Licence: Public Domain
   URL:    http://rsbweb.nih.gov/ij/
-  Source: http://rsbweb.nih.gov/ij/download/src/ij141o-src.zip
+  Source: http://rsbweb.nih.gov/ij/download/src/ij145s-src.zip
   API:    http://rsbweb.nih.gov/ij/download/docs/api.zip
 
 # Utilities.jar
