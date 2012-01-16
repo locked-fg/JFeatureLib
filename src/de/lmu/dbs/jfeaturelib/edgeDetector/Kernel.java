@@ -64,6 +64,7 @@ public class Kernel implements FeatureDescriptor{
     private int height;
     private float[] kernel;
     private int kernelWidth;
+    private int treshold;
     private int[] result;
 
     /**
@@ -82,6 +83,7 @@ public class Kernel implements FeatureDescriptor{
     public Kernel(double[] kernel) {        
         this.kernelWidth = Math.round((float) Math.sqrt(kernel.length + 1.0f));
         this.kernel = Arrays2.convertToFloat(kernel);
+        this.treshold = 0;
     }
 
     /**
@@ -93,6 +95,7 @@ public class Kernel implements FeatureDescriptor{
     public Kernel(float[] kernel) {
         this.kernelWidth = Math.round((float) Math.sqrt(kernel.length + 1.0f));
         this.kernel = kernel;
+        this.treshold = 0;
     }
     
         /**
@@ -143,13 +146,38 @@ public class Kernel implements FeatureDescriptor{
     public void setKernelWidth(int kernelWidth) {
         this.kernelWidth = kernelWidth;
     }
+    
+    /**
+     * Returns treshold
+     *
+     * @return treshold
+     */
+    public int getTreshold() {
+        return treshold;
+    }
 
+    /**
+     * Setter for treshold, default zero
+     *
+     * @param treshold int
+     */
+    public void setTreshold(int treshold) {
+        if(treshold < 255){
+            this.treshold = treshold;
+        }
+        else{
+            treshold = 254;
+        }
+    }
     /**
      * Proceses the image applying the kernel in x- and y-direction
      */
     public void process(){
 
        pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "initialized"));
+       
+       width = image.getWidth();
+       height = image.getHeight();
        
        ByteProcessor imgX = new ByteProcessor(image.createImage());
        ByteProcessor imgY = new ByteProcessor(image.createImage());
@@ -177,11 +205,14 @@ public class Kernel implements FeatureDescriptor{
        imgY.convolve(kernelY, kernelWidth, kernelWidth);
        int[][] imgXa = imgX.getIntArray();
        int[][] imgYa = imgY.getIntArray();
-       int[][] imgA = new int[image.getWidth()][image.getHeight()];
-       for(int x = 0; x < image.getWidth();x++){
-           for(int y = 0; y < image.getHeight(); y++){
+       int[][] imgA = new int[width][height];
+       for(int x = 0; x < width;x++){
+           for(int y = 0; y < height; y++){
                if((int)Math.round(Math.sqrt(imgXa[x][y]*imgXa[x][y]+imgYa[x][y]*imgYa[x][y])) > 255){
                    imgA[x][y] = 255;
+               }
+               else if((int)Math.round(Math.sqrt(imgXa[x][y]*imgXa[x][y]+imgYa[x][y]*imgYa[x][y])) < treshold){
+                   imgA[x][y] = 0;
                }
                else{
                imgA[x][y] = (int)Math.round(Math.sqrt(imgXa[x][y]*imgXa[x][y]+imgYa[x][y]*imgYa[x][y]));                   
@@ -189,74 +220,8 @@ public class Kernel implements FeatureDescriptor{
            }           
        }
        image.setIntArray(imgA);
-       result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
+       result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, width, height, null);
        
-       
-       /*
-        //inspired by http://users.ecs.soton.ac.uk/msn/book/new_demo/sobel/
-        width = image.getWidth();
-        height = image.getHeight();
-        int[] input = new int[width*height];
-        int[] output = new int[width*height];
-        double[] direction = new double[width*height];
-
-        float[] GY = new float[width*height];
-        float[] GX = new float[width*height];
-        int[] total = new int[width*height];
-        int sum=0;
-        int max=0;        
-        
-        PixelGrabber grabber = new PixelGrabber(image.getBufferedImage(), 0, 0, width, height, input, 0, width);
-        try {
-            grabber.grabPixels();
-        } catch (InterruptedException ex) {
-            System.out.println("Fatal error trying to convert image to int array");
-        }
-
-
-        for(int x=(kernelWidth-1)/2; x<width-(kernelWidth+1)/2;x++) {
-                for(int y=(kernelWidth-1)/2; y<height-(kernelWidth+1)/2;y++) {
-                        sum=0;
-
-                        for(int x1=0;x1<kernelWidth;x1++) {
-                                for(int y1=0;y1<kernelWidth;y1++) {
-                                        int x2 = (x-(kernelWidth-1)/2+x1);
-                                        int y2 = (y-(kernelWidth-1)/2+y1);
-                                        float value = (input[y2*width+x2] & 0xff) * (kernel[y1*kernelWidth+x1]);
-                                        sum += value;
-                                }
-                        }
-                        GY[y*width+x] = sum;
-                        for(int x1=0;x1<kernelWidth;x1++) {
-                                for(int y1=0;y1<kernelWidth;y1++) {
-                                        int x2 = (x-(kernelWidth-1)/2+x1);
-                                        int y2 = (y-(kernelWidth-1)/2+y1);
-                                        float value = (input[y2*width+x2] & 0xff) * (kernel[x1*kernelWidth+y1]);
-                                        sum += value;
-                                }
-                        }
-                        GX[y*width+x] = sum;
-
-                }
-        }
-        for(int x=0; x<width;x++) {
-                for(int y=0; y<height;y++) {
-                        total[y*width+x]=(int)Math.sqrt(GX[y*width+x]*GX[y*width+x]+GY[y*width+x]*GY[y*width+x]);
-                        direction[y*width+x] = Math.atan2(GX[y*width+x],GY[y*width+x]);
-                        if(max<total[y*width+x])
-                                max=total[y*width+x];
-                }
-        }
-        float ratio=(float)max/255;
-        for(int x=0; x<width;x++) {
-                for(int y=0; y<height;y++) {
-                        sum=(int)(total[y*width+x]/ratio);
-                        output[y*width+x] = 0xff000000 | ((int)sum << 16 | (int)sum << 8 | (int)sum);
-                }
-        }
-
-       result = output;
-        */
        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
     

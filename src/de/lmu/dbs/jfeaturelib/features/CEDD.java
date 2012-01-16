@@ -48,6 +48,42 @@ public class CEDD implements FeatureDescriptor {
         cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, Compact);
     }
 
+    public double getT0(){
+        return this.T0;
+    }
+    public void setT0(double t0){
+        this.T0 = t0;
+        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, Compact);
+    }
+    public double getT1(){
+        return this.T1;
+    }
+    public void setT1(double t1){
+        this.T1 = t1;
+        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, Compact);
+    }
+    public double getT2(){
+        return this.T2;
+    }
+    public void setT2(double t2){
+        this.T2 = t2;
+        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, Compact);
+    }
+    public double getT3(){
+        return this.T3;
+    }
+    public void setT3(double t3){
+        this.T3 = t3;
+        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, Compact);
+    }
+    public boolean getCompact(){
+        return Compact;
+    }
+    public void setCompact(boolean compact){
+        this.Compact = compact;
+        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, Compact);
+    }
+    
     @Override
     public void run(ImageProcessor ip) {
         bi = ip.getBufferedImage();
