@@ -26,9 +26,6 @@ public class CEDD implements FeatureDescriptor {
     private double T2;
     private double T3;
     private boolean Compact = false;
-    /**
-     * 
-     */
     protected double[] data = null;
     private de.lmu.dbs.jfeaturelib.features.lire.CEDD cedd;
     private BufferedImage bi;
