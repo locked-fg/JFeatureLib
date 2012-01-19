@@ -1,6 +1,5 @@
 package de.lmu.dbs.jfeaturelib.edgeDetector;
 
-import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
@@ -22,7 +21,7 @@ import java.util.List;
  * classic algorithm has a number of shortcomings, but remains an effective tool
  * in many scenarios.
  *
- * The original source code was provided by Tom Gibara who rekleased the code to
+ * The original source code was provided by Tom Gibara who released the code to
  * the public domain.
  *
  * @author Tom Gibara
