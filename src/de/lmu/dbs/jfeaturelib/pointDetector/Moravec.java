@@ -13,10 +13,15 @@ import java.util.List;
  * 
  * Moravec Corner Detector
  * 
- * Returns a List of ImagePoint Corners
+ * Returns a List of ImagePoint Corners.
+ * 
+ * This implementation is based on the Original Paper from Moravec, 1980. See link below.
+ * And also based on the Aricle from Donovan Parks and Jean-Philippe Gravel. Also see link below.
+ * This implementation does differ from the Wikipedia Article about the Moravec Detector!
  * 
  * @author Robert Zelhofer
  * @see http://www.ri.cmu.edu/pub_files/pub4/moravec_hans_1980_1/moravec_hans_1980_1.pdf
+ * @see http://kiwi.cs.dal.ca/~dparks/CornerDetection/moravec.htm
  */
 public class Moravec implements PointDetector {
     //Returning List of Corners
@@ -39,23 +44,27 @@ public class Moravec implements PointDetector {
         0,      0,
         1,  1,  1 
     };
+    
+    //Shifted Window for both the orignial Pixel and the shifted Pixels
+
+    private int[] xRedDelta;
+    private int[] yRedDelta;
     /*
      * This is how a window for windowsize = 3 looks like
-    private final int[] xRedDelta = new int[] { 
+    private int[] xRedDelta = new int[] { 
         -1, 0,  1, 
         -1, 0,  1,
         -1,  0,  1 
     };
-    private final int[] yRedDelta = new int[] { 
+    private int[] yRedDelta = new int[] { 
         -1, -1, -1, 
         0,  0,  0,
         1,  1,  1 
     };
-    
     */
     
     //Shifted Window for both the orignial Pixel and the shifted Pixels
-    private ArrayList<ImagePoint> redDeltaList;
+    //private ArrayList<ImagePoint> redDeltaList;
     
 
     @Override
@@ -74,6 +83,7 @@ public class Moravec implements PointDetector {
     public void run(ImageProcessor ip) {
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         
+        this.generateWindow(size);
         
         int width = ip.getWidth();
         int height = ip.getHeight();
@@ -98,12 +108,12 @@ public class Moravec implements PointDetector {
                     
                     // Sum up the difference of the window around the actual pixel and the shifted window
                                         
-                    for (int i = 0; i < redDeltaList.size(); i++) {
-                        int redX = x + (int)redDeltaList.get(i).x;
-                        int redY = y + (int)redDeltaList.get(i).y;
+                    for (int i = 0; i < xRedDelta.length; i++) {
+                        int redX = x + xRedDelta[i];
+                        int redY = y + yRedDelta[i];
                         int redValue = ip.getPixel(redX, redY);
-                        int blueX = sx + (int)redDeltaList.get(i).x;
-                        int blueY = sy + (int)redDeltaList.get(i).y;
+                        int blueX = sx + xRedDelta[i];
+                        int blueY = sy + yRedDelta[i];
                         int blueValue = ip.getPixel(blueX, blueY);
                         int dif = redValue - blueValue;
                         sum += dif * dif; 
@@ -166,27 +176,36 @@ public class Moravec implements PointDetector {
         }
         this.size = size;
         corners = new ArrayList<>();
-        redDeltaList = new ArrayList<>();
+    }
+    
+    /**
+     * 
+     * create the shifted Windows for calculation the Itensity Differences
+     * creates for window size = 7:
+     * -3 -3    -2 -3   -1 -3   0 -3    1 -3    2 -3    3 -3
+     * -3 -2                                            3 -2	
+     * -3 -1                                            3 -1	
+     * -3 0                     0 0                     3 0
+     * -3 1                                             3 1
+     * -3 2                                             3 2	
+     * -3 3     -2 3    -1 3    0 3     1 3     2 3     3 3	
+     * @param size Window Size
+     * @return List of ImagePoints
+     */
+    private void generateWindow(int size) {
+        int redDeltaLength = (size - 1) * 4;
+        xRedDelta = new int[redDeltaLength];
+        yRedDelta = new int[redDeltaLength];
         
-        
-        
-        /*
-         * create the shifted Windows for calculation the Itensity Differences
-         * creates for window size = 7:
-         * -3 -3    -2 -3   -1 -3   0 -3    1 -3    2 -3    3 -3
-         * -3 -2                                            3 -2	
-         * -3 -1                                            3 -1	
-         * -3 0                     0 0                     3 0
-         * -3 1                                             3 1
-         * -3 2                                             3 2	
-         * -3 3     -2 3    -1 3    0 3     1 3     2 3     3 3	
-         */
+        //ArrayList<ImagePoint> tempList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 int radius = size/2;
                 if (Math.abs(j-radius) == radius || Math.abs(i - radius) == radius) {
                     //System.out.print((j-radius) + " " + (i-radius) + "\t");
-                    redDeltaList.add(new ImagePoint(j-radius, i-radius));
+                    //tempList.add(new ImagePoint(j-radius, i-radius));
+                    xRedDelta[i] = j-radius;
+                    yRedDelta[i] = i- radius;
                 } else {
                     //System.out.print("\t");
                 }
@@ -195,6 +214,8 @@ public class Moravec implements PointDetector {
             //System.out.println();
             //System.out.println();
         }
-        redDeltaList.add(new ImagePoint(0, 0));
+        //tempList.add(new ImagePoint(0, 0));
+        xRedDelta[redDeltaLength - 1] = 0;
+        yRedDelta[redDeltaLength - 1] = 0;
     }
 }
