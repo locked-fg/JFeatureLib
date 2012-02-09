@@ -38,7 +38,7 @@ import java.util.List;
 
 /**
  *
- * @author rob
+ * @author Robert Zelhofer
  */
 public class FAST9 {
 
@@ -55,13 +55,14 @@ public class FAST9 {
         List<ImagePoint> nonmax = new ArrayList<>();
 
         corners = fast9_detect(im, xsize, ysize, stride, b, num_corners);
-        //System.out.println("Total Corners: " + corners.size());
         scores = fast9_score(im, stride, corners, corners.size(), b);
         //TODO add nonmax suppression
-        //nonmax = nonmax_suppression(corners, scores, num_corners, ret_num_corners);
+        FASTNonMaxSuppression nonmaxSuppressor = new FASTNonMaxSuppression();
+        nonmax = nonmaxSuppressor.nonmax_suppression(corners, scores, corners.size());
+        
         
 
-        return corners;
+        return nonmax;
     }
     
     /*This is mechanically generated code*/
@@ -3420,7 +3421,6 @@ public class FAST9 {
                 ret_corners.add(new ImagePoint(x, y));
                 num_corners++;
                 ret_num_corners++;
-                //System.out.println("Corner added; total: " + num_corners);
 
             }
         }
@@ -3478,7 +3478,6 @@ public class FAST9 {
     private void end_if() {
         if (bmin == bmax - 1 || bmin == bmax) {
             endScore = true;
-            //System.out.println("Score: " + bmin);
         }
         b = (bmin + bmax) / 2;
     }
