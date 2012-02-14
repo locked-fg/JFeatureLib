@@ -56,7 +56,6 @@ public class FAST9 {
 
         corners = fast9_detect(im, xsize, ysize, stride, b, num_corners);
         scores = fast9_score(im, stride, corners, corners.size(), b);
-        //TODO add nonmax suppression
         FASTNonMaxSuppression nonmaxSuppressor = new FASTNonMaxSuppression();
         nonmax = nonmaxSuppressor.nonmax_suppression(corners, scores, corners.size());
         
@@ -79,7 +78,7 @@ public class FAST9 {
 
         for (y = 3; y < ysize - 3; y++) {
             for (x = 3; x < xsize - 3; x++) {
-                make_offsets(pixel, stride, x, y);
+                FASTUtils.make_offsets(pixel, stride, x, y);
                 int[] p = im;
                 int pValue = im[y * stride + x];
                 int cb = pValue + b;
@@ -3430,24 +3429,6 @@ public class FAST9 {
 
     }
 
-    private void make_offsets(int[] pixel, int row_stride, int x, int y) {
-        pixel[0] = 0 + row_stride * 3 + x + y * row_stride;
-        pixel[1] = 1 + row_stride * 3 + x + y * row_stride;
-        pixel[2] = 2 + row_stride * 2 + x + y * row_stride;
-        pixel[3] = 3 + row_stride * 1 + x + y * row_stride;
-        pixel[4] = 3 + row_stride * 0 + x + y * row_stride;
-        pixel[5] = 3 + row_stride * -1 + x + y * row_stride;
-        pixel[6] = 2 + row_stride * -2 + x + y * row_stride;
-        pixel[7] = 1 + row_stride * -3 + x + y * row_stride;
-        pixel[8] = 0 + row_stride * -3 + x + y * row_stride;
-        pixel[9] = -1 + row_stride * -3 + x + y * row_stride;
-        pixel[10] = -2 + row_stride * -2 + x + y * row_stride;
-        pixel[11] = -3 + row_stride * -1 + x + y * row_stride;
-        pixel[12] = -3 + row_stride * 0 + x + y * row_stride;
-        pixel[13] = -3 + row_stride * 1 + x + y * row_stride;
-        pixel[14] = -2 + row_stride * 2 + x + y * row_stride;
-        pixel[15] = -1 + row_stride * 3 + x + y * row_stride;
-    }
 
     private int[] fast9_score(int[] i, int stride, List<ImagePoint> corners, int num_corners, int b) {
         int[] scores = new int[num_corners];
@@ -3457,7 +3438,7 @@ public class FAST9 {
 
 
         for (n = 0; n < num_corners; n++) {
-            make_offsets(pixel, stride, (int) corners.get(n).x, (int) corners.get(n).y);
+            FASTUtils.make_offsets(pixel, stride, (int) corners.get(n).x, (int) corners.get(n).y);
             scores[n] = fast9_corner_score(i, pixel, b, corners.get(n), stride);
         }
         
