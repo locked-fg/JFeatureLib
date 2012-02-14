@@ -34,6 +34,9 @@ package de.lmu.dbs.jfeaturelib.pointDetector;
 
 import de.lmu.dbs.jfeaturelib.ImagePoint;
 import de.lmu.dbs.jfeaturelib.Progress;
+import de.lmu.dbs.jfeaturelib.pointDetector.FAST.FAST10;
+import de.lmu.dbs.jfeaturelib.pointDetector.FAST.FAST11;
+import de.lmu.dbs.jfeaturelib.pointDetector.FAST.FAST12;
 import de.lmu.dbs.jfeaturelib.pointDetector.FAST.FAST9;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
@@ -50,7 +53,8 @@ import java.util.List;
 public class FASTCornerDetector implements PointDetector {
     //TODO add doku
     List<ImagePoint> corners;
-    int threshold;
+    private int threshold;
+    private int fastNNumber;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     @Override
@@ -73,10 +77,28 @@ public class FASTCornerDetector implements PointDetector {
         int height = ipConverted.getHeight();
         int width = ipConverted.getWidth();
         
-        FAST9 f = new FAST9();
         List<ImagePoint> retList = new ArrayList<>();
-
-        corners = f.fast9_detect_nonmax(ipArray, width, height, width, threshold, retList);
+        
+        switch (fastNNumber) {
+            case 9:
+                FAST9 f9 = new FAST9();
+                corners = f9.fast9_detect_nonmax(ipArray, width, height, width, threshold, retList);
+                break;
+            case 10:
+                FAST10 f10 = new FAST10();
+                corners = f10.fast10_detect_nonmax(ipArray, width, height, width, threshold, retList);
+                break;
+            case 11:
+                FAST11 f11 = new FAST11();
+                corners = f11.fast11_detect_nonmax(ipArray, width, height, width, threshold, retList);
+                break;
+            case 12:
+                FAST12 f12 = new FAST12();
+                corners = f12.fast12_detect_nonmax(ipArray, width, height, width, threshold, retList);
+                break;
+            default:
+                break;
+        }
         
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
@@ -87,11 +109,15 @@ public class FASTCornerDetector implements PointDetector {
     }
 
     public FASTCornerDetector() {
-        this(40);
+        this(40, 9);
     }
 
-    public FASTCornerDetector(int threshold) {
+    public FASTCornerDetector(int threshold, int fastNNumber) {
         this.corners = new ArrayList<>();
-        this.threshold = threshold * threshold * threshold * threshold;
+        this.threshold = threshold;
+        if (fastNNumber < 9 || fastNNumber > 12) {
+            throw new IllegalArgumentException("Fast N Number is not 9 - 12");
+        }
+        this.fastNNumber = fastNNumber;
     }
 }

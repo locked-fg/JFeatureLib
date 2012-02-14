@@ -59,8 +59,6 @@ public class FAST9 {
         FASTNonMaxSuppression nonmaxSuppressor = new FASTNonMaxSuppression();
         nonmax = nonmaxSuppressor.nonmax_suppression(corners, scores, corners.size());
         
-        
-
         return nonmax;
     }
     

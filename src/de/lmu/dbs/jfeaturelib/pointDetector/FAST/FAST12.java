@@ -39,29 +39,28 @@ import java.util.List;
  *
  * @author Robert Zelhofer
  */
-public class FAST11 {
+public class FAST12 {
 
     int bmin;
     int b;
     int bmax;
     boolean endScore;
 
-    public List<ImagePoint> fast11_detect_nonmax(int[] im, int xsize, int ysize, int stride, int b, List<ImagePoint> ret_num_corners) {
-
+    public List<ImagePoint> fast12_detect_nonmax(int[] im, int xsize, int ysize, int stride, int b, List<ImagePoint> ret_num_corners) {
         List<ImagePoint> corners;
         int num_corners = 0;
         int[] scores;
         List<ImagePoint> nonmax = new ArrayList<>();
 
-        corners = fast11_detect(im, xsize, ysize, stride, b, num_corners);
-        scores = fast11_score(im, stride, corners, corners.size(), b);
+        corners = fast12_detect(im, xsize, ysize, stride, b, num_corners);
+        scores = fast12_score(im, stride, corners, corners.size(), b);
         FASTNonMaxSuppression nonmaxSuppressor = new FASTNonMaxSuppression();
         nonmax = nonmaxSuppressor.nonmax_suppression(corners, scores, corners.size());
 
         return nonmax;
     }
 
-    private List<ImagePoint> fast11_detect(int[] im, int xsize, int ysize, int stride, int b, int ret_num_corners) {
+    private List<ImagePoint> fast12_detect(int[] im, int xsize, int ysize, int stride, int b, int ret_num_corners) {
         int num_corners = 0;
         List<ImagePoint> ret_corners;
         int rsize = 512;
@@ -70,7 +69,6 @@ public class FAST11 {
 
         //ret_corners = (xy *) malloc(sizeof(xy) * rsize);
         ret_corners = new ArrayList<>();
-
 
         for (y = 3; y < ysize - 3; y++) {
             for (x = 3; x < xsize - 3; x++) {
@@ -90,21 +88,38 @@ public class FAST11 {
                                                 if (p[pixel[8]] > cb) {
                                                     if (p[pixel[9]] > cb) {
                                                         if (p[pixel[10]] > cb) {
-                                                        } else if (p[pixel[15]] > cb) {
+                                                            if (p[pixel[11]] > cb) {
+                                                            } else if (p[pixel[15]] > cb) {
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
-                                                    } else if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
+                                                    } else if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
                                                     } else {
                                                         continue;
                                                     }
-                                                } else if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
+                                                } else if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
@@ -114,10 +129,14 @@ public class FAST11 {
                                                 } else {
                                                     continue;
                                                 }
-                                            } else if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
+                                            } else if (p[pixel[11]] > cb) {
+                                                if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
@@ -130,11 +149,15 @@ public class FAST11 {
                                             } else {
                                                 continue;
                                             }
-                                        } else if (p[pixel[11]] > cb) {
-                                            if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
+                                        } else if (p[pixel[10]] > cb) {
+                                            if (p[pixel[11]] > cb) {
+                                                if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
@@ -150,7 +173,7 @@ public class FAST11 {
                                         } else {
                                             continue;
                                         }
-                                    } else if (p[pixel[5]] < c_b) {
+                                    } else if (p[pixel[9]] > cb) {
                                         if (p[pixel[10]] > cb) {
                                             if (p[pixel[11]] > cb) {
                                                 if (p[pixel[12]] > cb) {
@@ -172,11 +195,48 @@ public class FAST11 {
                                             } else {
                                                 continue;
                                             }
-                                        } else if (p[pixel[10]] < c_b) {
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        continue;
+                                    }
+                                } else if (p[pixel[4]] < c_b) {
+                                    if (p[pixel[8]] > cb) {
+                                        if (p[pixel[9]] > cb) {
+                                            if (p[pixel[10]] > cb) {
+                                                if (p[pixel[11]] > cb) {
+                                                    if (p[pixel[12]] > cb) {
+                                                        if (p[pixel[13]] > cb) {
+                                                            if (p[pixel[14]] > cb) {
+                                                                if (p[pixel[15]] > cb) {
+                                                                } else {
+                                                                    continue;
+                                                                }
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else {
+                                                    continue;
+                                                }
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            continue;
+                                        }
+                                    } else if (p[pixel[8]] < c_b) {
+                                        if (p[pixel[5]] < c_b) {
                                             if (p[pixel[6]] < c_b) {
                                                 if (p[pixel[7]] < c_b) {
-                                                    if (p[pixel[8]] < c_b) {
-                                                        if (p[pixel[9]] < c_b) {
+                                                    if (p[pixel[9]] < c_b) {
+                                                        if (p[pixel[10]] < c_b) {
                                                             if (p[pixel[11]] < c_b) {
                                                                 if (p[pixel[12]] < c_b) {
                                                                     if (p[pixel[13]] < c_b) {
@@ -212,12 +272,20 @@ public class FAST11 {
                                         } else {
                                             continue;
                                         }
-                                    } else if (p[pixel[10]] > cb) {
-                                        if (p[pixel[11]] > cb) {
-                                            if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
+                                    } else {
+                                        continue;
+                                    }
+                                } else if (p[pixel[8]] > cb) {
+                                    if (p[pixel[9]] > cb) {
+                                        if (p[pixel[10]] > cb) {
+                                            if (p[pixel[11]] > cb) {
+                                                if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
@@ -236,14 +304,22 @@ public class FAST11 {
                                     } else {
                                         continue;
                                     }
-                                } else if (p[pixel[4]] < c_b) {
-                                    if (p[pixel[15]] > cb) {
-                                        if (p[pixel[9]] > cb) {
-                                            if (p[pixel[10]] > cb) {
-                                                if (p[pixel[11]] > cb) {
-                                                    if (p[pixel[12]] > cb) {
-                                                        if (p[pixel[13]] > cb) {
-                                                            if (p[pixel[14]] > cb) {
+                                } else {
+                                    continue;
+                                }
+                            } else if (p[pixel[3]] < c_b) {
+                                if (p[pixel[15]] > cb) {
+                                    if (p[pixel[7]] > cb) {
+                                        if (p[pixel[8]] > cb) {
+                                            if (p[pixel[9]] > cb) {
+                                                if (p[pixel[10]] > cb) {
+                                                    if (p[pixel[11]] > cb) {
+                                                        if (p[pixel[12]] > cb) {
+                                                            if (p[pixel[13]] > cb) {
+                                                                if (p[pixel[14]] > cb) {
+                                                                } else {
+                                                                    continue;
+                                                                }
                                                             } else {
                                                                 continue;
                                                             }
@@ -259,11 +335,15 @@ public class FAST11 {
                                             } else {
                                                 continue;
                                             }
-                                        } else if (p[pixel[9]] < c_b) {
+                                        } else {
+                                            continue;
+                                        }
+                                    } else if (p[pixel[7]] < c_b) {
+                                        if (p[pixel[4]] < c_b) {
                                             if (p[pixel[5]] < c_b) {
                                                 if (p[pixel[6]] < c_b) {
-                                                    if (p[pixel[7]] < c_b) {
-                                                        if (p[pixel[8]] < c_b) {
+                                                    if (p[pixel[8]] < c_b) {
+                                                        if (p[pixel[9]] < c_b) {
                                                             if (p[pixel[10]] < c_b) {
                                                                 if (p[pixel[11]] < c_b) {
                                                                     if (p[pixel[12]] < c_b) {
@@ -299,7 +379,11 @@ public class FAST11 {
                                         } else {
                                             continue;
                                         }
-                                    } else if (p[pixel[5]] < c_b) {
+                                    } else {
+                                        continue;
+                                    }
+                                } else if (p[pixel[4]] < c_b) {
+                                    if (p[pixel[5]] < c_b) {
                                         if (p[pixel[6]] < c_b) {
                                             if (p[pixel[7]] < c_b) {
                                                 if (p[pixel[8]] < c_b) {
@@ -339,13 +423,21 @@ public class FAST11 {
                                     } else {
                                         continue;
                                     }
-                                } else if (p[pixel[9]] > cb) {
-                                    if (p[pixel[10]] > cb) {
-                                        if (p[pixel[11]] > cb) {
-                                            if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
+                                } else {
+                                    continue;
+                                }
+                            } else if (p[pixel[7]] > cb) {
+                                if (p[pixel[8]] > cb) {
+                                    if (p[pixel[9]] > cb) {
+                                        if (p[pixel[10]] > cb) {
+                                            if (p[pixel[11]] > cb) {
+                                                if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
@@ -364,11 +456,15 @@ public class FAST11 {
                                     } else {
                                         continue;
                                     }
-                                } else if (p[pixel[9]] < c_b) {
+                                } else {
+                                    continue;
+                                }
+                            } else if (p[pixel[7]] < c_b) {
+                                if (p[pixel[4]] < c_b) {
                                     if (p[pixel[5]] < c_b) {
                                         if (p[pixel[6]] < c_b) {
-                                            if (p[pixel[7]] < c_b) {
-                                                if (p[pixel[8]] < c_b) {
+                                            if (p[pixel[8]] < c_b) {
+                                                if (p[pixel[9]] < c_b) {
                                                     if (p[pixel[10]] < c_b) {
                                                         if (p[pixel[11]] < c_b) {
                                                             if (p[pixel[12]] < c_b) {
@@ -408,138 +504,26 @@ public class FAST11 {
                                 } else {
                                     continue;
                                 }
-                            } else if (p[pixel[3]] < c_b) {
-                                if (p[pixel[14]] > cb) {
+                            } else {
+                                continue;
+                            }
+                        } else if (p[pixel[2]] < c_b) {
+                            if (p[pixel[6]] > cb) {
+                                if (p[pixel[7]] > cb) {
                                     if (p[pixel[8]] > cb) {
                                         if (p[pixel[9]] > cb) {
                                             if (p[pixel[10]] > cb) {
                                                 if (p[pixel[11]] > cb) {
                                                     if (p[pixel[12]] > cb) {
                                                         if (p[pixel[13]] > cb) {
-                                                            if (p[pixel[15]] > cb) {
-                                                            } else if (p[pixel[4]] > cb) {
-                                                                if (p[pixel[5]] > cb) {
-                                                                    if (p[pixel[6]] > cb) {
-                                                                        if (p[pixel[7]] > cb) {
+                                                            if (p[pixel[14]] > cb) {
+                                                                if (p[pixel[15]] > cb) {
+                                                                } else if (p[pixel[3]] > cb) {
+                                                                    if (p[pixel[4]] > cb) {
+                                                                        if (p[pixel[5]] > cb) {
                                                                         } else {
                                                                             continue;
                                                                         }
-                                                                    } else {
-                                                                        continue;
-                                                                    }
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else if (p[pixel[8]] < c_b) {
-                                        if (p[pixel[4]] < c_b) {
-                                            if (p[pixel[5]] < c_b) {
-                                                if (p[pixel[6]] < c_b) {
-                                                    if (p[pixel[7]] < c_b) {
-                                                        if (p[pixel[9]] < c_b) {
-                                                            if (p[pixel[10]] < c_b) {
-                                                                if (p[pixel[11]] < c_b) {
-                                                                    if (p[pixel[12]] < c_b) {
-                                                                        if (p[pixel[13]] < c_b) {
-                                                                        } else {
-                                                                            continue;
-                                                                        }
-                                                                    } else {
-                                                                        continue;
-                                                                    }
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else if (p[pixel[14]] < c_b) {
-                                    if (p[pixel[5]] < c_b) {
-                                        if (p[pixel[6]] < c_b) {
-                                            if (p[pixel[7]] < c_b) {
-                                                if (p[pixel[8]] < c_b) {
-                                                    if (p[pixel[9]] < c_b) {
-                                                        if (p[pixel[10]] < c_b) {
-                                                            if (p[pixel[11]] < c_b) {
-                                                                if (p[pixel[12]] < c_b) {
-                                                                    if (p[pixel[13]] < c_b) {
-                                                                        if (p[pixel[4]] < c_b) {
-                                                                        } else if (p[pixel[15]] < c_b) {
-                                                                        } else {
-                                                                            continue;
-                                                                        }
-                                                                    } else {
-                                                                        continue;
-                                                                    }
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else if (p[pixel[4]] < c_b) {
-                                    if (p[pixel[5]] < c_b) {
-                                        if (p[pixel[6]] < c_b) {
-                                            if (p[pixel[7]] < c_b) {
-                                                if (p[pixel[8]] < c_b) {
-                                                    if (p[pixel[9]] < c_b) {
-                                                        if (p[pixel[10]] < c_b) {
-                                                            if (p[pixel[11]] < c_b) {
-                                                                if (p[pixel[12]] < c_b) {
-                                                                    if (p[pixel[13]] < c_b) {
                                                                     } else {
                                                                         continue;
                                                                     }
@@ -570,59 +554,113 @@ public class FAST11 {
                                 } else {
                                     continue;
                                 }
-                            } else if (p[pixel[8]] > cb) {
-                                if (p[pixel[9]] > cb) {
-                                    if (p[pixel[10]] > cb) {
-                                        if (p[pixel[11]] > cb) {
-                                            if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
-                                                        } else if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                if (p[pixel[6]] > cb) {
-                                                                    if (p[pixel[7]] > cb) {
-                                                                    } else {
-                                                                        continue;
-                                                                    }
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else if (p[pixel[8]] < c_b) {
-                                if (p[pixel[5]] < c_b) {
-                                    if (p[pixel[6]] < c_b) {
+                            } else if (p[pixel[6]] < c_b) {
+                                if (p[pixel[4]] < c_b) {
+                                    if (p[pixel[5]] < c_b) {
                                         if (p[pixel[7]] < c_b) {
+                                            if (p[pixel[8]] < c_b) {
+                                                if (p[pixel[9]] < c_b) {
+                                                    if (p[pixel[10]] < c_b) {
+                                                        if (p[pixel[11]] < c_b) {
+                                                            if (p[pixel[12]] < c_b) {
+                                                                if (p[pixel[13]] < c_b) {
+                                                                    if (p[pixel[3]] < c_b) {
+                                                                    } else if (p[pixel[14]] < c_b) {
+                                                                        if (p[pixel[15]] < c_b) {
+                                                                        } else {
+                                                                            continue;
+                                                                        }
+                                                                    } else {
+                                                                        continue;
+                                                                    }
+                                                                } else {
+                                                                    continue;
+                                                                }
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else {
+                                                    continue;
+                                                }
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        continue;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            } else {
+                                continue;
+                            }
+                        } else if (p[pixel[6]] > cb) {
+                            if (p[pixel[7]] > cb) {
+                                if (p[pixel[8]] > cb) {
+                                    if (p[pixel[9]] > cb) {
+                                        if (p[pixel[10]] > cb) {
+                                            if (p[pixel[11]] > cb) {
+                                                if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else if (p[pixel[3]] > cb) {
+                                                                if (p[pixel[4]] > cb) {
+                                                                    if (p[pixel[5]] > cb) {
+                                                                    } else {
+                                                                        continue;
+                                                                    }
+                                                                } else {
+                                                                    continue;
+                                                                }
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else {
+                                                    continue;
+                                                }
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        continue;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            } else {
+                                continue;
+                            }
+                        } else if (p[pixel[6]] < c_b) {
+                            if (p[pixel[4]] < c_b) {
+                                if (p[pixel[5]] < c_b) {
+                                    if (p[pixel[7]] < c_b) {
+                                        if (p[pixel[8]] < c_b) {
                                             if (p[pixel[9]] < c_b) {
                                                 if (p[pixel[10]] < c_b) {
                                                     if (p[pixel[11]] < c_b) {
                                                         if (p[pixel[12]] < c_b) {
                                                             if (p[pixel[13]] < c_b) {
                                                                 if (p[pixel[14]] < c_b) {
-                                                                    if (p[pixel[4]] < c_b) {
+                                                                    if (p[pixel[3]] < c_b) {
                                                                     } else if (p[pixel[15]] < c_b) {
                                                                     } else {
                                                                         continue;
@@ -657,32 +695,32 @@ public class FAST11 {
                             } else {
                                 continue;
                             }
-                        } else if (p[pixel[2]] < c_b) {
-                            if (p[pixel[7]] > cb) {
-                                if (p[pixel[8]] > cb) {
-                                    if (p[pixel[9]] > cb) {
-                                        if (p[pixel[10]] > cb) {
-                                            if (p[pixel[11]] > cb) {
-                                                if (p[pixel[12]] > cb) {
-                                                    if (p[pixel[13]] > cb) {
-                                                        if (p[pixel[14]] > cb) {
-                                                            if (p[pixel[15]] > cb) {
-                                                            } else if (p[pixel[4]] > cb) {
-                                                                if (p[pixel[5]] > cb) {
-                                                                    if (p[pixel[6]] > cb) {
+                        } else {
+                            continue;
+                        }
+                    } else if (p[pixel[1]] < c_b) {
+                        if (p[pixel[5]] > cb) {
+                            if (p[pixel[6]] > cb) {
+                                if (p[pixel[7]] > cb) {
+                                    if (p[pixel[8]] > cb) {
+                                        if (p[pixel[9]] > cb) {
+                                            if (p[pixel[10]] > cb) {
+                                                if (p[pixel[11]] > cb) {
+                                                    if (p[pixel[12]] > cb) {
+                                                        if (p[pixel[13]] > cb) {
+                                                            if (p[pixel[14]] > cb) {
+                                                                if (p[pixel[15]] > cb) {
+                                                                } else if (p[pixel[3]] > cb) {
+                                                                    if (p[pixel[4]] > cb) {
                                                                     } else {
                                                                         continue;
                                                                     }
                                                                 } else {
                                                                     continue;
                                                                 }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else if (p[pixel[3]] > cb) {
-                                                            if (p[pixel[4]] > cb) {
-                                                                if (p[pixel[5]] > cb) {
-                                                                    if (p[pixel[6]] > cb) {
+                                                            } else if (p[pixel[2]] > cb) {
+                                                                if (p[pixel[3]] > cb) {
+                                                                    if (p[pixel[4]] > cb) {
                                                                     } else {
                                                                         continue;
                                                                     }
@@ -713,16 +751,20 @@ public class FAST11 {
                                 } else {
                                     continue;
                                 }
-                            } else if (p[pixel[7]] < c_b) {
-                                if (p[pixel[5]] < c_b) {
-                                    if (p[pixel[6]] < c_b) {
+                            } else {
+                                continue;
+                            }
+                        } else if (p[pixel[5]] < c_b) {
+                            if (p[pixel[4]] < c_b) {
+                                if (p[pixel[6]] < c_b) {
+                                    if (p[pixel[7]] < c_b) {
                                         if (p[pixel[8]] < c_b) {
                                             if (p[pixel[9]] < c_b) {
                                                 if (p[pixel[10]] < c_b) {
                                                     if (p[pixel[11]] < c_b) {
                                                         if (p[pixel[12]] < c_b) {
-                                                            if (p[pixel[4]] < c_b) {
-                                                                if (p[pixel[3]] < c_b) {
+                                                            if (p[pixel[3]] < c_b) {
+                                                                if (p[pixel[2]] < c_b) {
                                                                 } else if (p[pixel[13]] < c_b) {
                                                                     if (p[pixel[14]] < c_b) {
                                                                     } else {
@@ -767,31 +809,31 @@ public class FAST11 {
                             } else {
                                 continue;
                             }
-                        } else if (p[pixel[7]] > cb) {
-                            if (p[pixel[8]] > cb) {
-                                if (p[pixel[9]] > cb) {
-                                    if (p[pixel[10]] > cb) {
-                                        if (p[pixel[11]] > cb) {
-                                            if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
-                                                        } else if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                if (p[pixel[6]] > cb) {
+                        } else {
+                            continue;
+                        }
+                    } else if (p[pixel[5]] > cb) {
+                        if (p[pixel[6]] > cb) {
+                            if (p[pixel[7]] > cb) {
+                                if (p[pixel[8]] > cb) {
+                                    if (p[pixel[9]] > cb) {
+                                        if (p[pixel[10]] > cb) {
+                                            if (p[pixel[11]] > cb) {
+                                                if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                            } else if (p[pixel[3]] > cb) {
+                                                                if (p[pixel[4]] > cb) {
                                                                 } else {
                                                                     continue;
                                                                 }
                                                             } else {
                                                                 continue;
                                                             }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[3]] > cb) {
-                                                        if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                if (p[pixel[6]] > cb) {
+                                                        } else if (p[pixel[2]] > cb) {
+                                                            if (p[pixel[3]] > cb) {
+                                                                if (p[pixel[4]] > cb) {
                                                                 } else {
                                                                     continue;
                                                                 }
@@ -822,17 +864,21 @@ public class FAST11 {
                             } else {
                                 continue;
                             }
-                        } else if (p[pixel[7]] < c_b) {
-                            if (p[pixel[5]] < c_b) {
-                                if (p[pixel[6]] < c_b) {
+                        } else {
+                            continue;
+                        }
+                    } else if (p[pixel[5]] < c_b) {
+                        if (p[pixel[4]] < c_b) {
+                            if (p[pixel[6]] < c_b) {
+                                if (p[pixel[7]] < c_b) {
                                     if (p[pixel[8]] < c_b) {
                                         if (p[pixel[9]] < c_b) {
                                             if (p[pixel[10]] < c_b) {
                                                 if (p[pixel[11]] < c_b) {
                                                     if (p[pixel[12]] < c_b) {
                                                         if (p[pixel[13]] < c_b) {
-                                                            if (p[pixel[4]] < c_b) {
-                                                                if (p[pixel[3]] < c_b) {
+                                                            if (p[pixel[3]] < c_b) {
+                                                                if (p[pixel[2]] < c_b) {
                                                                 } else if (p[pixel[14]] < c_b) {
                                                                 } else {
                                                                     continue;
@@ -872,406 +918,22 @@ public class FAST11 {
                         } else {
                             continue;
                         }
-                    } else if (p[pixel[1]] < c_b) {
-                        if (p[pixel[6]] > cb) {
-                            if (p[pixel[7]] > cb) {
-                                if (p[pixel[8]] > cb) {
-                                    if (p[pixel[9]] > cb) {
-                                        if (p[pixel[10]] > cb) {
-                                            if (p[pixel[11]] > cb) {
-                                                if (p[pixel[12]] > cb) {
-                                                    if (p[pixel[13]] > cb) {
-                                                        if (p[pixel[14]] > cb) {
-                                                            if (p[pixel[15]] > cb) {
-                                                            } else if (p[pixel[4]] > cb) {
-                                                                if (p[pixel[5]] > cb) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else if (p[pixel[3]] > cb) {
-                                                            if (p[pixel[4]] > cb) {
-                                                                if (p[pixel[5]] > cb) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[2]] > cb) {
-                                                        if (p[pixel[3]] > cb) {
-                                                            if (p[pixel[4]] > cb) {
-                                                                if (p[pixel[5]] > cb) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-                                continue;
-                            }
-                        } else if (p[pixel[6]] < c_b) {
-                            if (p[pixel[5]] < c_b) {
-                                if (p[pixel[7]] < c_b) {
-                                    if (p[pixel[8]] < c_b) {
-                                        if (p[pixel[9]] < c_b) {
-                                            if (p[pixel[10]] < c_b) {
-                                                if (p[pixel[11]] < c_b) {
-                                                    if (p[pixel[4]] < c_b) {
-                                                        if (p[pixel[3]] < c_b) {
-                                                            if (p[pixel[2]] < c_b) {
-                                                            } else if (p[pixel[12]] < c_b) {
-                                                                if (p[pixel[13]] < c_b) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else if (p[pixel[12]] < c_b) {
-                                                            if (p[pixel[13]] < c_b) {
-                                                                if (p[pixel[14]] < c_b) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[12]] < c_b) {
-                                                        if (p[pixel[13]] < c_b) {
-                                                            if (p[pixel[14]] < c_b) {
-                                                                if (p[pixel[15]] < c_b) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-                                continue;
-                            }
-                        } else {
-                            continue;
-                        }
-                    } else if (p[pixel[6]] > cb) {
-                        if (p[pixel[7]] > cb) {
-                            if (p[pixel[8]] > cb) {
-                                if (p[pixel[9]] > cb) {
-                                    if (p[pixel[10]] > cb) {
-                                        if (p[pixel[11]] > cb) {
-                                            if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
-                                                        } else if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[3]] > cb) {
-                                                        if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else if (p[pixel[2]] > cb) {
-                                                    if (p[pixel[3]] > cb) {
-                                                        if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-                                continue;
-                            }
-                        } else {
-                            continue;
-                        }
-                    } else if (p[pixel[6]] < c_b) {
-                        if (p[pixel[5]] < c_b) {
-                            if (p[pixel[7]] < c_b) {
-                                if (p[pixel[8]] < c_b) {
-                                    if (p[pixel[9]] < c_b) {
-                                        if (p[pixel[10]] < c_b) {
-                                            if (p[pixel[11]] < c_b) {
-                                                if (p[pixel[12]] < c_b) {
-                                                    if (p[pixel[4]] < c_b) {
-                                                        if (p[pixel[3]] < c_b) {
-                                                            if (p[pixel[2]] < c_b) {
-                                                            } else if (p[pixel[13]] < c_b) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else if (p[pixel[13]] < c_b) {
-                                                            if (p[pixel[14]] < c_b) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[13]] < c_b) {
-                                                        if (p[pixel[14]] < c_b) {
-                                                            if (p[pixel[15]] < c_b) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-                                continue;
-                            }
-                        } else {
-                            continue;
-                        }
                     } else {
                         continue;
                     }
                 } else if (p[pixel[0]] < c_b) {
                     if (p[pixel[1]] > cb) {
-                        if (p[pixel[6]] > cb) {
-                            if (p[pixel[5]] > cb) {
-                                if (p[pixel[7]] > cb) {
-                                    if (p[pixel[8]] > cb) {
-                                        if (p[pixel[9]] > cb) {
-                                            if (p[pixel[10]] > cb) {
-                                                if (p[pixel[11]] > cb) {
-                                                    if (p[pixel[4]] > cb) {
-                                                        if (p[pixel[3]] > cb) {
-                                                            if (p[pixel[2]] > cb) {
-                                                            } else if (p[pixel[12]] > cb) {
-                                                                if (p[pixel[13]] > cb) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else if (p[pixel[12]] > cb) {
-                                                            if (p[pixel[13]] > cb) {
-                                                                if (p[pixel[14]] > cb) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[12]] > cb) {
-                                                        if (p[pixel[13]] > cb) {
-                                                            if (p[pixel[14]] > cb) {
-                                                                if (p[pixel[15]] > cb) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-                                continue;
-                            }
-                        } else if (p[pixel[6]] < c_b) {
-                            if (p[pixel[7]] < c_b) {
-                                if (p[pixel[8]] < c_b) {
-                                    if (p[pixel[9]] < c_b) {
-                                        if (p[pixel[10]] < c_b) {
-                                            if (p[pixel[11]] < c_b) {
-                                                if (p[pixel[12]] < c_b) {
-                                                    if (p[pixel[13]] < c_b) {
-                                                        if (p[pixel[14]] < c_b) {
-                                                            if (p[pixel[15]] < c_b) {
-                                                            } else if (p[pixel[4]] < c_b) {
-                                                                if (p[pixel[5]] < c_b) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else if (p[pixel[3]] < c_b) {
-                                                            if (p[pixel[4]] < c_b) {
-                                                                if (p[pixel[5]] < c_b) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[2]] < c_b) {
-                                                        if (p[pixel[3]] < c_b) {
-                                                            if (p[pixel[4]] < c_b) {
-                                                                if (p[pixel[5]] < c_b) {
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-                                continue;
-                            }
-                        } else {
-                            continue;
-                        }
-                    } else if (p[pixel[1]] < c_b) {
-                        if (p[pixel[2]] > cb) {
-                            if (p[pixel[7]] > cb) {
-                                if (p[pixel[5]] > cb) {
-                                    if (p[pixel[6]] > cb) {
+                        if (p[pixel[5]] > cb) {
+                            if (p[pixel[4]] > cb) {
+                                if (p[pixel[6]] > cb) {
+                                    if (p[pixel[7]] > cb) {
                                         if (p[pixel[8]] > cb) {
                                             if (p[pixel[9]] > cb) {
                                                 if (p[pixel[10]] > cb) {
                                                     if (p[pixel[11]] > cb) {
                                                         if (p[pixel[12]] > cb) {
-                                                            if (p[pixel[4]] > cb) {
-                                                                if (p[pixel[3]] > cb) {
+                                                            if (p[pixel[3]] > cb) {
+                                                                if (p[pixel[2]] > cb) {
                                                                 } else if (p[pixel[13]] > cb) {
                                                                     if (p[pixel[14]] > cb) {
                                                                     } else {
@@ -1313,18 +975,31 @@ public class FAST11 {
                                 } else {
                                     continue;
                                 }
-                            } else if (p[pixel[7]] < c_b) {
-                                if (p[pixel[8]] < c_b) {
-                                    if (p[pixel[9]] < c_b) {
-                                        if (p[pixel[10]] < c_b) {
-                                            if (p[pixel[11]] < c_b) {
-                                                if (p[pixel[12]] < c_b) {
-                                                    if (p[pixel[13]] < c_b) {
-                                                        if (p[pixel[14]] < c_b) {
-                                                            if (p[pixel[15]] < c_b) {
-                                                            } else if (p[pixel[4]] < c_b) {
-                                                                if (p[pixel[5]] < c_b) {
-                                                                    if (p[pixel[6]] < c_b) {
+                            } else {
+                                continue;
+                            }
+                        } else if (p[pixel[5]] < c_b) {
+                            if (p[pixel[6]] < c_b) {
+                                if (p[pixel[7]] < c_b) {
+                                    if (p[pixel[8]] < c_b) {
+                                        if (p[pixel[9]] < c_b) {
+                                            if (p[pixel[10]] < c_b) {
+                                                if (p[pixel[11]] < c_b) {
+                                                    if (p[pixel[12]] < c_b) {
+                                                        if (p[pixel[13]] < c_b) {
+                                                            if (p[pixel[14]] < c_b) {
+                                                                if (p[pixel[15]] < c_b) {
+                                                                } else if (p[pixel[3]] < c_b) {
+                                                                    if (p[pixel[4]] < c_b) {
+                                                                    } else {
+                                                                        continue;
+                                                                    }
+                                                                } else {
+                                                                    continue;
+                                                                }
+                                                            } else if (p[pixel[2]] < c_b) {
+                                                                if (p[pixel[3]] < c_b) {
+                                                                    if (p[pixel[4]] < c_b) {
                                                                     } else {
                                                                         continue;
                                                                     }
@@ -1334,10 +1009,97 @@ public class FAST11 {
                                                             } else {
                                                                 continue;
                                                             }
-                                                        } else if (p[pixel[3]] < c_b) {
-                                                            if (p[pixel[4]] < c_b) {
-                                                                if (p[pixel[5]] < c_b) {
-                                                                    if (p[pixel[6]] < c_b) {
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else {
+                                                    continue;
+                                                }
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        continue;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            continue;
+                        }
+                    } else if (p[pixel[1]] < c_b) {
+                        if (p[pixel[2]] > cb) {
+                            if (p[pixel[6]] > cb) {
+                                if (p[pixel[4]] > cb) {
+                                    if (p[pixel[5]] > cb) {
+                                        if (p[pixel[7]] > cb) {
+                                            if (p[pixel[8]] > cb) {
+                                                if (p[pixel[9]] > cb) {
+                                                    if (p[pixel[10]] > cb) {
+                                                        if (p[pixel[11]] > cb) {
+                                                            if (p[pixel[12]] > cb) {
+                                                                if (p[pixel[13]] > cb) {
+                                                                    if (p[pixel[3]] > cb) {
+                                                                    } else if (p[pixel[14]] > cb) {
+                                                                        if (p[pixel[15]] > cb) {
+                                                                        } else {
+                                                                            continue;
+                                                                        }
+                                                                    } else {
+                                                                        continue;
+                                                                    }
+                                                                } else {
+                                                                    continue;
+                                                                }
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else {
+                                                    continue;
+                                                }
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        continue;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            } else if (p[pixel[6]] < c_b) {
+                                if (p[pixel[7]] < c_b) {
+                                    if (p[pixel[8]] < c_b) {
+                                        if (p[pixel[9]] < c_b) {
+                                            if (p[pixel[10]] < c_b) {
+                                                if (p[pixel[11]] < c_b) {
+                                                    if (p[pixel[12]] < c_b) {
+                                                        if (p[pixel[13]] < c_b) {
+                                                            if (p[pixel[14]] < c_b) {
+                                                                if (p[pixel[15]] < c_b) {
+                                                                } else if (p[pixel[3]] < c_b) {
+                                                                    if (p[pixel[4]] < c_b) {
+                                                                        if (p[pixel[5]] < c_b) {
+                                                                        } else {
+                                                                            continue;
+                                                                        }
                                                                     } else {
                                                                         continue;
                                                                     }
@@ -1373,59 +1135,21 @@ public class FAST11 {
                             }
                         } else if (p[pixel[2]] < c_b) {
                             if (p[pixel[3]] > cb) {
-                                if (p[pixel[14]] > cb) {
-                                    if (p[pixel[5]] > cb) {
-                                        if (p[pixel[6]] > cb) {
-                                            if (p[pixel[7]] > cb) {
-                                                if (p[pixel[8]] > cb) {
-                                                    if (p[pixel[9]] > cb) {
-                                                        if (p[pixel[10]] > cb) {
-                                                            if (p[pixel[11]] > cb) {
-                                                                if (p[pixel[12]] > cb) {
-                                                                    if (p[pixel[13]] > cb) {
-                                                                        if (p[pixel[4]] > cb) {
-                                                                        } else if (p[pixel[15]] > cb) {
-                                                                        } else {
-                                                                            continue;
-                                                                        }
-                                                                    } else {
-                                                                        continue;
-                                                                    }
-                                                                } else {
-                                                                    continue;
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else if (p[pixel[14]] < c_b) {
-                                    if (p[pixel[8]] > cb) {
+                                if (p[pixel[15]] < c_b) {
+                                    if (p[pixel[7]] > cb) {
                                         if (p[pixel[4]] > cb) {
                                             if (p[pixel[5]] > cb) {
                                                 if (p[pixel[6]] > cb) {
-                                                    if (p[pixel[7]] > cb) {
+                                                    if (p[pixel[8]] > cb) {
                                                         if (p[pixel[9]] > cb) {
                                                             if (p[pixel[10]] > cb) {
                                                                 if (p[pixel[11]] > cb) {
                                                                     if (p[pixel[12]] > cb) {
                                                                         if (p[pixel[13]] > cb) {
+                                                                            if (p[pixel[14]] > cb) {
+                                                                            } else {
+                                                                                continue;
+                                                                            }
                                                                         } else {
                                                                             continue;
                                                                         }
@@ -1453,23 +1177,14 @@ public class FAST11 {
                                         } else {
                                             continue;
                                         }
-                                    } else if (p[pixel[8]] < c_b) {
-                                        if (p[pixel[9]] < c_b) {
-                                            if (p[pixel[10]] < c_b) {
-                                                if (p[pixel[11]] < c_b) {
-                                                    if (p[pixel[12]] < c_b) {
-                                                        if (p[pixel[13]] < c_b) {
-                                                            if (p[pixel[15]] < c_b) {
-                                                            } else if (p[pixel[4]] < c_b) {
-                                                                if (p[pixel[5]] < c_b) {
-                                                                    if (p[pixel[6]] < c_b) {
-                                                                        if (p[pixel[7]] < c_b) {
-                                                                        } else {
-                                                                            continue;
-                                                                        }
-                                                                    } else {
-                                                                        continue;
-                                                                    }
+                                    } else if (p[pixel[7]] < c_b) {
+                                        if (p[pixel[8]] < c_b) {
+                                            if (p[pixel[9]] < c_b) {
+                                                if (p[pixel[10]] < c_b) {
+                                                    if (p[pixel[11]] < c_b) {
+                                                        if (p[pixel[12]] < c_b) {
+                                                            if (p[pixel[13]] < c_b) {
+                                                                if (p[pixel[14]] < c_b) {
                                                                 } else {
                                                                     continue;
                                                                 }
@@ -1504,6 +1219,10 @@ public class FAST11 {
                                                             if (p[pixel[11]] > cb) {
                                                                 if (p[pixel[12]] > cb) {
                                                                     if (p[pixel[13]] > cb) {
+                                                                        if (p[pixel[14]] > cb) {
+                                                                        } else {
+                                                                            continue;
+                                                                        }
                                                                     } else {
                                                                         continue;
                                                                     }
@@ -1536,17 +1255,17 @@ public class FAST11 {
                                 }
                             } else if (p[pixel[3]] < c_b) {
                                 if (p[pixel[4]] > cb) {
-                                    if (p[pixel[15]] < c_b) {
-                                        if (p[pixel[9]] > cb) {
-                                            if (p[pixel[5]] > cb) {
-                                                if (p[pixel[6]] > cb) {
-                                                    if (p[pixel[7]] > cb) {
-                                                        if (p[pixel[8]] > cb) {
-                                                            if (p[pixel[10]] > cb) {
-                                                                if (p[pixel[11]] > cb) {
-                                                                    if (p[pixel[12]] > cb) {
-                                                                        if (p[pixel[13]] > cb) {
-                                                                            if (p[pixel[14]] > cb) {
+                                    if (p[pixel[8]] > cb) {
+                                        if (p[pixel[5]] > cb) {
+                                            if (p[pixel[6]] > cb) {
+                                                if (p[pixel[7]] > cb) {
+                                                    if (p[pixel[9]] > cb) {
+                                                        if (p[pixel[10]] > cb) {
+                                                            if (p[pixel[11]] > cb) {
+                                                                if (p[pixel[12]] > cb) {
+                                                                    if (p[pixel[13]] > cb) {
+                                                                        if (p[pixel[14]] > cb) {
+                                                                            if (p[pixel[15]] > cb) {
                                                                             } else {
                                                                                 continue;
                                                                             }
@@ -1574,46 +1293,17 @@ public class FAST11 {
                                             } else {
                                                 continue;
                                             }
-                                        } else if (p[pixel[9]] < c_b) {
+                                        } else {
+                                            continue;
+                                        }
+                                    } else if (p[pixel[8]] < c_b) {
+                                        if (p[pixel[9]] < c_b) {
                                             if (p[pixel[10]] < c_b) {
                                                 if (p[pixel[11]] < c_b) {
                                                     if (p[pixel[12]] < c_b) {
                                                         if (p[pixel[13]] < c_b) {
                                                             if (p[pixel[14]] < c_b) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else if (p[pixel[5]] > cb) {
-                                        if (p[pixel[6]] > cb) {
-                                            if (p[pixel[7]] > cb) {
-                                                if (p[pixel[8]] > cb) {
-                                                    if (p[pixel[9]] > cb) {
-                                                        if (p[pixel[10]] > cb) {
-                                                            if (p[pixel[11]] > cb) {
-                                                                if (p[pixel[12]] > cb) {
-                                                                    if (p[pixel[13]] > cb) {
-                                                                        if (p[pixel[14]] > cb) {
-                                                                        } else {
-                                                                            continue;
-                                                                        }
-                                                                    } else {
-                                                                        continue;
-                                                                    }
+                                                                if (p[pixel[15]] < c_b) {
                                                                 } else {
                                                                     continue;
                                                                 }
@@ -1639,29 +1329,58 @@ public class FAST11 {
                                         continue;
                                     }
                                 } else if (p[pixel[4]] < c_b) {
-                                    if (p[pixel[5]] > cb) {
-                                        if (p[pixel[10]] > cb) {
-                                            if (p[pixel[6]] > cb) {
-                                                if (p[pixel[7]] > cb) {
-                                                    if (p[pixel[8]] > cb) {
-                                                        if (p[pixel[9]] > cb) {
-                                                            if (p[pixel[11]] > cb) {
-                                                                if (p[pixel[12]] > cb) {
-                                                                    if (p[pixel[13]] > cb) {
-                                                                        if (p[pixel[14]] > cb) {
-                                                                            if (p[pixel[15]] > cb) {
-                                                                            } else {
-                                                                                continue;
-                                                                            }
-                                                                        } else {
-                                                                            continue;
-                                                                        }
-                                                                    } else {
-                                                                        continue;
-                                                                    }
-                                                                } else {
-                                                                    continue;
-                                                                }
+                                    if (p[pixel[5]] < c_b) {
+                                        if (p[pixel[6]] < c_b) {
+                                            if (p[pixel[7]] < c_b) {
+                                                if (p[pixel[8]] < c_b) {
+                                                    if (p[pixel[9]] < c_b) {
+                                                        if (p[pixel[10]] < c_b) {
+                                                            if (p[pixel[11]] < c_b) {
+                                                            } else if (p[pixel[15]] < c_b) {
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else {
+                                                    continue;
+                                                }
+                                            } else if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
                                                             } else {
                                                                 continue;
                                                             }
@@ -1701,78 +1420,16 @@ public class FAST11 {
                                         } else {
                                             continue;
                                         }
-                                    } else if (p[pixel[5]] < c_b) {
-                                        if (p[pixel[6]] < c_b) {
-                                            if (p[pixel[7]] < c_b) {
-                                                if (p[pixel[8]] < c_b) {
-                                                    if (p[pixel[9]] < c_b) {
-                                                        if (p[pixel[10]] < c_b) {
-                                                        } else if (p[pixel[15]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
+                                    } else if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
@@ -1791,11 +1448,44 @@ public class FAST11 {
                                     } else {
                                         continue;
                                     }
-                                } else if (p[pixel[9]] > cb) {
+                                } else if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else {
+                                                    continue;
+                                                }
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        continue;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            } else if (p[pixel[7]] > cb) {
+                                if (p[pixel[4]] > cb) {
                                     if (p[pixel[5]] > cb) {
                                         if (p[pixel[6]] > cb) {
-                                            if (p[pixel[7]] > cb) {
-                                                if (p[pixel[8]] > cb) {
+                                            if (p[pixel[8]] > cb) {
+                                                if (p[pixel[9]] > cb) {
                                                     if (p[pixel[10]] > cb) {
                                                         if (p[pixel[11]] > cb) {
                                                             if (p[pixel[12]] > cb) {
@@ -1832,52 +1522,18 @@ public class FAST11 {
                                     } else {
                                         continue;
                                     }
-                                } else if (p[pixel[9]] < c_b) {
-                                    if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
                                 } else {
                                     continue;
                                 }
-                            } else if (p[pixel[8]] > cb) {
-                                if (p[pixel[5]] > cb) {
-                                    if (p[pixel[6]] > cb) {
-                                        if (p[pixel[7]] > cb) {
-                                            if (p[pixel[9]] > cb) {
-                                                if (p[pixel[10]] > cb) {
-                                                    if (p[pixel[11]] > cb) {
-                                                        if (p[pixel[12]] > cb) {
-                                                            if (p[pixel[13]] > cb) {
-                                                                if (p[pixel[14]] > cb) {
-                                                                    if (p[pixel[4]] > cb) {
-                                                                    } else if (p[pixel[15]] > cb) {
-                                                                    } else {
-                                                                        continue;
-                                                                    }
-                                                                } else {
-                                                                    continue;
-                                                                }
+                            } else if (p[pixel[7]] < c_b) {
+                                if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
                                                             } else {
                                                                 continue;
                                                             }
@@ -1902,18 +1558,22 @@ public class FAST11 {
                                 } else {
                                     continue;
                                 }
-                            } else if (p[pixel[8]] < c_b) {
-                                if (p[pixel[9]] < c_b) {
-                                    if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                        } else if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                if (p[pixel[6]] < c_b) {
-                                                                    if (p[pixel[7]] < c_b) {
+                            } else {
+                                continue;
+                            }
+                        } else if (p[pixel[6]] > cb) {
+                            if (p[pixel[4]] > cb) {
+                                if (p[pixel[5]] > cb) {
+                                    if (p[pixel[7]] > cb) {
+                                        if (p[pixel[8]] > cb) {
+                                            if (p[pixel[9]] > cb) {
+                                                if (p[pixel[10]] > cb) {
+                                                    if (p[pixel[11]] > cb) {
+                                                        if (p[pixel[12]] > cb) {
+                                                            if (p[pixel[13]] > cb) {
+                                                                if (p[pixel[14]] > cb) {
+                                                                    if (p[pixel[3]] > cb) {
+                                                                    } else if (p[pixel[15]] > cb) {
                                                                     } else {
                                                                         continue;
                                                                     }
@@ -1947,17 +1607,67 @@ public class FAST11 {
                             } else {
                                 continue;
                             }
-                        } else if (p[pixel[7]] > cb) {
-                            if (p[pixel[5]] > cb) {
-                                if (p[pixel[6]] > cb) {
+                        } else if (p[pixel[6]] < c_b) {
+                            if (p[pixel[7]] < c_b) {
+                                if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                            } else if (p[pixel[3]] < c_b) {
+                                                                if (p[pixel[4]] < c_b) {
+                                                                    if (p[pixel[5]] < c_b) {
+                                                                    } else {
+                                                                        continue;
+                                                                    }
+                                                                } else {
+                                                                    continue;
+                                                                }
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else {
+                                                            continue;
+                                                        }
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } else {
+                                                    continue;
+                                                }
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        continue;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            continue;
+                        }
+                    } else if (p[pixel[5]] > cb) {
+                        if (p[pixel[4]] > cb) {
+                            if (p[pixel[6]] > cb) {
+                                if (p[pixel[7]] > cb) {
                                     if (p[pixel[8]] > cb) {
                                         if (p[pixel[9]] > cb) {
                                             if (p[pixel[10]] > cb) {
                                                 if (p[pixel[11]] > cb) {
                                                     if (p[pixel[12]] > cb) {
                                                         if (p[pixel[13]] > cb) {
-                                                            if (p[pixel[4]] > cb) {
-                                                                if (p[pixel[3]] > cb) {
+                                                            if (p[pixel[3]] > cb) {
+                                                                if (p[pixel[2]] > cb) {
                                                                 } else if (p[pixel[14]] > cb) {
                                                                 } else {
                                                                     continue;
@@ -1994,31 +1704,31 @@ public class FAST11 {
                             } else {
                                 continue;
                             }
-                        } else if (p[pixel[7]] < c_b) {
-                            if (p[pixel[8]] < c_b) {
-                                if (p[pixel[9]] < c_b) {
-                                    if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                        } else if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                if (p[pixel[6]] < c_b) {
+                        } else {
+                            continue;
+                        }
+                    } else if (p[pixel[5]] < c_b) {
+                        if (p[pixel[6]] < c_b) {
+                            if (p[pixel[7]] < c_b) {
+                                if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                            } else if (p[pixel[3]] < c_b) {
+                                                                if (p[pixel[4]] < c_b) {
                                                                 } else {
                                                                     continue;
                                                                 }
                                                             } else {
                                                                 continue;
                                                             }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[3]] < c_b) {
-                                                        if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                if (p[pixel[6]] < c_b) {
+                                                        } else if (p[pixel[2]] < c_b) {
+                                                            if (p[pixel[3]] < c_b) {
+                                                                if (p[pixel[4]] < c_b) {
                                                                 } else {
                                                                     continue;
                                                                 }
@@ -2052,17 +1762,21 @@ public class FAST11 {
                         } else {
                             continue;
                         }
-                    } else if (p[pixel[6]] > cb) {
-                        if (p[pixel[5]] > cb) {
+                    } else {
+                        continue;
+                    }
+                } else if (p[pixel[4]] > cb) {
+                    if (p[pixel[5]] > cb) {
+                        if (p[pixel[6]] > cb) {
                             if (p[pixel[7]] > cb) {
                                 if (p[pixel[8]] > cb) {
                                     if (p[pixel[9]] > cb) {
                                         if (p[pixel[10]] > cb) {
                                             if (p[pixel[11]] > cb) {
                                                 if (p[pixel[12]] > cb) {
-                                                    if (p[pixel[4]] > cb) {
-                                                        if (p[pixel[3]] > cb) {
-                                                            if (p[pixel[2]] > cb) {
+                                                    if (p[pixel[3]] > cb) {
+                                                        if (p[pixel[2]] > cb) {
+                                                            if (p[pixel[1]] > cb) {
                                                             } else if (p[pixel[13]] > cb) {
                                                             } else {
                                                                 continue;
@@ -2108,181 +1822,39 @@ public class FAST11 {
                         } else {
                             continue;
                         }
-                    } else if (p[pixel[6]] < c_b) {
-                        if (p[pixel[7]] < c_b) {
-                            if (p[pixel[8]] < c_b) {
-                                if (p[pixel[9]] < c_b) {
-                                    if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                        } else if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[3]] < c_b) {
-                                                        if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else if (p[pixel[2]] < c_b) {
+                    } else {
+                        continue;
+                    }
+                } else if (p[pixel[4]] < c_b) {
+                    if (p[pixel[5]] < c_b) {
+                        if (p[pixel[6]] < c_b) {
+                            if (p[pixel[7]] < c_b) {
+                                if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
                                                     if (p[pixel[3]] < c_b) {
-                                                        if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
+                                                        if (p[pixel[2]] < c_b) {
+                                                            if (p[pixel[1]] < c_b) {
+                                                            } else if (p[pixel[13]] < c_b) {
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                        } else if (p[pixel[13]] < c_b) {
+                                                            if (p[pixel[14]] < c_b) {
                                                             } else {
                                                                 continue;
                                                             }
                                                         } else {
                                                             continue;
                                                         }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-                                continue;
-                            }
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        continue;
-                    }
-                } else if (p[pixel[5]] > cb) {
-                    if (p[pixel[6]] > cb) {
-                        if (p[pixel[7]] > cb) {
-                            if (p[pixel[8]] > cb) {
-                                if (p[pixel[9]] > cb) {
-                                    if (p[pixel[10]] > cb) {
-                                        if (p[pixel[11]] > cb) {
-                                            if (p[pixel[4]] > cb) {
-                                                if (p[pixel[3]] > cb) {
-                                                    if (p[pixel[2]] > cb) {
-                                                        if (p[pixel[1]] > cb) {
-                                                        } else if (p[pixel[12]] > cb) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[12]] > cb) {
-                                                        if (p[pixel[13]] > cb) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else if (p[pixel[12]] > cb) {
-                                                    if (p[pixel[13]] > cb) {
-                                                        if (p[pixel[14]] > cb) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else {
-                                                continue;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-                                continue;
-                            }
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        continue;
-                    }
-                } else if (p[pixel[5]] < c_b) {
-                    if (p[pixel[6]] < c_b) {
-                        if (p[pixel[7]] < c_b) {
-                            if (p[pixel[8]] < c_b) {
-                                if (p[pixel[9]] < c_b) {
-                                    if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[4]] < c_b) {
-                                                if (p[pixel[3]] < c_b) {
-                                                    if (p[pixel[2]] < c_b) {
-                                                        if (p[pixel[1]] < c_b) {
-                                                        } else if (p[pixel[12]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else if (p[pixel[12]] < c_b) {
-                                                        if (p[pixel[13]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else if (p[pixel[12]] < c_b) {
-                                                    if (p[pixel[13]] < c_b) {
+                                                    } else if (p[pixel[13]] < c_b) {
                                                         if (p[pixel[14]] < c_b) {
-                                                        } else {
-                                                            continue;
-                                                        }
-                                                    } else {
-                                                        continue;
-                                                    }
-                                                } else {
-                                                    continue;
-                                                }
-                                            } else if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                            } else {
+                                                                continue;
+                                                            }
                                                         } else {
                                                             continue;
                                                         }
@@ -2325,10 +1897,9 @@ public class FAST11 {
 
         ret_num_corners = num_corners;
         return ret_corners;
-
     }
 
-    private int[] fast11_score(int[] i, int stride, List<ImagePoint> corners, int num_corners, int b) {
+    private int[] fast12_score(int[] i, int stride, List<ImagePoint> corners, int num_corners, int b) {
         int[] scores = new int[num_corners];
         int n;
 
@@ -2336,8 +1907,9 @@ public class FAST11 {
 
         for (n = 0; n < num_corners; n++) {
             FASTUtils.make_offsets(pixel, stride, (int) corners.get(n).x, (int) corners.get(n).y);
-            scores[n] = fast11_corner_score(i, pixel, b, corners.get(n), stride);
+            scores[n] = fast12_corner_score(i, pixel, b, corners.get(n), stride);
         }
+        
         return scores;
     }
 
@@ -2358,7 +1930,7 @@ public class FAST11 {
         b = (bmin + bmax) / 2;
     }
 
-    private int fast11_corner_score(int[] p, int[] pixel, int bstart, ImagePoint currentP, int stride) {
+    private int fast12_corner_score(int[] p, int[] pixel, int bstart, ImagePoint currentP, int stride) {
 
         bmin = bstart;
         bmax = 255;
@@ -2381,25 +1953,43 @@ public class FAST11 {
                                             if (p[pixel[8]] > cb) {
                                                 if (p[pixel[9]] > cb) {
                                                     if (p[pixel[10]] > cb) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
+                                                        if (p[pixel[11]] > cb) {
+                                                            is_a_corner();
+                                                        } else if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else if (p[pixel[14]] > cb) {
+                                                        if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
-                                                } else if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
+                                                } else if (p[pixel[13]] > cb) {
+                                                    if (p[pixel[14]] > cb) {
+                                                        if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
                                                 } else {
                                                     is_not_a_corner();
                                                 }
-                                            } else if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
+                                            } else if (p[pixel[12]] > cb) {
+                                                if (p[pixel[13]] > cb) {
+                                                    if (p[pixel[14]] > cb) {
+                                                        if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
@@ -2409,11 +1999,15 @@ public class FAST11 {
                                             } else {
                                                 is_not_a_corner();
                                             }
-                                        } else if (p[pixel[12]] > cb) {
-                                            if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
+                                        } else if (p[pixel[11]] > cb) {
+                                            if (p[pixel[12]] > cb) {
+                                                if (p[pixel[13]] > cb) {
+                                                    if (p[pixel[14]] > cb) {
+                                                        if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
@@ -2426,12 +2020,16 @@ public class FAST11 {
                                         } else {
                                             is_not_a_corner();
                                         }
-                                    } else if (p[pixel[11]] > cb) {
-                                        if (p[pixel[12]] > cb) {
-                                            if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
+                                    } else if (p[pixel[10]] > cb) {
+                                        if (p[pixel[11]] > cb) {
+                                            if (p[pixel[12]] > cb) {
+                                                if (p[pixel[13]] > cb) {
+                                                    if (p[pixel[14]] > cb) {
+                                                        if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
@@ -2447,7 +2045,7 @@ public class FAST11 {
                                     } else {
                                         is_not_a_corner();
                                     }
-                                } else if (p[pixel[5]] < c_b) {
+                                } else if (p[pixel[9]] > cb) {
                                     if (p[pixel[10]] > cb) {
                                         if (p[pixel[11]] > cb) {
                                             if (p[pixel[12]] > cb) {
@@ -2470,11 +2068,49 @@ public class FAST11 {
                                         } else {
                                             is_not_a_corner();
                                         }
-                                    } else if (p[pixel[10]] < c_b) {
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else if (p[pixel[4]] < c_b) {
+                                if (p[pixel[8]] > cb) {
+                                    if (p[pixel[9]] > cb) {
+                                        if (p[pixel[10]] > cb) {
+                                            if (p[pixel[11]] > cb) {
+                                                if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                                is_a_corner();
+                                                            } else {
+                                                                is_not_a_corner();
+                                                            }
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[5]] < c_b) {
                                         if (p[pixel[6]] < c_b) {
                                             if (p[pixel[7]] < c_b) {
-                                                if (p[pixel[8]] < c_b) {
-                                                    if (p[pixel[9]] < c_b) {
+                                                if (p[pixel[9]] < c_b) {
+                                                    if (p[pixel[10]] < c_b) {
                                                         if (p[pixel[11]] < c_b) {
                                                             if (p[pixel[12]] < c_b) {
                                                                 if (p[pixel[13]] < c_b) {
@@ -2511,13 +2147,21 @@ public class FAST11 {
                                     } else {
                                         is_not_a_corner();
                                     }
-                                } else if (p[pixel[10]] > cb) {
-                                    if (p[pixel[11]] > cb) {
-                                        if (p[pixel[12]] > cb) {
-                                            if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else if (p[pixel[8]] > cb) {
+                                if (p[pixel[9]] > cb) {
+                                    if (p[pixel[10]] > cb) {
+                                        if (p[pixel[11]] > cb) {
+                                            if (p[pixel[12]] > cb) {
+                                                if (p[pixel[13]] > cb) {
+                                                    if (p[pixel[14]] > cb) {
+                                                        if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
@@ -2536,15 +2180,23 @@ public class FAST11 {
                                 } else {
                                     is_not_a_corner();
                                 }
-                            } else if (p[pixel[4]] < c_b) {
-                                if (p[pixel[15]] > cb) {
-                                    if (p[pixel[9]] > cb) {
-                                        if (p[pixel[10]] > cb) {
-                                            if (p[pixel[11]] > cb) {
-                                                if (p[pixel[12]] > cb) {
-                                                    if (p[pixel[13]] > cb) {
-                                                        if (p[pixel[14]] > cb) {
-                                                            is_a_corner();
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else if (p[pixel[3]] < c_b) {
+                            if (p[pixel[15]] > cb) {
+                                if (p[pixel[7]] > cb) {
+                                    if (p[pixel[8]] > cb) {
+                                        if (p[pixel[9]] > cb) {
+                                            if (p[pixel[10]] > cb) {
+                                                if (p[pixel[11]] > cb) {
+                                                    if (p[pixel[12]] > cb) {
+                                                        if (p[pixel[13]] > cb) {
+                                                            if (p[pixel[14]] > cb) {
+                                                                is_a_corner();
+                                                            } else {
+                                                                is_not_a_corner();
+                                                            }
                                                         } else {
                                                             is_not_a_corner();
                                                         }
@@ -2560,11 +2212,15 @@ public class FAST11 {
                                         } else {
                                             is_not_a_corner();
                                         }
-                                    } else if (p[pixel[9]] < c_b) {
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else if (p[pixel[7]] < c_b) {
+                                    if (p[pixel[4]] < c_b) {
                                         if (p[pixel[5]] < c_b) {
                                             if (p[pixel[6]] < c_b) {
-                                                if (p[pixel[7]] < c_b) {
-                                                    if (p[pixel[8]] < c_b) {
+                                                if (p[pixel[8]] < c_b) {
+                                                    if (p[pixel[9]] < c_b) {
                                                         if (p[pixel[10]] < c_b) {
                                                             if (p[pixel[11]] < c_b) {
                                                                 if (p[pixel[12]] < c_b) {
@@ -2601,7 +2257,11 @@ public class FAST11 {
                                     } else {
                                         is_not_a_corner();
                                     }
-                                } else if (p[pixel[5]] < c_b) {
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else if (p[pixel[4]] < c_b) {
+                                if (p[pixel[5]] < c_b) {
                                     if (p[pixel[6]] < c_b) {
                                         if (p[pixel[7]] < c_b) {
                                             if (p[pixel[8]] < c_b) {
@@ -2642,14 +2302,22 @@ public class FAST11 {
                                 } else {
                                     is_not_a_corner();
                                 }
-                            } else if (p[pixel[9]] > cb) {
-                                if (p[pixel[10]] > cb) {
-                                    if (p[pixel[11]] > cb) {
-                                        if (p[pixel[12]] > cb) {
-                                            if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else if (p[pixel[7]] > cb) {
+                            if (p[pixel[8]] > cb) {
+                                if (p[pixel[9]] > cb) {
+                                    if (p[pixel[10]] > cb) {
+                                        if (p[pixel[11]] > cb) {
+                                            if (p[pixel[12]] > cb) {
+                                                if (p[pixel[13]] > cb) {
+                                                    if (p[pixel[14]] > cb) {
+                                                        if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
@@ -2668,11 +2336,15 @@ public class FAST11 {
                                 } else {
                                     is_not_a_corner();
                                 }
-                            } else if (p[pixel[9]] < c_b) {
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else if (p[pixel[7]] < c_b) {
+                            if (p[pixel[4]] < c_b) {
                                 if (p[pixel[5]] < c_b) {
                                     if (p[pixel[6]] < c_b) {
-                                        if (p[pixel[7]] < c_b) {
-                                            if (p[pixel[8]] < c_b) {
+                                        if (p[pixel[8]] < c_b) {
+                                            if (p[pixel[9]] < c_b) {
                                                 if (p[pixel[10]] < c_b) {
                                                     if (p[pixel[11]] < c_b) {
                                                         if (p[pixel[12]] < c_b) {
@@ -2713,143 +2385,123 @@ public class FAST11 {
                             } else {
                                 is_not_a_corner();
                             }
-                        } else if (p[pixel[3]] < c_b) {
-                            if (p[pixel[14]] > cb) {
+                        } else {
+                            is_not_a_corner();
+                        }
+                    } else if (p[pixel[2]] < c_b) {
+                        if (p[pixel[6]] > cb) {
+                            if (p[pixel[7]] > cb) {
                                 if (p[pixel[8]] > cb) {
                                     if (p[pixel[9]] > cb) {
                                         if (p[pixel[10]] > cb) {
                                             if (p[pixel[11]] > cb) {
                                                 if (p[pixel[12]] > cb) {
                                                     if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                                is_a_corner();
+                                                            } else if (p[pixel[3]] > cb) {
+                                                                if (p[pixel[4]] > cb) {
+                                                                    if (p[pixel[5]] > cb) {
+                                                                        is_a_corner();
+                                                                    } else {
+                                                                        is_not_a_corner();
+                                                                    }
+                                                                } else {
+                                                                    is_not_a_corner();
+                                                                }
+                                                            } else {
+                                                                is_not_a_corner();
+                                                            }
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else if (p[pixel[6]] < c_b) {
+                            if (p[pixel[4]] < c_b) {
+                                if (p[pixel[5]] < c_b) {
+                                    if (p[pixel[7]] < c_b) {
+                                        if (p[pixel[8]] < c_b) {
+                                            if (p[pixel[9]] < c_b) {
+                                                if (p[pixel[10]] < c_b) {
+                                                    if (p[pixel[11]] < c_b) {
+                                                        if (p[pixel[12]] < c_b) {
+                                                            if (p[pixel[13]] < c_b) {
+                                                                if (p[pixel[3]] < c_b) {
+                                                                    is_a_corner();
+                                                                } else if (p[pixel[14]] < c_b) {
+                                                                    if (p[pixel[15]] < c_b) {
+                                                                        is_a_corner();
+                                                                    } else {
+                                                                        is_not_a_corner();
+                                                                    }
+                                                                } else {
+                                                                    is_not_a_corner();
+                                                                }
+                                                            } else {
+                                                                is_not_a_corner();
+                                                            }
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else {
+                            is_not_a_corner();
+                        }
+                    } else if (p[pixel[6]] > cb) {
+                        if (p[pixel[7]] > cb) {
+                            if (p[pixel[8]] > cb) {
+                                if (p[pixel[9]] > cb) {
+                                    if (p[pixel[10]] > cb) {
+                                        if (p[pixel[11]] > cb) {
+                                            if (p[pixel[12]] > cb) {
+                                                if (p[pixel[13]] > cb) {
+                                                    if (p[pixel[14]] > cb) {
                                                         if (p[pixel[15]] > cb) {
                                                             is_a_corner();
-                                                        } else if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                if (p[pixel[6]] > cb) {
-                                                                    if (p[pixel[7]] > cb) {
-                                                                        is_a_corner();
-                                                                    } else {
-                                                                        is_not_a_corner();
-                                                                    }
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else if (p[pixel[8]] < c_b) {
-                                    if (p[pixel[4]] < c_b) {
-                                        if (p[pixel[5]] < c_b) {
-                                            if (p[pixel[6]] < c_b) {
-                                                if (p[pixel[7]] < c_b) {
-                                                    if (p[pixel[9]] < c_b) {
-                                                        if (p[pixel[10]] < c_b) {
-                                                            if (p[pixel[11]] < c_b) {
-                                                                if (p[pixel[12]] < c_b) {
-                                                                    if (p[pixel[13]] < c_b) {
-                                                                        is_a_corner();
-                                                                    } else {
-                                                                        is_not_a_corner();
-                                                                    }
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else if (p[pixel[14]] < c_b) {
-                                if (p[pixel[5]] < c_b) {
-                                    if (p[pixel[6]] < c_b) {
-                                        if (p[pixel[7]] < c_b) {
-                                            if (p[pixel[8]] < c_b) {
-                                                if (p[pixel[9]] < c_b) {
-                                                    if (p[pixel[10]] < c_b) {
-                                                        if (p[pixel[11]] < c_b) {
-                                                            if (p[pixel[12]] < c_b) {
-                                                                if (p[pixel[13]] < c_b) {
-                                                                    if (p[pixel[4]] < c_b) {
-                                                                        is_a_corner();
-                                                                    } else if (p[pixel[15]] < c_b) {
-                                                                        is_a_corner();
-                                                                    } else {
-                                                                        is_not_a_corner();
-                                                                    }
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else if (p[pixel[4]] < c_b) {
-                                if (p[pixel[5]] < c_b) {
-                                    if (p[pixel[6]] < c_b) {
-                                        if (p[pixel[7]] < c_b) {
-                                            if (p[pixel[8]] < c_b) {
-                                                if (p[pixel[9]] < c_b) {
-                                                    if (p[pixel[10]] < c_b) {
-                                                        if (p[pixel[11]] < c_b) {
-                                                            if (p[pixel[12]] < c_b) {
-                                                                if (p[pixel[13]] < c_b) {
+                                                        } else if (p[pixel[3]] > cb) {
+                                                            if (p[pixel[4]] > cb) {
+                                                                if (p[pixel[5]] > cb) {
                                                                     is_a_corner();
                                                                 } else {
                                                                     is_not_a_corner();
@@ -2881,61 +2533,21 @@ public class FAST11 {
                             } else {
                                 is_not_a_corner();
                             }
-                        } else if (p[pixel[8]] > cb) {
-                            if (p[pixel[9]] > cb) {
-                                if (p[pixel[10]] > cb) {
-                                    if (p[pixel[11]] > cb) {
-                                        if (p[pixel[12]] > cb) {
-                                            if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[4]] > cb) {
-                                                        if (p[pixel[5]] > cb) {
-                                                            if (p[pixel[6]] > cb) {
-                                                                if (p[pixel[7]] > cb) {
-                                                                    is_a_corner();
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else if (p[pixel[8]] < c_b) {
+                        } else {
+                            is_not_a_corner();
+                        }
+                    } else if (p[pixel[6]] < c_b) {
+                        if (p[pixel[4]] < c_b) {
                             if (p[pixel[5]] < c_b) {
-                                if (p[pixel[6]] < c_b) {
-                                    if (p[pixel[7]] < c_b) {
+                                if (p[pixel[7]] < c_b) {
+                                    if (p[pixel[8]] < c_b) {
                                         if (p[pixel[9]] < c_b) {
                                             if (p[pixel[10]] < c_b) {
                                                 if (p[pixel[11]] < c_b) {
                                                     if (p[pixel[12]] < c_b) {
                                                         if (p[pixel[13]] < c_b) {
                                                             if (p[pixel[14]] < c_b) {
-                                                                if (p[pixel[4]] < c_b) {
+                                                                if (p[pixel[3]] < c_b) {
                                                                     is_a_corner();
                                                                 } else if (p[pixel[15]] < c_b) {
                                                                     is_a_corner();
@@ -2972,20 +2584,24 @@ public class FAST11 {
                         } else {
                             is_not_a_corner();
                         }
-                    } else if (p[pixel[2]] < c_b) {
-                        if (p[pixel[7]] > cb) {
-                            if (p[pixel[8]] > cb) {
-                                if (p[pixel[9]] > cb) {
-                                    if (p[pixel[10]] > cb) {
-                                        if (p[pixel[11]] > cb) {
-                                            if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
-                                                            is_a_corner();
-                                                        } else if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                if (p[pixel[6]] > cb) {
+                    } else {
+                        is_not_a_corner();
+                    }
+                } else if (p[pixel[1]] < c_b) {
+                    if (p[pixel[5]] > cb) {
+                        if (p[pixel[6]] > cb) {
+                            if (p[pixel[7]] > cb) {
+                                if (p[pixel[8]] > cb) {
+                                    if (p[pixel[9]] > cb) {
+                                        if (p[pixel[10]] > cb) {
+                                            if (p[pixel[11]] > cb) {
+                                                if (p[pixel[12]] > cb) {
+                                                    if (p[pixel[13]] > cb) {
+                                                        if (p[pixel[14]] > cb) {
+                                                            if (p[pixel[15]] > cb) {
+                                                                is_a_corner();
+                                                            } else if (p[pixel[3]] > cb) {
+                                                                if (p[pixel[4]] > cb) {
                                                                     is_a_corner();
                                                                 } else {
                                                                     is_not_a_corner();
@@ -2993,13 +2609,9 @@ public class FAST11 {
                                                             } else {
                                                                 is_not_a_corner();
                                                             }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else if (p[pixel[3]] > cb) {
-                                                        if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                if (p[pixel[6]] > cb) {
+                                                        } else if (p[pixel[2]] > cb) {
+                                                            if (p[pixel[3]] > cb) {
+                                                                if (p[pixel[4]] > cb) {
                                                                     is_a_corner();
                                                                 } else {
                                                                     is_not_a_corner();
@@ -3031,16 +2643,20 @@ public class FAST11 {
                             } else {
                                 is_not_a_corner();
                             }
-                        } else if (p[pixel[7]] < c_b) {
-                            if (p[pixel[5]] < c_b) {
-                                if (p[pixel[6]] < c_b) {
+                        } else {
+                            is_not_a_corner();
+                        }
+                    } else if (p[pixel[5]] < c_b) {
+                        if (p[pixel[4]] < c_b) {
+                            if (p[pixel[6]] < c_b) {
+                                if (p[pixel[7]] < c_b) {
                                     if (p[pixel[8]] < c_b) {
                                         if (p[pixel[9]] < c_b) {
                                             if (p[pixel[10]] < c_b) {
                                                 if (p[pixel[11]] < c_b) {
                                                     if (p[pixel[12]] < c_b) {
-                                                        if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[3]] < c_b) {
+                                                        if (p[pixel[3]] < c_b) {
+                                                            if (p[pixel[2]] < c_b) {
                                                                 is_a_corner();
                                                             } else if (p[pixel[13]] < c_b) {
                                                                 if (p[pixel[14]] < c_b) {
@@ -3088,19 +2704,23 @@ public class FAST11 {
                         } else {
                             is_not_a_corner();
                         }
-                    } else if (p[pixel[7]] > cb) {
-                        if (p[pixel[8]] > cb) {
-                            if (p[pixel[9]] > cb) {
-                                if (p[pixel[10]] > cb) {
-                                    if (p[pixel[11]] > cb) {
-                                        if (p[pixel[12]] > cb) {
-                                            if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[4]] > cb) {
-                                                        if (p[pixel[5]] > cb) {
-                                                            if (p[pixel[6]] > cb) {
+                    } else {
+                        is_not_a_corner();
+                    }
+                } else if (p[pixel[5]] > cb) {
+                    if (p[pixel[6]] > cb) {
+                        if (p[pixel[7]] > cb) {
+                            if (p[pixel[8]] > cb) {
+                                if (p[pixel[9]] > cb) {
+                                    if (p[pixel[10]] > cb) {
+                                        if (p[pixel[11]] > cb) {
+                                            if (p[pixel[12]] > cb) {
+                                                if (p[pixel[13]] > cb) {
+                                                    if (p[pixel[14]] > cb) {
+                                                        if (p[pixel[15]] > cb) {
+                                                            is_a_corner();
+                                                        } else if (p[pixel[3]] > cb) {
+                                                            if (p[pixel[4]] > cb) {
                                                                 is_a_corner();
                                                             } else {
                                                                 is_not_a_corner();
@@ -3108,13 +2728,9 @@ public class FAST11 {
                                                         } else {
                                                             is_not_a_corner();
                                                         }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[3]] > cb) {
-                                                    if (p[pixel[4]] > cb) {
-                                                        if (p[pixel[5]] > cb) {
-                                                            if (p[pixel[6]] > cb) {
+                                                    } else if (p[pixel[2]] > cb) {
+                                                        if (p[pixel[3]] > cb) {
+                                                            if (p[pixel[4]] > cb) {
                                                                 is_a_corner();
                                                             } else {
                                                                 is_not_a_corner();
@@ -3146,17 +2762,21 @@ public class FAST11 {
                         } else {
                             is_not_a_corner();
                         }
-                    } else if (p[pixel[7]] < c_b) {
-                        if (p[pixel[5]] < c_b) {
-                            if (p[pixel[6]] < c_b) {
+                    } else {
+                        is_not_a_corner();
+                    }
+                } else if (p[pixel[5]] < c_b) {
+                    if (p[pixel[4]] < c_b) {
+                        if (p[pixel[6]] < c_b) {
+                            if (p[pixel[7]] < c_b) {
                                 if (p[pixel[8]] < c_b) {
                                     if (p[pixel[9]] < c_b) {
                                         if (p[pixel[10]] < c_b) {
                                             if (p[pixel[11]] < c_b) {
                                                 if (p[pixel[12]] < c_b) {
                                                     if (p[pixel[13]] < c_b) {
-                                                        if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[3]] < c_b) {
+                                                        if (p[pixel[3]] < c_b) {
+                                                            if (p[pixel[2]] < c_b) {
                                                                 is_a_corner();
                                                             } else if (p[pixel[14]] < c_b) {
                                                                 is_a_corner();
@@ -3199,430 +2819,22 @@ public class FAST11 {
                     } else {
                         is_not_a_corner();
                     }
-                } else if (p[pixel[1]] < c_b) {
-                    if (p[pixel[6]] > cb) {
-                        if (p[pixel[7]] > cb) {
-                            if (p[pixel[8]] > cb) {
-                                if (p[pixel[9]] > cb) {
-                                    if (p[pixel[10]] > cb) {
-                                        if (p[pixel[11]] > cb) {
-                                            if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        if (p[pixel[15]] > cb) {
-                                                            is_a_corner();
-                                                        } else if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else if (p[pixel[3]] > cb) {
-                                                        if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[2]] > cb) {
-                                                    if (p[pixel[3]] > cb) {
-                                                        if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[5]] > cb) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else {
-                            is_not_a_corner();
-                        }
-                    } else if (p[pixel[6]] < c_b) {
-                        if (p[pixel[5]] < c_b) {
-                            if (p[pixel[7]] < c_b) {
-                                if (p[pixel[8]] < c_b) {
-                                    if (p[pixel[9]] < c_b) {
-                                        if (p[pixel[10]] < c_b) {
-                                            if (p[pixel[11]] < c_b) {
-                                                if (p[pixel[4]] < c_b) {
-                                                    if (p[pixel[3]] < c_b) {
-                                                        if (p[pixel[2]] < c_b) {
-                                                            is_a_corner();
-                                                        } else if (p[pixel[12]] < c_b) {
-                                                            if (p[pixel[13]] < c_b) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else if (p[pixel[12]] < c_b) {
-                                                        if (p[pixel[13]] < c_b) {
-                                                            if (p[pixel[14]] < c_b) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[12]] < c_b) {
-                                                    if (p[pixel[13]] < c_b) {
-                                                        if (p[pixel[14]] < c_b) {
-                                                            if (p[pixel[15]] < c_b) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else {
-                            is_not_a_corner();
-                        }
-                    } else {
-                        is_not_a_corner();
-                    }
-                } else if (p[pixel[6]] > cb) {
-                    if (p[pixel[7]] > cb) {
-                        if (p[pixel[8]] > cb) {
-                            if (p[pixel[9]] > cb) {
-                                if (p[pixel[10]] > cb) {
-                                    if (p[pixel[11]] > cb) {
-                                        if (p[pixel[12]] > cb) {
-                                            if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[4]] > cb) {
-                                                        if (p[pixel[5]] > cb) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[3]] > cb) {
-                                                    if (p[pixel[4]] > cb) {
-                                                        if (p[pixel[5]] > cb) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else if (p[pixel[2]] > cb) {
-                                                if (p[pixel[3]] > cb) {
-                                                    if (p[pixel[4]] > cb) {
-                                                        if (p[pixel[5]] > cb) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else {
-                            is_not_a_corner();
-                        }
-                    } else {
-                        is_not_a_corner();
-                    }
-                } else if (p[pixel[6]] < c_b) {
-                    if (p[pixel[5]] < c_b) {
-                        if (p[pixel[7]] < c_b) {
-                            if (p[pixel[8]] < c_b) {
-                                if (p[pixel[9]] < c_b) {
-                                    if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[4]] < c_b) {
-                                                    if (p[pixel[3]] < c_b) {
-                                                        if (p[pixel[2]] < c_b) {
-                                                            is_a_corner();
-                                                        } else if (p[pixel[13]] < c_b) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else if (p[pixel[13]] < c_b) {
-                                                        if (p[pixel[14]] < c_b) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else {
-                            is_not_a_corner();
-                        }
-                    } else {
-                        is_not_a_corner();
-                    }
                 } else {
                     is_not_a_corner();
                 }
             } else if (p[pixel[0]] < c_b) {
                 if (p[pixel[1]] > cb) {
-                    if (p[pixel[6]] > cb) {
-                        if (p[pixel[5]] > cb) {
-                            if (p[pixel[7]] > cb) {
-                                if (p[pixel[8]] > cb) {
-                                    if (p[pixel[9]] > cb) {
-                                        if (p[pixel[10]] > cb) {
-                                            if (p[pixel[11]] > cb) {
-                                                if (p[pixel[4]] > cb) {
-                                                    if (p[pixel[3]] > cb) {
-                                                        if (p[pixel[2]] > cb) {
-                                                            is_a_corner();
-                                                        } else if (p[pixel[12]] > cb) {
-                                                            if (p[pixel[13]] > cb) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else if (p[pixel[12]] > cb) {
-                                                        if (p[pixel[13]] > cb) {
-                                                            if (p[pixel[14]] > cb) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[12]] > cb) {
-                                                    if (p[pixel[13]] > cb) {
-                                                        if (p[pixel[14]] > cb) {
-                                                            if (p[pixel[15]] > cb) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else {
-                            is_not_a_corner();
-                        }
-                    } else if (p[pixel[6]] < c_b) {
-                        if (p[pixel[7]] < c_b) {
-                            if (p[pixel[8]] < c_b) {
-                                if (p[pixel[9]] < c_b) {
-                                    if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                            is_a_corner();
-                                                        } else if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else if (p[pixel[3]] < c_b) {
-                                                        if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[2]] < c_b) {
-                                                    if (p[pixel[3]] < c_b) {
-                                                        if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                is_a_corner();
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else {
-                            is_not_a_corner();
-                        }
-                    } else {
-                        is_not_a_corner();
-                    }
-                } else if (p[pixel[1]] < c_b) {
-                    if (p[pixel[2]] > cb) {
-                        if (p[pixel[7]] > cb) {
-                            if (p[pixel[5]] > cb) {
-                                if (p[pixel[6]] > cb) {
+                    if (p[pixel[5]] > cb) {
+                        if (p[pixel[4]] > cb) {
+                            if (p[pixel[6]] > cb) {
+                                if (p[pixel[7]] > cb) {
                                     if (p[pixel[8]] > cb) {
                                         if (p[pixel[9]] > cb) {
                                             if (p[pixel[10]] > cb) {
                                                 if (p[pixel[11]] > cb) {
                                                     if (p[pixel[12]] > cb) {
-                                                        if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[3]] > cb) {
+                                                        if (p[pixel[3]] > cb) {
+                                                            if (p[pixel[2]] > cb) {
                                                                 is_a_corner();
                                                             } else if (p[pixel[13]] > cb) {
                                                                 if (p[pixel[14]] > cb) {
@@ -3667,19 +2879,33 @@ public class FAST11 {
                             } else {
                                 is_not_a_corner();
                             }
-                        } else if (p[pixel[7]] < c_b) {
-                            if (p[pixel[8]] < c_b) {
-                                if (p[pixel[9]] < c_b) {
-                                    if (p[pixel[10]] < c_b) {
-                                        if (p[pixel[11]] < c_b) {
-                                            if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
-                                                    if (p[pixel[14]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                            is_a_corner();
-                                                        } else if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                if (p[pixel[6]] < c_b) {
+                        } else {
+                            is_not_a_corner();
+                        }
+                    } else if (p[pixel[5]] < c_b) {
+                        if (p[pixel[6]] < c_b) {
+                            if (p[pixel[7]] < c_b) {
+                                if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                                is_a_corner();
+                                                            } else if (p[pixel[3]] < c_b) {
+                                                                if (p[pixel[4]] < c_b) {
+                                                                    is_a_corner();
+                                                                } else {
+                                                                    is_not_a_corner();
+                                                                }
+                                                            } else {
+                                                                is_not_a_corner();
+                                                            }
+                                                        } else if (p[pixel[2]] < c_b) {
+                                                            if (p[pixel[3]] < c_b) {
+                                                                if (p[pixel[4]] < c_b) {
                                                                     is_a_corner();
                                                                 } else {
                                                                     is_not_a_corner();
@@ -3690,11 +2916,101 @@ public class FAST11 {
                                                         } else {
                                                             is_not_a_corner();
                                                         }
-                                                    } else if (p[pixel[3]] < c_b) {
-                                                        if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                if (p[pixel[6]] < c_b) {
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else {
+                            is_not_a_corner();
+                        }
+                    } else {
+                        is_not_a_corner();
+                    }
+                } else if (p[pixel[1]] < c_b) {
+                    if (p[pixel[2]] > cb) {
+                        if (p[pixel[6]] > cb) {
+                            if (p[pixel[4]] > cb) {
+                                if (p[pixel[5]] > cb) {
+                                    if (p[pixel[7]] > cb) {
+                                        if (p[pixel[8]] > cb) {
+                                            if (p[pixel[9]] > cb) {
+                                                if (p[pixel[10]] > cb) {
+                                                    if (p[pixel[11]] > cb) {
+                                                        if (p[pixel[12]] > cb) {
+                                                            if (p[pixel[13]] > cb) {
+                                                                if (p[pixel[3]] > cb) {
                                                                     is_a_corner();
+                                                                } else if (p[pixel[14]] > cb) {
+                                                                    if (p[pixel[15]] > cb) {
+                                                                        is_a_corner();
+                                                                    } else {
+                                                                        is_not_a_corner();
+                                                                    }
+                                                                } else {
+                                                                    is_not_a_corner();
+                                                                }
+                                                            } else {
+                                                                is_not_a_corner();
+                                                            }
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else if (p[pixel[6]] < c_b) {
+                            if (p[pixel[7]] < c_b) {
+                                if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                                is_a_corner();
+                                                            } else if (p[pixel[3]] < c_b) {
+                                                                if (p[pixel[4]] < c_b) {
+                                                                    if (p[pixel[5]] < c_b) {
+                                                                        is_a_corner();
+                                                                    } else {
+                                                                        is_not_a_corner();
+                                                                    }
                                                                 } else {
                                                                     is_not_a_corner();
                                                                 }
@@ -3730,62 +3046,22 @@ public class FAST11 {
                         }
                     } else if (p[pixel[2]] < c_b) {
                         if (p[pixel[3]] > cb) {
-                            if (p[pixel[14]] > cb) {
-                                if (p[pixel[5]] > cb) {
-                                    if (p[pixel[6]] > cb) {
-                                        if (p[pixel[7]] > cb) {
-                                            if (p[pixel[8]] > cb) {
-                                                if (p[pixel[9]] > cb) {
-                                                    if (p[pixel[10]] > cb) {
-                                                        if (p[pixel[11]] > cb) {
-                                                            if (p[pixel[12]] > cb) {
-                                                                if (p[pixel[13]] > cb) {
-                                                                    if (p[pixel[4]] > cb) {
-                                                                        is_a_corner();
-                                                                    } else if (p[pixel[15]] > cb) {
-                                                                        is_a_corner();
-                                                                    } else {
-                                                                        is_not_a_corner();
-                                                                    }
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else if (p[pixel[14]] < c_b) {
-                                if (p[pixel[8]] > cb) {
+                            if (p[pixel[15]] < c_b) {
+                                if (p[pixel[7]] > cb) {
                                     if (p[pixel[4]] > cb) {
                                         if (p[pixel[5]] > cb) {
                                             if (p[pixel[6]] > cb) {
-                                                if (p[pixel[7]] > cb) {
+                                                if (p[pixel[8]] > cb) {
                                                     if (p[pixel[9]] > cb) {
                                                         if (p[pixel[10]] > cb) {
                                                             if (p[pixel[11]] > cb) {
                                                                 if (p[pixel[12]] > cb) {
                                                                     if (p[pixel[13]] > cb) {
-                                                                        is_a_corner();
+                                                                        if (p[pixel[14]] > cb) {
+                                                                            is_a_corner();
+                                                                        } else {
+                                                                            is_not_a_corner();
+                                                                        }
                                                                     } else {
                                                                         is_not_a_corner();
                                                                     }
@@ -3813,25 +3089,15 @@ public class FAST11 {
                                     } else {
                                         is_not_a_corner();
                                     }
-                                } else if (p[pixel[8]] < c_b) {
-                                    if (p[pixel[9]] < c_b) {
-                                        if (p[pixel[10]] < c_b) {
-                                            if (p[pixel[11]] < c_b) {
-                                                if (p[pixel[12]] < c_b) {
-                                                    if (p[pixel[13]] < c_b) {
-                                                        if (p[pixel[15]] < c_b) {
-                                                            is_a_corner();
-                                                        } else if (p[pixel[4]] < c_b) {
-                                                            if (p[pixel[5]] < c_b) {
-                                                                if (p[pixel[6]] < c_b) {
-                                                                    if (p[pixel[7]] < c_b) {
-                                                                        is_a_corner();
-                                                                    } else {
-                                                                        is_not_a_corner();
-                                                                    }
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
+                                } else if (p[pixel[7]] < c_b) {
+                                    if (p[pixel[8]] < c_b) {
+                                        if (p[pixel[9]] < c_b) {
+                                            if (p[pixel[10]] < c_b) {
+                                                if (p[pixel[11]] < c_b) {
+                                                    if (p[pixel[12]] < c_b) {
+                                                        if (p[pixel[13]] < c_b) {
+                                                            if (p[pixel[14]] < c_b) {
+                                                                is_a_corner();
                                                             } else {
                                                                 is_not_a_corner();
                                                             }
@@ -3866,112 +3132,6 @@ public class FAST11 {
                                                         if (p[pixel[11]] > cb) {
                                                             if (p[pixel[12]] > cb) {
                                                                 if (p[pixel[13]] > cb) {
-                                                                    is_a_corner();
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else if (p[pixel[3]] < c_b) {
-                            if (p[pixel[4]] > cb) {
-                                if (p[pixel[15]] < c_b) {
-                                    if (p[pixel[9]] > cb) {
-                                        if (p[pixel[5]] > cb) {
-                                            if (p[pixel[6]] > cb) {
-                                                if (p[pixel[7]] > cb) {
-                                                    if (p[pixel[8]] > cb) {
-                                                        if (p[pixel[10]] > cb) {
-                                                            if (p[pixel[11]] > cb) {
-                                                                if (p[pixel[12]] > cb) {
-                                                                    if (p[pixel[13]] > cb) {
-                                                                        if (p[pixel[14]] > cb) {
-                                                                            is_a_corner();
-                                                                        } else {
-                                                                            is_not_a_corner();
-                                                                        }
-                                                                    } else {
-                                                                        is_not_a_corner();
-                                                                    }
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else if (p[pixel[9]] < c_b) {
-                                        if (p[pixel[10]] < c_b) {
-                                            if (p[pixel[11]] < c_b) {
-                                                if (p[pixel[12]] < c_b) {
-                                                    if (p[pixel[13]] < c_b) {
-                                                        if (p[pixel[14]] < c_b) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else if (p[pixel[5]] > cb) {
-                                    if (p[pixel[6]] > cb) {
-                                        if (p[pixel[7]] > cb) {
-                                            if (p[pixel[8]] > cb) {
-                                                if (p[pixel[9]] > cb) {
-                                                    if (p[pixel[10]] > cb) {
-                                                        if (p[pixel[11]] > cb) {
-                                                            if (p[pixel[12]] > cb) {
-                                                                if (p[pixel[13]] > cb) {
                                                                     if (p[pixel[14]] > cb) {
                                                                         is_a_corner();
                                                                     } else {
@@ -4004,13 +3164,17 @@ public class FAST11 {
                                 } else {
                                     is_not_a_corner();
                                 }
-                            } else if (p[pixel[4]] < c_b) {
-                                if (p[pixel[5]] > cb) {
-                                    if (p[pixel[10]] > cb) {
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else if (p[pixel[3]] < c_b) {
+                            if (p[pixel[4]] > cb) {
+                                if (p[pixel[8]] > cb) {
+                                    if (p[pixel[5]] > cb) {
                                         if (p[pixel[6]] > cb) {
                                             if (p[pixel[7]] > cb) {
-                                                if (p[pixel[8]] > cb) {
-                                                    if (p[pixel[9]] > cb) {
+                                                if (p[pixel[9]] > cb) {
+                                                    if (p[pixel[10]] > cb) {
                                                         if (p[pixel[11]] > cb) {
                                                             if (p[pixel[12]] > cb) {
                                                                 if (p[pixel[13]] > cb) {
@@ -4029,6 +3193,116 @@ public class FAST11 {
                                                             } else {
                                                                 is_not_a_corner();
                                                             }
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else if (p[pixel[8]] < c_b) {
+                                    if (p[pixel[9]] < c_b) {
+                                        if (p[pixel[10]] < c_b) {
+                                            if (p[pixel[11]] < c_b) {
+                                                if (p[pixel[12]] < c_b) {
+                                                    if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
+                                                            if (p[pixel[15]] < c_b) {
+                                                                is_a_corner();
+                                                            } else {
+                                                                is_not_a_corner();
+                                                            }
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else if (p[pixel[4]] < c_b) {
+                                if (p[pixel[5]] < c_b) {
+                                    if (p[pixel[6]] < c_b) {
+                                        if (p[pixel[7]] < c_b) {
+                                            if (p[pixel[8]] < c_b) {
+                                                if (p[pixel[9]] < c_b) {
+                                                    if (p[pixel[10]] < c_b) {
+                                                        if (p[pixel[11]] < c_b) {
+                                                            is_a_corner();
+                                                        } else if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else if (p[pixel[13]] < c_b) {
+                                                    if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else if (p[pixel[12]] < c_b) {
+                                                if (p[pixel[13]] < c_b) {
+                                                    if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else if (p[pixel[11]] < c_b) {
+                                            if (p[pixel[12]] < c_b) {
+                                                if (p[pixel[13]] < c_b) {
+                                                    if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
                                                         } else {
                                                             is_not_a_corner();
                                                         }
@@ -4069,85 +3343,17 @@ public class FAST11 {
                                     } else {
                                         is_not_a_corner();
                                     }
-                                } else if (p[pixel[5]] < c_b) {
-                                    if (p[pixel[6]] < c_b) {
-                                        if (p[pixel[7]] < c_b) {
-                                            if (p[pixel[8]] < c_b) {
-                                                if (p[pixel[9]] < c_b) {
-                                                    if (p[pixel[10]] < c_b) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else if (p[pixel[12]] < c_b) {
-                                            if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else if (p[pixel[11]] < c_b) {
-                                        if (p[pixel[12]] < c_b) {
-                                            if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else if (p[pixel[10]] < c_b) {
-                                    if (p[pixel[11]] < c_b) {
-                                        if (p[pixel[12]] < c_b) {
-                                            if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
+                                } else if (p[pixel[9]] < c_b) {
+                                    if (p[pixel[10]] < c_b) {
+                                        if (p[pixel[11]] < c_b) {
+                                            if (p[pixel[12]] < c_b) {
+                                                if (p[pixel[13]] < c_b) {
+                                                    if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
@@ -4166,11 +3372,45 @@ public class FAST11 {
                                 } else {
                                     is_not_a_corner();
                                 }
-                            } else if (p[pixel[9]] > cb) {
+                            } else if (p[pixel[8]] < c_b) {
+                                if (p[pixel[9]] < c_b) {
+                                    if (p[pixel[10]] < c_b) {
+                                        if (p[pixel[11]] < c_b) {
+                                            if (p[pixel[12]] < c_b) {
+                                                if (p[pixel[13]] < c_b) {
+                                                    if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else if (p[pixel[7]] > cb) {
+                            if (p[pixel[4]] > cb) {
                                 if (p[pixel[5]] > cb) {
                                     if (p[pixel[6]] > cb) {
-                                        if (p[pixel[7]] > cb) {
-                                            if (p[pixel[8]] > cb) {
+                                        if (p[pixel[8]] > cb) {
+                                            if (p[pixel[9]] > cb) {
                                                 if (p[pixel[10]] > cb) {
                                                     if (p[pixel[11]] > cb) {
                                                         if (p[pixel[12]] > cb) {
@@ -4208,55 +3448,19 @@ public class FAST11 {
                                 } else {
                                     is_not_a_corner();
                                 }
-                            } else if (p[pixel[9]] < c_b) {
-                                if (p[pixel[10]] < c_b) {
-                                    if (p[pixel[11]] < c_b) {
-                                        if (p[pixel[12]] < c_b) {
-                                            if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
                             } else {
                                 is_not_a_corner();
                             }
-                        } else if (p[pixel[8]] > cb) {
-                            if (p[pixel[5]] > cb) {
-                                if (p[pixel[6]] > cb) {
-                                    if (p[pixel[7]] > cb) {
-                                        if (p[pixel[9]] > cb) {
-                                            if (p[pixel[10]] > cb) {
-                                                if (p[pixel[11]] > cb) {
-                                                    if (p[pixel[12]] > cb) {
-                                                        if (p[pixel[13]] > cb) {
-                                                            if (p[pixel[14]] > cb) {
-                                                                if (p[pixel[4]] > cb) {
-                                                                    is_a_corner();
-                                                                } else if (p[pixel[15]] > cb) {
-                                                                    is_a_corner();
-                                                                } else {
-                                                                    is_not_a_corner();
-                                                                }
-                                                            } else {
-                                                                is_not_a_corner();
-                                                            }
+                        } else if (p[pixel[7]] < c_b) {
+                            if (p[pixel[8]] < c_b) {
+                                if (p[pixel[9]] < c_b) {
+                                    if (p[pixel[10]] < c_b) {
+                                        if (p[pixel[11]] < c_b) {
+                                            if (p[pixel[12]] < c_b) {
+                                                if (p[pixel[13]] < c_b) {
+                                                    if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
                                                         } else {
                                                             is_not_a_corner();
                                                         }
@@ -4281,19 +3485,23 @@ public class FAST11 {
                             } else {
                                 is_not_a_corner();
                             }
-                        } else if (p[pixel[8]] < c_b) {
-                            if (p[pixel[9]] < c_b) {
-                                if (p[pixel[10]] < c_b) {
-                                    if (p[pixel[11]] < c_b) {
-                                        if (p[pixel[12]] < c_b) {
-                                            if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[4]] < c_b) {
-                                                        if (p[pixel[5]] < c_b) {
-                                                            if (p[pixel[6]] < c_b) {
-                                                                if (p[pixel[7]] < c_b) {
+                        } else {
+                            is_not_a_corner();
+                        }
+                    } else if (p[pixel[6]] > cb) {
+                        if (p[pixel[4]] > cb) {
+                            if (p[pixel[5]] > cb) {
+                                if (p[pixel[7]] > cb) {
+                                    if (p[pixel[8]] > cb) {
+                                        if (p[pixel[9]] > cb) {
+                                            if (p[pixel[10]] > cb) {
+                                                if (p[pixel[11]] > cb) {
+                                                    if (p[pixel[12]] > cb) {
+                                                        if (p[pixel[13]] > cb) {
+                                                            if (p[pixel[14]] > cb) {
+                                                                if (p[pixel[3]] > cb) {
+                                                                    is_a_corner();
+                                                                } else if (p[pixel[15]] > cb) {
                                                                     is_a_corner();
                                                                 } else {
                                                                     is_not_a_corner();
@@ -4328,17 +3536,69 @@ public class FAST11 {
                         } else {
                             is_not_a_corner();
                         }
-                    } else if (p[pixel[7]] > cb) {
-                        if (p[pixel[5]] > cb) {
-                            if (p[pixel[6]] > cb) {
+                    } else if (p[pixel[6]] < c_b) {
+                        if (p[pixel[7]] < c_b) {
+                            if (p[pixel[8]] < c_b) {
+                                if (p[pixel[9]] < c_b) {
+                                    if (p[pixel[10]] < c_b) {
+                                        if (p[pixel[11]] < c_b) {
+                                            if (p[pixel[12]] < c_b) {
+                                                if (p[pixel[13]] < c_b) {
+                                                    if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else if (p[pixel[3]] < c_b) {
+                                                            if (p[pixel[4]] < c_b) {
+                                                                if (p[pixel[5]] < c_b) {
+                                                                    is_a_corner();
+                                                                } else {
+                                                                    is_not_a_corner();
+                                                                }
+                                                            } else {
+                                                                is_not_a_corner();
+                                                            }
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else {
+                                                        is_not_a_corner();
+                                                    }
+                                                } else {
+                                                    is_not_a_corner();
+                                                }
+                                            } else {
+                                                is_not_a_corner();
+                                            }
+                                        } else {
+                                            is_not_a_corner();
+                                        }
+                                    } else {
+                                        is_not_a_corner();
+                                    }
+                                } else {
+                                    is_not_a_corner();
+                                }
+                            } else {
+                                is_not_a_corner();
+                            }
+                        } else {
+                            is_not_a_corner();
+                        }
+                    } else {
+                        is_not_a_corner();
+                    }
+                } else if (p[pixel[5]] > cb) {
+                    if (p[pixel[4]] > cb) {
+                        if (p[pixel[6]] > cb) {
+                            if (p[pixel[7]] > cb) {
                                 if (p[pixel[8]] > cb) {
                                     if (p[pixel[9]] > cb) {
                                         if (p[pixel[10]] > cb) {
                                             if (p[pixel[11]] > cb) {
                                                 if (p[pixel[12]] > cb) {
                                                     if (p[pixel[13]] > cb) {
-                                                        if (p[pixel[4]] > cb) {
-                                                            if (p[pixel[3]] > cb) {
+                                                        if (p[pixel[3]] > cb) {
+                                                            if (p[pixel[2]] > cb) {
                                                                 is_a_corner();
                                                             } else if (p[pixel[14]] > cb) {
                                                                 is_a_corner();
@@ -4378,19 +3638,23 @@ public class FAST11 {
                         } else {
                             is_not_a_corner();
                         }
-                    } else if (p[pixel[7]] < c_b) {
-                        if (p[pixel[8]] < c_b) {
-                            if (p[pixel[9]] < c_b) {
-                                if (p[pixel[10]] < c_b) {
-                                    if (p[pixel[11]] < c_b) {
-                                        if (p[pixel[12]] < c_b) {
-                                            if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[4]] < c_b) {
-                                                        if (p[pixel[5]] < c_b) {
-                                                            if (p[pixel[6]] < c_b) {
+                    } else {
+                        is_not_a_corner();
+                    }
+                } else if (p[pixel[5]] < c_b) {
+                    if (p[pixel[6]] < c_b) {
+                        if (p[pixel[7]] < c_b) {
+                            if (p[pixel[8]] < c_b) {
+                                if (p[pixel[9]] < c_b) {
+                                    if (p[pixel[10]] < c_b) {
+                                        if (p[pixel[11]] < c_b) {
+                                            if (p[pixel[12]] < c_b) {
+                                                if (p[pixel[13]] < c_b) {
+                                                    if (p[pixel[14]] < c_b) {
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else if (p[pixel[3]] < c_b) {
+                                                            if (p[pixel[4]] < c_b) {
                                                                 is_a_corner();
                                                             } else {
                                                                 is_not_a_corner();
@@ -4398,13 +3662,9 @@ public class FAST11 {
                                                         } else {
                                                             is_not_a_corner();
                                                         }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[3]] < c_b) {
-                                                    if (p[pixel[4]] < c_b) {
-                                                        if (p[pixel[5]] < c_b) {
-                                                            if (p[pixel[6]] < c_b) {
+                                                    } else if (p[pixel[2]] < c_b) {
+                                                        if (p[pixel[3]] < c_b) {
+                                                            if (p[pixel[4]] < c_b) {
                                                                 is_a_corner();
                                                             } else {
                                                                 is_not_a_corner();
@@ -4439,17 +3699,21 @@ public class FAST11 {
                     } else {
                         is_not_a_corner();
                     }
-                } else if (p[pixel[6]] > cb) {
-                    if (p[pixel[5]] > cb) {
+                } else {
+                    is_not_a_corner();
+                }
+            } else if (p[pixel[4]] > cb) {
+                if (p[pixel[5]] > cb) {
+                    if (p[pixel[6]] > cb) {
                         if (p[pixel[7]] > cb) {
                             if (p[pixel[8]] > cb) {
                                 if (p[pixel[9]] > cb) {
                                     if (p[pixel[10]] > cb) {
                                         if (p[pixel[11]] > cb) {
                                             if (p[pixel[12]] > cb) {
-                                                if (p[pixel[4]] > cb) {
-                                                    if (p[pixel[3]] > cb) {
-                                                        if (p[pixel[2]] > cb) {
+                                                if (p[pixel[3]] > cb) {
+                                                    if (p[pixel[2]] > cb) {
+                                                        if (p[pixel[1]] > cb) {
                                                             is_a_corner();
                                                         } else if (p[pixel[13]] > cb) {
                                                             is_a_corner();
@@ -4499,43 +3763,29 @@ public class FAST11 {
                     } else {
                         is_not_a_corner();
                     }
-                } else if (p[pixel[6]] < c_b) {
-                    if (p[pixel[7]] < c_b) {
-                        if (p[pixel[8]] < c_b) {
-                            if (p[pixel[9]] < c_b) {
-                                if (p[pixel[10]] < c_b) {
-                                    if (p[pixel[11]] < c_b) {
-                                        if (p[pixel[12]] < c_b) {
-                                            if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[4]] < c_b) {
-                                                        if (p[pixel[5]] < c_b) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[3]] < c_b) {
-                                                    if (p[pixel[4]] < c_b) {
-                                                        if (p[pixel[5]] < c_b) {
-                                                            is_a_corner();
-                                                        } else {
-                                                            is_not_a_corner();
-                                                        }
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else if (p[pixel[2]] < c_b) {
+                } else {
+                    is_not_a_corner();
+                }
+            } else if (p[pixel[4]] < c_b) {
+                if (p[pixel[5]] < c_b) {
+                    if (p[pixel[6]] < c_b) {
+                        if (p[pixel[7]] < c_b) {
+                            if (p[pixel[8]] < c_b) {
+                                if (p[pixel[9]] < c_b) {
+                                    if (p[pixel[10]] < c_b) {
+                                        if (p[pixel[11]] < c_b) {
+                                            if (p[pixel[12]] < c_b) {
                                                 if (p[pixel[3]] < c_b) {
-                                                    if (p[pixel[4]] < c_b) {
-                                                        if (p[pixel[5]] < c_b) {
+                                                    if (p[pixel[2]] < c_b) {
+                                                        if (p[pixel[1]] < c_b) {
+                                                            is_a_corner();
+                                                        } else if (p[pixel[13]] < c_b) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
+                                                    } else if (p[pixel[13]] < c_b) {
+                                                        if (p[pixel[14]] < c_b) {
                                                             is_a_corner();
                                                         } else {
                                                             is_not_a_corner();
@@ -4543,151 +3793,13 @@ public class FAST11 {
                                                     } else {
                                                         is_not_a_corner();
                                                     }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else {
-                            is_not_a_corner();
-                        }
-                    } else {
-                        is_not_a_corner();
-                    }
-                } else {
-                    is_not_a_corner();
-                }
-            } else if (p[pixel[5]] > cb) {
-                if (p[pixel[6]] > cb) {
-                    if (p[pixel[7]] > cb) {
-                        if (p[pixel[8]] > cb) {
-                            if (p[pixel[9]] > cb) {
-                                if (p[pixel[10]] > cb) {
-                                    if (p[pixel[11]] > cb) {
-                                        if (p[pixel[4]] > cb) {
-                                            if (p[pixel[3]] > cb) {
-                                                if (p[pixel[2]] > cb) {
-                                                    if (p[pixel[1]] > cb) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[12]] > cb) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[12]] > cb) {
-                                                    if (p[pixel[13]] > cb) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else if (p[pixel[12]] > cb) {
-                                                if (p[pixel[13]] > cb) {
-                                                    if (p[pixel[14]] > cb) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else if (p[pixel[12]] > cb) {
-                                            if (p[pixel[13]] > cb) {
-                                                if (p[pixel[14]] > cb) {
-                                                    if (p[pixel[15]] > cb) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else {
-                                            is_not_a_corner();
-                                        }
-                                    } else {
-                                        is_not_a_corner();
-                                    }
-                                } else {
-                                    is_not_a_corner();
-                                }
-                            } else {
-                                is_not_a_corner();
-                            }
-                        } else {
-                            is_not_a_corner();
-                        }
-                    } else {
-                        is_not_a_corner();
-                    }
-                } else {
-                    is_not_a_corner();
-                }
-            } else if (p[pixel[5]] < c_b) {
-                if (p[pixel[6]] < c_b) {
-                    if (p[pixel[7]] < c_b) {
-                        if (p[pixel[8]] < c_b) {
-                            if (p[pixel[9]] < c_b) {
-                                if (p[pixel[10]] < c_b) {
-                                    if (p[pixel[11]] < c_b) {
-                                        if (p[pixel[4]] < c_b) {
-                                            if (p[pixel[3]] < c_b) {
-                                                if (p[pixel[2]] < c_b) {
-                                                    if (p[pixel[1]] < c_b) {
-                                                        is_a_corner();
-                                                    } else if (p[pixel[12]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else if (p[pixel[12]] < c_b) {
-                                                    if (p[pixel[13]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else if (p[pixel[12]] < c_b) {
-                                                if (p[pixel[13]] < c_b) {
+                                                } else if (p[pixel[13]] < c_b) {
                                                     if (p[pixel[14]] < c_b) {
-                                                        is_a_corner();
-                                                    } else {
-                                                        is_not_a_corner();
-                                                    }
-                                                } else {
-                                                    is_not_a_corner();
-                                                }
-                                            } else {
-                                                is_not_a_corner();
-                                            }
-                                        } else if (p[pixel[12]] < c_b) {
-                                            if (p[pixel[13]] < c_b) {
-                                                if (p[pixel[14]] < c_b) {
-                                                    if (p[pixel[15]] < c_b) {
-                                                        is_a_corner();
+                                                        if (p[pixel[15]] < c_b) {
+                                                            is_a_corner();
+                                                        } else {
+                                                            is_not_a_corner();
+                                                        }
                                                     } else {
                                                         is_not_a_corner();
                                                     }
