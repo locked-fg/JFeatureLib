@@ -46,14 +46,17 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- *
+ * FAST Corner Detector
+ * @author Edward Rosten
  * @author Robert Zelhofer
- * 
+ * @see http://www.edwardrosten.com/work/fast.html
  */
 public class FASTCornerDetector implements PointDetector {
-    //TODO add doku
+    //Return List of ImagePoints
     List<ImagePoint> corners;
+    //Threshold Value
     private int threshold;
+    //Contiguous Pixels Number
     private int fastNNumber;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -107,11 +110,25 @@ public class FASTCornerDetector implements PointDetector {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
-
+    /**
+     * Creates default FAST Corner Detector with threshold = 20 and test for 9 contiguous Pixels
+     */
     public FASTCornerDetector() {
-        this(40, 9);
+        this(20, 9);
     }
-
+    
+    /**
+     * Creates Fast Corner Detector for 9 contiguous Pixels
+     * @param threshold Threshold Value
+     */
+    public FASTCornerDetector(int threshold) {
+        this(threshold, 9);
+    }
+    /**
+     * Creates FAST Corner Detector
+     * @param threshold Integer for Threshold value.
+     * @param fastNNumber Integer n. Fast algorithm Tests whether there are n contiguous Pixels int the circle which are all darker, or all brighter than Pixel p. This Test does not generalize well for n < 12. There for n can only range from 9 to 12.
+     */
     public FASTCornerDetector(int threshold, int fastNNumber) {
         this.corners = new ArrayList<>();
         this.threshold = threshold;
