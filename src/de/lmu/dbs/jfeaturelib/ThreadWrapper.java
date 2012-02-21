@@ -82,8 +82,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
     }
 
     /**
-     * Returns the time for opening and processing an image.
-     *
+     * Returns the time for opening and processing an image.     *
      * @return Time for execution in milliseconds
      */
     public long getTime() {
@@ -91,7 +90,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
     }
 
     /**
-     *
+     * Returns the name of the descriptor which is used
      * @return Name of descriptor contained in this ThreadWrapper
      */
     public String getDescriptorName() {
@@ -99,7 +98,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
     }
 
     /**
-     *
+     * Returns the class of the descriptor
      * @return Class of descriptor contained in this ThreadWrapper
      */
     public Class getDescriptorClass() {
@@ -107,7 +106,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
     }
 
     /**
-     *
+     * Returns the number of this worker
      * @return Number of this ThreadWrapper, used for parallel computation
      */
     public int getNumber() {
@@ -115,7 +114,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
     }
 
     /**
-     *
+     * Returns image file which is processed
      * @return Image file which is processed
      */
     public File getFile() {
@@ -123,8 +122,8 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
     }
 
     /**
-     *
-     * @return The actual Descriptor contained in this ThreadWrapper
+     * Returns the instance of the descriptor
+     * @return The actual descriptor contained in this ThreadWrapper
      */
     public FeatureDescriptor getInstance() {
         return descriptor;
@@ -133,7 +132,6 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getNewValue().getClass().getSimpleName().equals("Progress")) {
-            //System.out.println(((Progress)evt.getNewValue()).getProgress());
             setProgress(((Progress) evt.getNewValue()).getProgress());
 
         }
