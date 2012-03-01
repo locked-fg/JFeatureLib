@@ -1,7 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Descriptor;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 
