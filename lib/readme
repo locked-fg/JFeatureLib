@@ -1,13 +1,6 @@
 List of third party libraries including their licence, origin and location of 
 API and sources (if possible).
 
-# example.jar
-  Version: 1
-  Licence: GPL
-  URL:    http://example.com/
-  Source: http://example.com/source
-  API:    http://example.com/api
-
 # ij145.jar
   Version: 1.45
   Licence: Public Domain
@@ -15,12 +8,12 @@ API and sources (if possible).
   Source: http://rsbweb.nih.gov/ij/download/src/ij145s-src.zip
   API:    http://rsbweb.nih.gov/ij/download/docs/api.zip
 
-# Utilities.jar
+# common-extension-lib.jar
   Version: Build time in about.properties included in the Jar
+  Licence: BSD http://www.opensource.org/licenses/bsd-license.php
+  URL:     http://code.google.com/p/common-extension-lib/
+
+# Jama-1.0.2.jar
+  Version: 1.0.2
   Licence: Public Domain
-  URL:     dbs.ifi.lmu.de internal SVN
-  Source:  http://www.dbs.ifi.lmu.de/~graf/Utilities-API/SRC.zip
-  API:     http://www.dbs.ifi.lmu.de/~graf/Utilities-API/ 
-  API:     http://www.dbs.ifi.lmu.de/~graf/Utilities-API/API.zip
-  If the download URLs are not working, contact graf@dbs.ifi.lmu.de. 
-  I've forgotten to update the permissions then
+  URL: http://math.nist.gov/javanumerics/jama/

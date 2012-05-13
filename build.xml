@@ -75,4 +75,19 @@
     <target name="-post-jar">
         <copy file="jfeaturelib.properties" todir="${dist.dir}"/>
     </target>
+    
+        <!-- prepare release files -->
+    <target name="release" depends="jar, -javadoc-build">
+        <delete dir="${release.dir}" />
+        <mkdir dir="${release.dir}" />
+        <zip destfile="${release.dir}/${application.title}_x.x.x-api.zip"
+             basedir="${dist.dir}" 
+             includes="javadoc/**" />
+        <zip destfile="${release.dir}/${application.title}_x.x.x-src.zip"
+             basedir="./" 
+             includes="${src.dir}/**,${test.src.dir}/**" />
+        <zip destfile="${release.dir}/${application.title}_x.x.x.zip"
+             basedir="${dist.dir}"
+             excludes="javadoc/**" />
+    </target>
 </project>

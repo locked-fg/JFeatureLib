@@ -1,5 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import Jama.Matrix;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
@@ -8,12 +9,14 @@ import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * Haralick texture features
- * 
+ *
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
  * @article{haralick1973textural,
@@ -27,33 +30,64 @@ import java.util.List;
  *   publisher={IEEE}
  *  }
  * </pre>
+ *
  * @author graf
  */
 public class Haralick extends FeatureDescriptorAdapter {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    /** The number of gray values for the textures */
+    /**
+     * The number of gray values for the textures
+     */
     private final int NUM_GRAY_VALUES = 32;
-    /** p_(x+y) statistics */
+    /**
+     * p_(x+y) statistics
+     */
     private double[] p_x_plus_y = new double[2 * NUM_GRAY_VALUES - 1];
-    /** p_(x-y) statistics */
+    /**
+     * p_(x-y) statistics
+     */
     private double[] p_x_minus_y = new double[NUM_GRAY_VALUES];
-    /** row mean value */
+    /**
+     * row mean value
+     */
     private double mu_x = 0;
-    /** column mean value */
+    /**
+     * column mean value
+     */
     private double mu_y = 0;
-    /** row variance */
+    /**
+     * row variance
+     */
     private double var_x = 0;
-    /** column variance */
+    /**
+     * column variance
+     */
     private double var_y = 0;
-    /** HXY1 statistics */
+    /**
+     * HXY1 statistics
+     */
     private double hx = 0;
-    /** HXY2 statistics */
+    /**
+     * HXY2 statistics
+     */
     private double hy = 0;
-    /** HXY1 statistics */
+    /**
+     * HXY1 statistics
+     */
     private double hxy1 = 0;
-    /** HXY2 statistics */
+    /**
+     * HXY2 statistics
+     */
     private double hxy2 = 0;
+    /**
+     * p_x statistics
+     */
+    private double[] p_x = new double[NUM_GRAY_VALUES];
+    /**
+     * p_y statistics
+     */
+    private double[] p_y = new double[NUM_GRAY_VALUES];
     // -
     private int haralickDist;
     double[] features = null;
@@ -68,6 +102,7 @@ public class Haralick extends FeatureDescriptorAdapter {
 
     /**
      * Constructs a haralick detector.
+     *
      * @param haralickDist Integer for haralick distribution
      */
     public Haralick(int haralickDist) {
@@ -76,25 +111,27 @@ public class Haralick extends FeatureDescriptorAdapter {
 
     /**
      * Getter for haralick distributions
+     *
      * @return haralick distributions
      */
-    public int getHaralickDist(){
+    public int getHaralickDist() {
         return haralickDist;
     }
-    
+
     /**
      * Setter for haralick distributions
+     *
      * @param haralickDist int for haralick distributions
      */
-    public void setHaralickDist(int haralickDist){
+    public void setHaralickDist(int haralickDist) {
         this.haralickDist = haralickDist;
     }
-    
+
     /**
      * Defines the capability of the algorithm.
-     * 
+     *
      * @see PlugInFilter
-     * @see #supports() 
+     * @see #supports()
      */
     @Override
     public EnumSet<Supports> supports() {
@@ -105,6 +142,7 @@ public class Haralick extends FeatureDescriptorAdapter {
 
     /**
      * Starts the haralick detection.
+     *
      * @param ip ImageProcessor of the source image
      */
     @Override
@@ -119,7 +157,8 @@ public class Haralick extends FeatureDescriptorAdapter {
     }
 
     /**
-     * Calculates the Haralick texture features and returns them as double array.
+     * Calculates the Haralick texture features and returns them as double
+     * array.
      */
     @Override
     public List<double[]> getFeatures() {
@@ -135,7 +174,7 @@ public class Haralick extends FeatureDescriptorAdapter {
      */
     @Override
     public String getDescription() {
-        StringBuilder sb = new StringBuilder("50");
+        StringBuilder sb = new StringBuilder();
         sb.append("Haralick features: ");
         sb.append("Angular 2nd moment, ");
         sb.append("Contrast, ");
@@ -149,12 +188,13 @@ public class Haralick extends FeatureDescriptorAdapter {
         sb.append("Difference Variance, ");
         sb.append("Difference Entropy, ");
         sb.append("Information Measures of Correlation, ");
-        sb.append("Information Measures of Correlation");
+        sb.append("Information Measures of Correlation, ");
+        sb.append("Maximum Correlation COefficient");
         return sb.toString();
     }
 
     private void process() {
-        features = new double[13];
+        features = new double[14];
 
         pcs.firePropertyChange(Progress.getName(), null, new Progress(1, "creating coocurrence matrix"));
         Coocurrence coocurrence = new Coocurrence(image, NUM_GRAY_VALUES, this.haralickDist);
@@ -168,10 +208,13 @@ public class Haralick extends FeatureDescriptorAdapter {
         calculateStatistics(cooccurrenceMatrix);
 
         pcs.firePropertyChange(Progress.getName(), null, new Progress(75, "computing features"));
+
+        double[][] p = cooccurrenceMatrix;
+        double[][] Q = new double[NUM_GRAY_VALUES][NUM_GRAY_VALUES];
         for (int i = 0; i < NUM_GRAY_VALUES; i++) {
             double sum_j_p_x_minus_y = 0;
             for (int j = 0; j < NUM_GRAY_VALUES; j++) {
-                double p_ij = cooccurrenceMatrix[i][j];
+                double p_ij = p[i][j];
 
                 sum_j_p_x_minus_y += j * p_x_minus_y[j];
 
@@ -180,12 +223,24 @@ public class Haralick extends FeatureDescriptorAdapter {
                 features[3] += (i - meanGrayValue) * (i - meanGrayValue) * p_ij;
                 features[4] += p_ij / (1 + (i - j) * (i - j));
                 features[8] += p_ij * log(p_ij);
+
+                // for feature 13
+                for (int k = 0; k < NUM_GRAY_VALUES; k++) {
+                    Q[i][j] += (p_ij * p[j][k]) / (p_x[i] * p_y[k]);
+                }
             }
 
             features[1] += i * i * p_x_minus_y[i];
             features[9] += (i - sum_j_p_x_minus_y) * (i - sum_j_p_x_minus_y) * p_x_minus_y[i];
             features[10] += p_x_minus_y[i] * log(p_x_minus_y[i]);
         }
+
+
+        // feature 13: Max Correlation Coefficient
+        double[] realEigenvaluesOfQ = new Matrix(Q).eig().getRealEigenvalues();
+        Arrays2.abs(realEigenvaluesOfQ);
+        Arrays.sort(realEigenvaluesOfQ);
+        features[13] = Math.sqrt(realEigenvaluesOfQ[realEigenvaluesOfQ.length - 2]);
 
         features[2] /= Math.sqrt(var_x * var_y);
         features[8] *= -1;
@@ -210,17 +265,13 @@ public class Haralick extends FeatureDescriptorAdapter {
         }
 
         features[7] *= -1;
+
     }
 
     /**
      * Calculates the statistical properties.
      */
     private void calculateStatistics(double[][] cooccurrenceMatrix) {
-        /** p_x statistics */
-        final double[] p_x = new double[NUM_GRAY_VALUES];
-        /** p_y statistics */
-        final double[] p_y = new double[NUM_GRAY_VALUES];
-
 
         // p_x, p_y, p_x+y, p_x-y
         for (int i = 0; i < NUM_GRAY_VALUES; i++) {
@@ -235,17 +286,16 @@ public class Haralick extends FeatureDescriptorAdapter {
             }
         }
 
-        // mean values
-        for (int i = 0; i < NUM_GRAY_VALUES; i++) {
-            mu_x += i * p_x[i];
-            mu_y += i * p_y[i];
-        }
+        // mean and variance values
+        double[] meanVar;
+        meanVar = meanVar(p_x);
+        mu_x = meanVar[0];
+        var_x = meanVar[1];
+        meanVar = meanVar(p_y);
+        mu_y = meanVar[0];
+        var_y = meanVar[1];
 
         for (int i = 0; i < NUM_GRAY_VALUES; i++) {
-            // variances
-            var_x += (i - mu_x) * (i - mu_x) * p_x[i];
-            var_y += (i - mu_y) * (i - mu_y) * p_y[i];
-
             // hx and hy
             hx += p_x[i] * log(p_x[i]);
             hy += p_y[i] * log(p_y[i]);
@@ -261,6 +311,26 @@ public class Haralick extends FeatureDescriptorAdapter {
         hy *= -1;
         hxy1 *= -1;
         hxy2 *= -1;
+    }
+
+    /**
+     * Compute mean and variance of the given array
+     *
+     * @param a inut values
+     * @return array{mean, variance}
+     */
+    private double[] meanVar(double[] a) {
+        // VAR(X) = E(X^2) - E(X)^2
+        double ex = 0, ex2 = 0; // E(X), E(X^2)
+        for (int i = 0; i < NUM_GRAY_VALUES; i++) {
+            ex += a[i];
+            ex2 += a[i] * a[i];
+        }
+        ex /= a.length;
+        ex2 /= a.length;
+        double var = ex2 - ex * ex;
+
+        return new double[]{ex, var};
     }
 
     /**
@@ -289,26 +359,42 @@ public class Haralick extends FeatureDescriptorAdapter {
     }
 }
 
-//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
- * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf */
+ * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
+ */
 class Coocurrence {
 
-    /** The number of gray values for the textures */
+    /**
+     * The number of gray values for the textures
+     */
     private final int NUM_GRAY_VALUES;
-    /** The number of gray levels in an image */
+    /**
+     * The number of gray levels in an image
+     */
     private final int GRAY_RANGES = 256;
-    /** The scale for the gray values for conversion rgb to gray values. */
+    /**
+     * The scale for the gray values for conversion rgb to gray values.
+     */
     private final double GRAY_SCALE;
-    /** gray histogram of the image. */
+    /**
+     * gray histogram of the image.
+     */
     private final double[] grayHistogram;
-    /** quantized gray values of each pixel of the image. */
+    /**
+     * quantized gray values of each pixel of the image.
+     */
     private final byte[] grayValue;
-    /** mean gray value  */
+    /**
+     * mean gray value
+     */
     private double meanGrayValue = 0;
-    /** The cooccurrence matrix  */
+    /**
+     * The cooccurrence matrix
+     */
     private final double[][] cooccurrenceMatrices;
-    /** The value for one increment in the gray/color histograms. */
+    /**
+     * The value for one increment in the gray/color histograms.
+     */
     private final int HARALICK_DIST;
     private final ByteProcessor image;
 
@@ -350,13 +436,13 @@ class Coocurrence {
 
                 // horizontal neighbor: 0 degrees
                 i = x - d;
-                j = y;
+//                j = y;
                 if (!(i < 0)) {
                     increment(grayValue[pos], grayValue[pos - d]);
                 }
 
                 // vertical neighbor: 90 degree
-                i = x;
+//                i = x;
                 j = y - d;
                 if (!(j < 0)) {
                     increment(grayValue[pos], grayValue[pos - d * imageWidth]);
@@ -392,7 +478,8 @@ class Coocurrence {
     }
 
     /**
-     * Incremets the coocurrence matrix at the specified positions (g1,g2) and (g2,g1).
+     * Incremets the coocurrence matrix at the specified positions (g1,g2) and
+     * (g2,g1).
      *
      * @param g1 the gray value of the first pixel
      * @param g2 the gray value of the second pixel
