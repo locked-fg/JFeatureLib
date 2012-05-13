@@ -2,10 +2,8 @@ package de.lmu.dbs.jfeaturelib.edgeDetector;
 
 import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Progress;
-import ij.ImagePlus;
 import ij.plugin.filter.Convolver;
 import ij.process.ByteProcessor;
-import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

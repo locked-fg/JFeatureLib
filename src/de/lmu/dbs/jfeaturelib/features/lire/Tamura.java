@@ -25,8 +25,7 @@
 package de.lmu.dbs.jfeaturelib.features.lire;
 
 import at.lux.imageanalysis.VisualDescriptor;
-
-import java.awt.*;
+import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;

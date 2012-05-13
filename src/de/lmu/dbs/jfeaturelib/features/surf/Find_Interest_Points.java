@@ -7,13 +7,8 @@ import ij.WindowManager;
 import ij.gui.GenericDialog;
 import ij.plugin.PlugIn;
 import ij.process.ImageProcessor;
-
 import java.util.Date;
 import java.util.List;
-
-import de.lmu.dbs.jfeaturelib.features.surf.IntegralImage;
-import de.lmu.dbs.jfeaturelib.features.surf.InterestPoint;
-import de.lmu.dbs.jfeaturelib.features.surf.Params;
 
 
 

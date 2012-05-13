@@ -1,7 +1,7 @@
 package de.lmu.dbs.jfeaturelib.utils;
 
-import ij.process.ImageProcessor;
 import ij.process.FloatProcessor;
+import ij.process.ImageProcessor;
 
 /**
  * Class that calculates gradients from a given image.

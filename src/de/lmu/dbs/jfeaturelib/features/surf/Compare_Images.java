@@ -1,29 +1,19 @@
 package de.lmu.dbs.jfeaturelib.features.surf;
 
 
-import static ij.IJ.d2s;
+import de.lmu.dbs.jfeaturelib.features.surf.Matcher.Point2Df;
 import ij.IJ;
+import static ij.IJ.d2s;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.gui.GenericDialog;
 import ij.io.OpenDialog;
 import ij.plugin.PlugIn;
 import ij.process.ImageProcessor;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.Map.Entry;
-
-import de.lmu.dbs.jfeaturelib.features.surf.IntegralImage;
-import de.lmu.dbs.jfeaturelib.features.surf.InterestPoint;
-import de.lmu.dbs.jfeaturelib.features.surf.Matcher;
-import de.lmu.dbs.jfeaturelib.features.surf.Params;
-import de.lmu.dbs.jfeaturelib.features.surf.Matcher.Point2Df;
+import java.util.*;
 
 
 

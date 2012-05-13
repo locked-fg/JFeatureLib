@@ -25,7 +25,6 @@
 package de.lmu.dbs.jfeaturelib.features.lire;
 
 import at.lux.imageanalysis.VisualDescriptor;
-
 import java.awt.image.BufferedImage;
 import java.util.StringTokenizer;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;

@@ -1,14 +1,9 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import java.io.File;
-import ij.process.ImageProcessor;
 import java.io.IOException;
-import java.util.EnumSet;
-import java.util.List;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import static org.junit.Assert.fail;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class SiftTest {
     

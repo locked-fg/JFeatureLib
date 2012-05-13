@@ -1,15 +1,10 @@
 package de.lmu.dbs.jfeaturelib.features.surf;
 
 import ij.IJ;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 // TODO move IJ-related code into IJFacade
 

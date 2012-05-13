@@ -2,7 +2,6 @@ package de.lmu.dbs.jfeaturelib.edgeDetector;
 
 import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Progress;
-import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

@@ -1,8 +1,7 @@
 package de.lmu.dbs.jfeaturelib.features.surf;
 
-import static java.lang.Math.round;
 import ij.ImagePlus;
-
+import static java.lang.Math.round;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

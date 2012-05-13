@@ -6,10 +6,7 @@ import ij.ImagePlus;
 import ij.WindowManager;
 import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
-
 import java.util.List;
-
-import de.lmu.dbs.jfeaturelib.features.surf.InterestPoint;
 
 
 

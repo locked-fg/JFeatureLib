@@ -4,10 +4,7 @@ package de.lmu.dbs.jfeaturelib.features.surf;
 import ij.IJ;
 import ij.io.OpenDialog;
 import ij.plugin.PlugIn;
-
 import java.util.List;
-
-import de.lmu.dbs.jfeaturelib.features.surf.InterestPoint;
 
 
 

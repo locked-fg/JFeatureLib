@@ -24,8 +24,6 @@
 package de.lmu.dbs.jfeaturelib.features.lire;
 
 import at.lux.imageanalysis.VisualDescriptor;
-import net.semanticmetadata.lire.utils.ImageUtils;
-
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
@@ -33,6 +31,7 @@ import java.awt.image.ColorConvertOp;
 import java.awt.image.Raster;
 import java.util.StringTokenizer;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
+import net.semanticmetadata.lire.utils.ImageUtils;
 
 /**
  * Implementation of a Gabor texture features done by  Marko Keuschnig & Christian Penz<br>

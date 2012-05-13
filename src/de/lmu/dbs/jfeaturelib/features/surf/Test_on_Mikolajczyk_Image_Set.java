@@ -5,17 +5,11 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.io.OpenDialog;
 import ij.plugin.PlugIn;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
-import de.lmu.dbs.jfeaturelib.features.surf.IntegralImage;
-import de.lmu.dbs.jfeaturelib.features.surf.InterestPoint;
-import de.lmu.dbs.jfeaturelib.features.surf.Matcher;
-import de.lmu.dbs.jfeaturelib.features.surf.Params;
 
 
 

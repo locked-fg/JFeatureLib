@@ -1,7 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features.surf;
 
 import static java.lang.Math.abs;
-
 import java.util.ArrayList;
 import java.util.List;
 

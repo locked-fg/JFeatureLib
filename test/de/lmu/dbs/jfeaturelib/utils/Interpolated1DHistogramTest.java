@@ -1,7 +1,7 @@
 package de.lmu.dbs.jfeaturelib.utils;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 

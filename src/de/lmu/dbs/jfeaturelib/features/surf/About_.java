@@ -1,8 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features.surf;
 
 
-import de.lmu.dbs.jfeaturelib.features.surf.Params;
-
 import ij.gui.GenericDialog;
 import ij.plugin.PlugIn;
 

@@ -1,8 +1,7 @@
 package de.lmu.dbs.jfeaturelib.features.surf;
 
-import java.awt.Color;
-
 import ij.gui.GenericDialog;
+import java.awt.Color;
 
 //TODO move IJ-related code into IJFacade
 // TODO JavaDoc for getter/setter

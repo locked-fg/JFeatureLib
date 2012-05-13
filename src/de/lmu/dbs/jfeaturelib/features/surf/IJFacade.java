@@ -1,21 +1,11 @@
 package de.lmu.dbs.jfeaturelib.features.surf;
 
 
-import static java.lang.Math.cos;
-import static java.lang.Math.round;
-import static java.lang.Math.sin;
 import ij.IJ;
 import ij.process.ImageProcessor;
-
+import static java.lang.Math.*;
 import java.util.Arrays;
 import java.util.List;
-
-import de.lmu.dbs.jfeaturelib.features.surf.Descriptor;
-import de.lmu.dbs.jfeaturelib.features.surf.Detector;
-import de.lmu.dbs.jfeaturelib.features.surf.IntegralImage;
-import de.lmu.dbs.jfeaturelib.features.surf.InterestPoint;
-import de.lmu.dbs.jfeaturelib.features.surf.Params;
-import de.lmu.dbs.jfeaturelib.features.surf.Statistics;
 
 
 // TODO: license info in all files?

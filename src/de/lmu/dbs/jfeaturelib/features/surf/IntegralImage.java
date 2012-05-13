@@ -1,11 +1,7 @@
 package de.lmu.dbs.jfeaturelib.features.surf;
 
 import ij.IJ;
-import ij.process.ByteProcessor;
-import ij.process.ColorProcessor;
-import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
-import ij.process.ShortProcessor;
+import ij.process.*;
 // TODO detach from IJ, move IJ-related code into IJFacade
 public class IntegralImage {
 
