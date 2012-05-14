@@ -224,9 +224,13 @@ public class Haralick extends FeatureDescriptorAdapter {
                 features[4] += p_ij / (1 + (i - j) * (i - j));
                 features[8] += p_ij * log(p_ij);
 
-                // for feature 13
-                for (int k = 0; k < NUM_GRAY_VALUES; k++) {
-                    Q[i][j] += (p_ij * p[j][k]) / (p_x[i] * p_y[k]);
+                // feature 13
+                if (p_ij != 0 && p_x[i] != 0) { // would result in 0
+                    for (int k = 0; k < NUM_GRAY_VALUES; k++) {
+                        if (p_y[k] != 0 && p[j][k] != 0) { // would result in NaN
+                            Q[i][j] += (p_ij * p[j][k]) / (p_x[i] * p_y[k]);
+                        }
+                    }
                 }
             }
 
