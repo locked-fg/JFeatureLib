@@ -5,14 +5,14 @@ import ij.process.ImageProcessor;
 
 /**
  * Class that calculates gradients from a given image.
- * 
- * The image is convolved with masks (default = sobel) in x and y in order
- * to create the derivates. Afterwards, the gradient orientation
- * and length is computed for each pixel.
- * 
- * If the task is just to create a derivation of the image 
+ *
+ * The image is convolved with masks (default = sobel) in x and y in order to
+ * create the derivates. Afterwards, the gradient orientation and length is
+ * computed for each pixel.
+ *
+ * If the task is just to create a derivation of the image
  * {@link DerivativeImage} might be more useful.
- * 
+ *
  * @author graf
  * @see DerivativeImage
  */
@@ -35,25 +35,20 @@ public class GradientImage implements GradientSource {
      */
     private FloatProcessor theta;
 
+    @Override
     public void setIp(ImageProcessor ip) {
         ip = ip.convertToFloat();
 
         /*
-         * ipX and ipY are temporary processors for the derivations.
-         * This of course consumes quite some memory.
-         * A more optimal yet less transparent solution would be to use the 
-         * length and theta processors for derivation AND for the final
-         * result at once.
+         * ipX and ipY are temporary processors for the derivations. This of
+         * course consumes quite some memory. A more optimal yet less
+         * transparent solution would be to use the length and theta processors
+         * for derivation AND for the final result at once.
          */
         FloatProcessor ipX = (FloatProcessor) ip.duplicate();
         FloatProcessor ipY = (FloatProcessor) ip.duplicate();
         ipX.convolve3x3(kernelX);
         ipY.convolve3x3(kernelY);
-
-//        ipX.resetMinAndMax();
-//        ipY.resetMinAndMax();
-//        new FileSaver(new ImagePlus("", ipX)).saveAsPng("c:/Temp/dx.png");
-//        new FileSaver(new ImagePlus("", ipY)).saveAsPng("c:/Temp/dy.png");
 
         length = new FloatProcessor(ip.getWidth(), ip.getHeight());
         theta = new FloatProcessor(ip.getWidth(), ip.getHeight());
@@ -70,15 +65,8 @@ public class GradientImage implements GradientSource {
                 thetaValue = (float) (Math.atan2(dy, dx) + Math.PI);
                 thetaValue %= Math.PI;
                 theta.setf(i, thetaValue);
-//            } else {
-//                theta.setf(i, Float.NaN);
             }
         }
-
-//        length.resetMinAndMax();
-//        theta.resetMinAndMax();
-//        new FileSaver(new ImagePlus("", length)).saveAsPng("c:/Temp/len.png");
-//        new FileSaver(new ImagePlus("", theta)).saveAsPng("c:/Temp/the.png");
     }
 
     /**
@@ -88,17 +76,19 @@ public class GradientImage implements GradientSource {
      * @param y y-cooridnate in pixel space
      * @return angle of gradient [0,pi[
      */
+    @Override
     public double getTheta(int x, int y) {
         return theta.getf(x, y);
     }
 
     /**
      * return the length of the gradient vector at the specified position
-     * 
+     *
      * @param x x-cooridnate in pixel space
      * @param y y-cooridnate in pixel space
      * @return length of gradient
      */
+    @Override
     public double getLength(int x, int y) {
         return length.getf(x, y);
     }
