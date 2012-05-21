@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-
 /**
  * Performs convolution with a given Kernel directly on this image.
  *
@@ -25,8 +24,7 @@ import java.util.List;
  * @author Benedikt
  * @author Franz
  */
-
-public class Kernel implements FeatureDescriptor{
+public class Kernel implements FeatureDescriptor {
 
     /**
      * Standard 3x3 SOBEL mask (1 0 -1, 2, 0, -2, 1, 0, -1 )
@@ -80,7 +78,7 @@ public class Kernel implements FeatureDescriptor{
      *
      * @param kernel double[] with kernel
      */
-    public Kernel(double[] kernel) {        
+    public Kernel(double[] kernel) {
         this.kernelWidth = Math.round((float) Math.sqrt(kernel.length + 1.0f));
         this.kernel = Arrays2.convertToFloat(kernel);
         this.treshold = 0;
@@ -91,20 +89,18 @@ public class Kernel implements FeatureDescriptor{
      *
      * @param kernel float[] with kernel
      */
-    
     public Kernel(float[] kernel) {
         this.kernelWidth = Math.round((float) Math.sqrt(kernel.length + 1.0f));
         this.kernel = kernel;
         this.treshold = 0;
     }
-    
-        /**
+
+    /**
      * Constructs a new detector with given float[] kernel and according width.
      *
      * @param kernel float[] with kernel
      * @param width width of kernel
      */
-    
     public Kernel(float[] kernel, int width) {
         this.kernelWidth = width;
         this.kernel = kernel;
@@ -146,7 +142,7 @@ public class Kernel implements FeatureDescriptor{
     public void setKernelWidth(int kernelWidth) {
         this.kernelWidth = kernelWidth;
     }
-    
+
     /**
      * Returns treshold
      *
@@ -162,69 +158,67 @@ public class Kernel implements FeatureDescriptor{
      * @param treshold int
      */
     public void setTreshold(int treshold) {
-        if(treshold < 255){
+        if (treshold < 255) {
             this.treshold = treshold;
-        }
-        else{
+        } else {
             treshold = 254;
         }
     }
+
     /**
      * Proceses the image applying the kernel in x- and y-direction
      */
-    public void process(){
+    public void process() {
 
-       pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "initialized"));
-       
-       width = image.getWidth();
-       height = image.getHeight();
-       
-       ByteProcessor imgX = new ByteProcessor(image.createImage());
-       ByteProcessor imgY = new ByteProcessor(image.createImage());
-       float[] kernelX = kernel;
-       float[] kernelY = new float[kernelWidth*kernelWidth];
-       float[][] kernelX2D = new float[kernelWidth][kernelWidth];
-       int i = 0;
-       for(int x = 0; x<kernelWidth; x++){
-           for(int y = 0; y<kernelWidth; y++){
-               kernelX2D[x][y] = kernelX[i];
-               i++;
-           }
-       }
-       float[][] kernelY2D = de.lmu.dbs.jfeaturelib.utils.RotateArrays.rotateFloatCW(kernelX2D);
-       i = 0;
-       for(int x = 0; x<kernelWidth; x++){
-           for(int y = 0; y<kernelWidth; y++){
-               kernelY[i] = kernelY2D[x][y];
-               int progress = (int)Math.round(i*(100.0/(double)(kernelWidth*kernelWidth)));
-               pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + kernelWidth*kernelWidth));
-               i++;
-           }                
-       }       
-       imgX.convolve(kernelX, kernelWidth, kernelWidth);
-       imgY.convolve(kernelY, kernelWidth, kernelWidth);
-       int[][] imgXa = imgX.getIntArray();
-       int[][] imgYa = imgY.getIntArray();
-       int[][] imgA = new int[width][height];
-       for(int x = 0; x < width;x++){
-           for(int y = 0; y < height; y++){
-               if((int)Math.round(Math.sqrt(imgXa[x][y]*imgXa[x][y]+imgYa[x][y]*imgYa[x][y])) > 255){
-                   imgA[x][y] = 255;
-               }
-               else if((int)Math.round(Math.sqrt(imgXa[x][y]*imgXa[x][y]+imgYa[x][y]*imgYa[x][y])) < treshold){
-                   imgA[x][y] = 0;
-               }
-               else{
-               imgA[x][y] = (int)Math.round(Math.sqrt(imgXa[x][y]*imgXa[x][y]+imgYa[x][y]*imgYa[x][y]));                   
-               }
-           }           
-       }
-       image.setIntArray(imgA);
-       result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, width, height, null);
-       
-       pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "initialized"));
+
+        width = image.getWidth();
+        height = image.getHeight();
+
+        ByteProcessor imgX = new ByteProcessor(image.createImage());
+        ByteProcessor imgY = new ByteProcessor(image.createImage());
+        float[] kernelX = kernel;
+        float[] kernelY = new float[kernelWidth * kernelWidth];
+        float[][] kernelX2D = new float[kernelWidth][kernelWidth];
+        int i = 0;
+        for (int x = 0; x < kernelWidth; x++) {
+            for (int y = 0; y < kernelWidth; y++) {
+                kernelX2D[x][y] = kernelX[i];
+                i++;
+            }
+        }
+        float[][] kernelY2D = de.lmu.dbs.jfeaturelib.utils.RotateArrays.rotateFloatCW(kernelX2D);
+        i = 0;
+        for (int x = 0; x < kernelWidth; x++) {
+            for (int y = 0; y < kernelWidth; y++) {
+                kernelY[i] = kernelY2D[x][y];
+                int progress = (int) Math.round(i * (100.0 / (double) (kernelWidth * kernelWidth)));
+                pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + kernelWidth * kernelWidth));
+                i++;
+            }
+        }
+        imgX.convolve(kernelX, kernelWidth, kernelWidth);
+        imgY.convolve(kernelY, kernelWidth, kernelWidth);
+        int[][] imgXa = imgX.getIntArray();
+        int[][] imgYa = imgY.getIntArray();
+        int[][] imgA = new int[width][height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if ((int) Math.round(Math.sqrt(imgXa[x][y] * imgXa[x][y] + imgYa[x][y] * imgYa[x][y])) > 255) {
+                    imgA[x][y] = 255;
+                } else if ((int) Math.round(Math.sqrt(imgXa[x][y] * imgXa[x][y] + imgYa[x][y] * imgYa[x][y])) < treshold) {
+                    imgA[x][y] = 0;
+                } else {
+                    imgA[x][y] = (int) Math.round(Math.sqrt(imgXa[x][y] * imgXa[x][y] + imgYa[x][y] * imgYa[x][y]));
+                }
+            }
+        }
+        image.setIntArray(imgA);
+        result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, width, height, null);
+
+        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
-    
+
     /**
      * Returns the image edges as INT_ARGB array. This can be used to create a
      * buffered image, if the dimensions are known.
