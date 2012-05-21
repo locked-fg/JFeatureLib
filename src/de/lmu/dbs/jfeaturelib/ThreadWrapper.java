@@ -25,10 +25,10 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
         implements PropertyChangeListener {
 
     private static final Logger logger = Logger.getLogger(ThreadWrapper.class.getName());
+    private final Class descriptorClass;
+    private final File file;
+    private final int number;
     private FeatureDescriptor descriptor;
-    private Class descriptorClass;
-    private File file;
-    private int number;
     private long time;
 
     /**
@@ -77,7 +77,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
         descriptor.addPropertyChangeListener(this);
         descriptor.run(new ColorProcessor(imp.getImage()));
         time = (System.currentTimeMillis() - start);
-        imp = null;
+        
         return descriptor.getFeatures();
     }
 
