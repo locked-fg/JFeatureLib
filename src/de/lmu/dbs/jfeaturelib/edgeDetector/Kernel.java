@@ -161,7 +161,7 @@ public class Kernel implements FeatureDescriptor {
         if (treshold < 255) {
             this.treshold = treshold;
         } else {
-            treshold = 254;
+            this.treshold = 254;
         }
     }
 
@@ -169,7 +169,6 @@ public class Kernel implements FeatureDescriptor {
      * Proceses the image applying the kernel in x- and y-direction
      */
     public void process() {
-
         pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "initialized"));
 
         width = image.getWidth();
@@ -177,26 +176,27 @@ public class Kernel implements FeatureDescriptor {
 
         ByteProcessor imgX = new ByteProcessor(image.createImage());
         ByteProcessor imgY = new ByteProcessor(image.createImage());
+        
         float[] kernelX = kernel;
         float[] kernelY = new float[kernelWidth * kernelWidth];
         float[][] kernelX2D = new float[kernelWidth][kernelWidth];
         int i = 0;
         for (int x = 0; x < kernelWidth; x++) {
             for (int y = 0; y < kernelWidth; y++) {
-                kernelX2D[x][y] = kernelX[i];
-                i++;
+                kernelX2D[x][y] = kernelX[i++];
             }
         }
-        float[][] kernelY2D = de.lmu.dbs.jfeaturelib.utils.RotateArrays.rotateFloatCW(kernelX2D);
+
+        float[][] kernelY2D = rotateFloatCW(kernelX2D);
         i = 0;
         for (int x = 0; x < kernelWidth; x++) {
             for (int y = 0; y < kernelWidth; y++) {
-                kernelY[i] = kernelY2D[x][y];
-                int progress = (int) Math.round(i * (100.0 / (double) (kernelWidth * kernelWidth)));
-                pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + kernelWidth * kernelWidth));
-                i++;
+                kernelY[i++] = kernelY2D[x][y];
             }
+            int progress = (int) Math.round(i * (100.0 / (double) (kernelWidth * kernelWidth)));
+            pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + kernelWidth * kernelWidth));
         }
+
         imgX.convolve(kernelX, kernelWidth, kernelWidth);
         imgY.convolve(kernelY, kernelWidth, kernelWidth);
         int[][] imgXa = imgX.getIntArray();
@@ -204,19 +204,31 @@ public class Kernel implements FeatureDescriptor {
         int[][] imgA = new int[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if ((int) Math.round(Math.sqrt(imgXa[x][y] * imgXa[x][y] + imgYa[x][y] * imgYa[x][y])) > 255) {
+                imgA[x][y] = (int) Math.round(Math.sqrt(imgXa[x][y] * imgXa[x][y] + imgYa[x][y] * imgYa[x][y]));
+                if (imgA[x][y] > 255) {
                     imgA[x][y] = 255;
-                } else if ((int) Math.round(Math.sqrt(imgXa[x][y] * imgXa[x][y] + imgYa[x][y] * imgYa[x][y])) < treshold) {
+                } else if (imgA[x][y] < treshold) {
                     imgA[x][y] = 0;
-                } else {
-                    imgA[x][y] = (int) Math.round(Math.sqrt(imgXa[x][y] * imgXa[x][y] + imgYa[x][y] * imgYa[x][y]));
                 }
             }
         }
+
         image.setIntArray(imgA);
         result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, width, height, null);
 
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
+    }
+
+    private float[][] rotateFloatCW(float[][] mat) {
+        final int M = mat.length;
+        final int N = mat[0].length;
+        float[][] ret = new float[N][M];
+        for (int r = 0; r < M; r++) {
+            for (int c = 0; c < N; c++) {
+                ret[c][M - 1 - r] = mat[r][c];
+            }
+        }
+        return ret;
     }
 
     /**
