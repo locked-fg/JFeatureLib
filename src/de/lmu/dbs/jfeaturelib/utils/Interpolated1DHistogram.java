@@ -1,5 +1,6 @@
 package de.lmu.dbs.jfeaturelib.utils;
 
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import java.util.Arrays;
 
 /**
@@ -158,10 +159,6 @@ public class Interpolated1DHistogram {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(bins.length * 4 * 2);
-        for (int i = 0; i < bins.length; i++) {
-            sb.append(String.format("%7.2f, ", bins[i]));
-        }
-        return sb.toString();
+        return Arrays2.join(bins, ", ", "%7.2f");
     }
 }
