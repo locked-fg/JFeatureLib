@@ -1,0 +1,3 @@
+0.1.1: introduced Abstract Feature Descriptor
+       fixed bug in Haralick feature (issue #11)
+0.1.0: start of history file

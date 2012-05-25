@@ -89,5 +89,6 @@
         <zip destfile="${release.dir}/${application.title}_x.x.x.zip"
              basedir="${dist.dir}"
              excludes="javadoc/**" />
+        <copydir src="${dist.dir}/javadoc" dest="${release.dir}/api/"/>
     </target>
 </project>
