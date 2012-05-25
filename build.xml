@@ -74,6 +74,8 @@
     
     <target name="-post-jar">
         <copy file="jfeaturelib.properties" todir="${dist.dir}"/>
+        <copy file="gpl-3.0.txt" todir="${dist.dir}"/>
+        <copy file="history.txt" todir="${dist.dir}"/>
     </target>
     
         <!-- prepare release files -->
