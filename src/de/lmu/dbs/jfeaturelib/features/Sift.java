@@ -5,7 +5,6 @@ import de.lmu.dbs.jfeaturelib.features.sift.SiftWrapper;
 import ij.process.ImageProcessor;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,11 +39,10 @@ import java.util.logging.Logger;
  *
  * @author graf
  */
-public class Sift extends FeatureDescriptorAdapter {
+public class Sift extends AbstractFeatureDescriptor {
 
     static final Logger log = Logger.getLogger(Sift.class.getName());
     private final File siftBinary;
-    private List<double[]> features = Collections.EMPTY_LIST;
 
     /**
      * Initialize the Sift wrapper with the sift binary file given in the
@@ -80,7 +78,7 @@ public class Sift extends FeatureDescriptorAdapter {
      */
     @Override
     public List<double[]> getFeatures() {
-        return features;
+        return super.getFeatures();
     }
 
     @Override
@@ -92,9 +90,14 @@ public class Sift extends FeatureDescriptorAdapter {
     public void run(ImageProcessor ip) {
         try {
             SiftWrapper siftWrapper = new SiftWrapper(siftBinary);
-            features = siftWrapper.getFeatures(ip);
+            addData(siftWrapper.getFeatures(ip));
         } catch (InterruptedException | IOException ex) {
             log.log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public String getDescription() {
+        return "Features extracted by the SIFT binary";
     }
 }

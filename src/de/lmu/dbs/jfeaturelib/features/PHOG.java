@@ -1,5 +1,6 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.dbs.jfeaturelib.utils.GradientImage;
 import de.lmu.dbs.jfeaturelib.utils.GradientSource;
 import de.lmu.dbs.jfeaturelib.utils.Interpolated1DHistogram;
@@ -8,75 +9,71 @@ import de.lmu.ifi.dbs.utilities.Vectors;
 import de.lmu.ifi.dbs.utilities.primitiveArrays.DoubleArray;
 import ij.process.ImageProcessor;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
- * Generates Pyramid Histograms of Oriented Gradients,
- * first introduced in "Representing shape with a spatial pyramid kernel" (2007).
- * By Anna Bosch, Andrew Zisserman, Xavier Munoz
- * 
- * See also http://www.robots.ox.ac.uk/~vgg/publications/2007/Bosch07/ and 
+ * Generates Pyramid Histograms of Oriented Gradients, first introduced in
+ * "Representing shape with a spatial pyramid kernel" (2007). By Anna Bosch,
+ * Andrew Zisserman, Xavier Munoz
+ *
+ * See also http://www.robots.ox.ac.uk/~vgg/publications/2007/Bosch07/ and
  * http://dl.acm.org/citation.cfm?id=1282340 for further information.
- * 
+ *
  * @author graf
  * @since 11/4/2011
- **/
-public class PHOG extends FeatureDescriptorAdapter {
+ *
+ */
+public class PHOG extends AbstractFeatureDescriptor {
 
-    /* 
-     * Amount of bins for each histogram 
+    /*
+     * Amount of bins for each histogram
      */
     private int bins = 8;
     /*
-     * Amount of recursions for this descriptor.
-     * 0 means only the root level.
+     * Amount of recursions for this descriptor. 0 means only the root level.
      */
     private int recursions = 1;
+    /**
+     * dynamic array holding the feature
+     */
     private DoubleArray feature;
+    /**
+     * the wrapper class to extract the gradient information from
+     */
     private GradientSource gradientSource = new GradientImage();
-    private Interpolated1DHistogram hist;
-
-    @Override
-    public List<double[]> getFeatures() {
-        ArrayList<double[]> list = new ArrayList<>(1);
-        list.add(feature.getData());
-        return list;
-    }
-
-    @Override
-    public EnumSet<Supports> supports() {
-        return EnumSet.of(Supports.DOES_8G, Supports.Masking);
-    }
+    private Interpolated1DHistogram histogram;
 
     @Override
     public void run(ImageProcessor ip) {
-        hist = new Interpolated1DHistogram(0, Math.PI, bins);
+        firePropertyChange(Progress.START);
         gradientSource.setIp(ip);
         initFeature();
 
+        histogram = new Interpolated1DHistogram(0, Math.PI, bins);
         buildHistogramRecursively(ip.getRoi(), 0);
 
         // release memory
         gradientSource = null;
         Vectors.normalize(feature.getData());
+
+        addData(feature.getData());
+        firePropertyChange(Progress.END);
     }
 
     private void buildHistogramRecursively(Rectangle r, int recursion) {
-        hist.clear();
+        histogram.clear();
 
         final int borderRight = r.x + r.width;
         final int borderBottom = r.y + r.height;
         for (int x = r.x; x < borderRight; x++) {
             for (int y = r.y; y < borderBottom; y++) {
                 if (gradientSource.getLength(x, y) != 0) {
-                    hist.add(gradientSource.getTheta(x, y),
+                    histogram.add(gradientSource.getTheta(x, y),
                             gradientSource.getLength(x, y));
                 }
             }
         }
-        feature.addAll(hist.getData());
+        feature.addAll(histogram.getData());
 
         // descend into next recursion
         if (recursion++ < recursions) {
@@ -103,6 +100,16 @@ public class PHOG extends FeatureDescriptorAdapter {
             length += bins * Math2.pow(4, i);
         }
         feature = new DoubleArray(length);
+    }
+
+    @Override
+    public EnumSet<Supports> supports() {
+        return EnumSet.of(Supports.DOES_8G, Supports.Masking);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Pyramid Histograms of Oriented Gradients";
     }
 
     //<editor-fold defaultstate="collapsed" desc="getters & setters">

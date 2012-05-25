@@ -1,12 +1,11 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Descriptor;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Interface for a common descriptor that returns a <b>single</b> feature
- * vector.
+ * Interface for a common descriptor that returns a either a single feature
+ * vector or a set / list of feature vectors.
  *
  * @author graf
  */
@@ -17,8 +16,7 @@ public interface FeatureDescriptor extends Descriptor {
      * the according values should be explained in the JavaDocs of the
      * implementing class.
      *
-     * If features are not (yet) computed, an ({@link Collections#EMPTY_LIST})
-     * should be returned.
+     * If features are not (yet) computed, an empty listis returned.
      *
      * @return list of feature vectors
      */

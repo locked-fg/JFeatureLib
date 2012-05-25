@@ -1,29 +1,19 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
+import de.lmu.dbs.jfeaturelib.Progress;
 import ij.process.ImageProcessor;
 import ij.process.ImageStatistics;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
- * Calculates the basic statistical moments of an image like 
- * mean, std_dev, skewness and kurtosis.
- * 
+ * Calculates the basic statistical moments of an image like mean, std_dev,
+ * skewness and kurtosis.
+ *
  * @author graf
  * @since 11/4/2011
  */
-public class Moments extends FeatureDescriptorAdapter {
-
-    private double[] feature;
-
-    @Override
-    public List<double[]> getFeatures() {
-        ArrayList<double[]> result = new ArrayList<>(1);
-        result.add(feature);
-        return result;
-    }
+public class Moments extends AbstractFeatureDescriptor {
 
     @Override
     public EnumSet<Supports> supports() {
@@ -36,7 +26,14 @@ public class Moments extends FeatureDescriptorAdapter {
                 + ImageStatistics.STD_DEV
                 + ImageStatistics.SKEWNESS
                 + ImageStatistics.KURTOSIS;
+        firePropertyChange(Progress.START);
         ImageStatistics stat = ImageStatistics.getStatistics(ip, STATS, null);
-        feature = new double[]{stat.mean, stat.stdDev, stat.skewness, stat.kurtosis};
+        addData(new double[]{stat.mean, stat.stdDev, stat.skewness, stat.kurtosis});
+        firePropertyChange(Progress.END);
+    }
+
+    @Override
+    public String getDescription() {
+        return "First 4 Statistical Moments";
     }
 }

@@ -6,14 +6,9 @@ import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.List;
 
-//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * Haralick texture features
  *
@@ -33,9 +28,8 @@ import java.util.List;
  *
  * @author graf
  */
-public class Haralick extends FeatureDescriptorAdapter {
+public class Haralick extends AbstractFeatureDescriptor {
 
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     /**
      * The number of gray values for the textures
      */
@@ -91,7 +85,7 @@ public class Haralick extends FeatureDescriptorAdapter {
     // -
     private int haralickDist;
     double[] features = null;
-    private ByteProcessor image;
+//    private ByteProcessor image;
 
     /**
      * Constructs a haralick detector with default parameters.
@@ -106,24 +100,6 @@ public class Haralick extends FeatureDescriptorAdapter {
      * @param haralickDist Integer for haralick distribution
      */
     public Haralick(int haralickDist) {
-        this.haralickDist = haralickDist;
-    }
-
-    /**
-     * Getter for haralick distributions
-     *
-     * @return haralick distributions
-     */
-    public int getHaralickDist() {
-        return haralickDist;
-    }
-
-    /**
-     * Setter for haralick distributions
-     *
-     * @param haralickDist int for haralick distributions
-     */
-    public void setHaralickDist(int haralickDist) {
         this.haralickDist = haralickDist;
     }
 
@@ -150,27 +126,14 @@ public class Haralick extends FeatureDescriptorAdapter {
         if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
             ip = ip.convertToByte(true);
         }
-        this.image = (ByteProcessor) ip;
-        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
-        process();
-        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
+        firePropertyChange(Progress.START);
+        process((ByteProcessor) ip);
+        addData(features);
+        firePropertyChange(Progress.END);
     }
 
     /**
-     * Calculates the Haralick texture features and returns them as double
-     * array.
-     */
-    @Override
-    public List<double[]> getFeatures() {
-        ArrayList<double[]> result = new ArrayList<>(1);
-        if (features != null) {
-            result.add(features);
-        }
-        return result;
-    }
-
-    /**
-     * Returns information about the getFeauture returns in a String array.
+     * Returns information about the getFeature
      */
     @Override
     public String getDescription() {
@@ -193,21 +156,21 @@ public class Haralick extends FeatureDescriptorAdapter {
         return sb.toString();
     }
 
-    private void process() {
+    private void process(ByteProcessor image) {
         features = new double[14];
 
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(1, "creating coocurrence matrix"));
+        firePropertyChange(new Progress(1, "creating coocurrence matrix"));
         Coocurrence coocurrence = new Coocurrence(image, NUM_GRAY_VALUES, this.haralickDist);
         double[][] cooccurrenceMatrix = coocurrence.getCooccurrenceMatrix();
         double meanGrayValue = coocurrence.getMeanGrayValue();
 
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(25, "normalizing"));
+        firePropertyChange(new Progress(25, "normalizing"));
         normalize(cooccurrenceMatrix, coocurrence.getCooccurenceSums());
 
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(50, "computing statistics"));
+        firePropertyChange(new Progress(50, "computing statistics"));
         calculateStatistics(cooccurrenceMatrix);
 
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(75, "computing features"));
+        firePropertyChange(new Progress(75, "computing features"));
 
         double[][] p = cooccurrenceMatrix;
         double[][] Q = new double[NUM_GRAY_VALUES][NUM_GRAY_VALUES];
@@ -276,7 +239,6 @@ public class Haralick extends FeatureDescriptorAdapter {
      * Calculates the statistical properties.
      */
     private void calculateStatistics(double[][] cooccurrenceMatrix) {
-
         // p_x, p_y, p_x+y, p_x-y
         for (int i = 0; i < NUM_GRAY_VALUES; i++) {
             for (int j = 0; j < NUM_GRAY_VALUES; j++) {
@@ -357,12 +319,28 @@ public class Haralick extends FeatureDescriptorAdapter {
         }
     }
 
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
+    //<editor-fold defaultstate="collapsed" desc="getter/Setter">
+    /**
+     * Getter for haralick distributions
+     *
+     * @return haralick distributions
+     */
+    public int getHaralickDist() {
+        return haralickDist;
     }
+
+    /**
+     * Setter for haralick distributions
+     *
+     * @param haralickDist int for haralick distributions
+     */
+    public void setHaralickDist(int haralickDist) {
+        this.haralickDist = haralickDist;
+    }
+    //</editor-fold>
 }
 
+//<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
 /**
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  */
