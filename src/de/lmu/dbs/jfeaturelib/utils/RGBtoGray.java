@@ -1,7 +1,7 @@
 package de.lmu.dbs.jfeaturelib.utils;
 
 /**
- * Simple util to return a gray value for given RGB value
+ * Simple util to convert RGB values to gray values
  *
  * @author Benedikt
  */
