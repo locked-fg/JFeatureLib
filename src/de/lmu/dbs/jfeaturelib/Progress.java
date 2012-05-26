@@ -2,10 +2,8 @@ package de.lmu.dbs.jfeaturelib;
 
 /**
  * The Progress class can be used in situations where an algorithm should fire 
- * updates about its progress. Valid progress values ar in the range of [0,100]. 
+ * updates about its progress. Valid progress values are in the range of [0,100]. 
  * Subsequent events should have increasing progress values.
- * 
- * Also, an optional progress message can be given.
  * 
  * @author graf
  */
