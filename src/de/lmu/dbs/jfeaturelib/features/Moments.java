@@ -34,6 +34,6 @@ public class Moments extends AbstractFeatureDescriptor {
 
     @Override
     public String getDescription() {
-        return "First 4 Statistical Moments";
+        return "First 4 Statistical Moments (Mean, StdDev, Skewness, kurtosis)";
     }
 }
