@@ -34,6 +34,7 @@ import net.semanticmetadata.lire.imageanalysis.LireFeature;
  * @author: Savvas A. Chatzichristofis, savvash@gmail.com
  */
 public class JCD implements LireFeature {
+
     protected double[] data;
 
     public JCD(CEDD cedd, FCTH fcth) {
@@ -42,7 +43,6 @@ public class JCD implements LireFeature {
 
     public JCD() {
     }
-
 
     public void extract(BufferedImage bimg) {
         CEDD c = new CEDD();
@@ -58,15 +58,17 @@ public class JCD implements LireFeature {
 
     public float getDistance(VisualDescriptor vd) {
         // Check if instance of the right class ...
-        if (!(vd instanceof JCD))
+        if (!(vd instanceof JCD)) {
             throw new UnsupportedOperationException("Wrong descriptor.");
+        }
 
         // casting ...
         JCD ch = (JCD) vd;
 
         // check if parameters are fitting ...
-        if ((ch.data.length != data.length))
+        if ((ch.data.length != data.length)) {
             throw new UnsupportedOperationException("Histogram lengths or color spaces do not match");
+        }
 
         // Tanimoto coefficient
         double Result = 0;
@@ -80,22 +82,23 @@ public class JCD implements LireFeature {
             Temp2 += data[i];
         }
 
-        if (Temp1 == 0 || Temp2 == 0) Result = 100;
-        if (Temp1 == 0 && Temp2 == 0) Result = 0;
+        if (Temp1 == 0 || Temp2 == 0) {
+            Result = 100;
+        }
+        if (Temp1 == 0 && Temp2 == 0) {
+            Result = 0;
+        }
 
         if (Temp1 > 0 && Temp2 > 0) {
             for (int i = 0; i < ch.data.length; i++) {
                 TempCount1 += (ch.data[i] / Temp1) * (data[i] / Temp2);
                 TempCount2 += (data[i] / Temp2) * (data[i] / Temp2);
                 TempCount3 += (ch.data[i] / Temp1) * (ch.data[i] / Temp1);
-
             }
 
-            Result = (100 - 100 * (TempCount1 / (TempCount2 + TempCount3
-                    - TempCount1))); //Tanimoto
+            Result = (100 - 100 * (TempCount1 / (TempCount2 + TempCount3 - TempCount1))); //Tanimoto
         }
         return (float) Result;
-
     }
 
     public String getStringRepresentation() {
@@ -107,7 +110,6 @@ public class JCD implements LireFeature {
     }
 
     private double[] joinHistograms(double[] CEDD, double[] FCTH) {
-
         double[] JointDescriptor = new double[168];
 
         double[] TempTable1 = new double[24];
@@ -123,7 +125,6 @@ public class JCD implements LireFeature {
 
         }
 
-
         for (int i = 0; i < 24; i++) {
             JointDescriptor[i] = (TempTable1[i] + CEDD[i]) / 2;
             JointDescriptor[24 + i] = (TempTable2[i] + CEDD[48 + i]) / 2;
@@ -132,15 +133,12 @@ public class JCD implements LireFeature {
             JointDescriptor[96 + i] = CEDD[120 + i];
             JointDescriptor[120 + i] = TempTable4[i];
             JointDescriptor[144 + i] = CEDD[24 + i];
-
         }
 
         return (JointDescriptor);
-
     }
-    
-    public double[] getData(){
+
+    public double[] getData() {
         return data;
     }
-
 }
