@@ -85,7 +85,6 @@ public class Haralick extends AbstractFeatureDescriptor {
     // -
     private int haralickDist;
     double[] features = null;
-//    private ByteProcessor image;
 
     /**
      * Constructs a haralick detector with default parameters.
