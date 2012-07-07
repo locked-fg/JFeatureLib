@@ -49,17 +49,17 @@ public class RGBHistogram extends AbstractFeatureDescriptor {
 
         ColorProcessor.setWeightingFactors(1, 0, 0);
         System.arraycopy(image.getHistogram(), 0, features, 0, 256);
-        firePropertyChange(new Progress(30));
+        firePropertyChange(new Progress(33));
 
         ColorProcessor.setWeightingFactors(0, 1, 0);
         System.arraycopy(image.getHistogram(), 0, features, 256, 256);
-        firePropertyChange(new Progress(60));
+        firePropertyChange(new Progress(66));
 
         ColorProcessor.setWeightingFactors(0, 0, 1);
         System.arraycopy(image.getHistogram(), 0, features, 512, 256);
-        firePropertyChange(new Progress(90));
 
         addData(features);
+        firePropertyChange(Progress.END);
     }
 
     /**
