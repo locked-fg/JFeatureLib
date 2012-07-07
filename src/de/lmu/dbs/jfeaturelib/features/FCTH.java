@@ -5,10 +5,11 @@ import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
 /**
- * The FCTH feature was created, implemented and provided by Savvas A. Chatzichristofis<br/> More information can be
- * found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis, <i>FCTH: Fuzzy Color and Texture Histogram - A Low
- * Level Feature for Accurate Image Retrieval</i>, in Proceedings of the Ninth International Workshop on Image Analysis
- * for Multimedia Interactive Services, IEEE, Klagenfurt, May, 2008.
+ * The FCTH feature was created, implemented and provided by Savvas A. Chatzichristofis
+ *
+ * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis, <i>FCTH: Fuzzy Color and
+ * Texture Histogram - A Low Level Feature for Accurate Image Retrieval</i>, in Proceedings of the Ninth International
+ * Workshop on Image Analysis for Multimedia Interactive Services, IEEE, Klagenfurt, May, 2008.
  */
 public class FCTH extends AbstractFeatureDescriptor {
 

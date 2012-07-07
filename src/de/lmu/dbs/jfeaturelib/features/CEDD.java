@@ -2,22 +2,15 @@ package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
 import ij.process.ImageProcessor;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
- * The CEDD feature was created, implemented and provided by Savvas A.
- * Chatzichristofis<br/> More information can be found in: Savvas A.
- * Chatzichristofis and Yiannis S. Boutalis,
+ * The CEDD feature was created, implemented and provided by Savvas A. Chatzichristofis
  *
- * <i>CEDD: Color and Edge Directivity Descriptor. A Compact Descriptor for
- * Image Indexing and Retrieval</i>, A. Gasteratos, M. Vincze, and J.K. Tsotsos
- * (Eds.): ICVS 2008, LNCS 5008, pp. 312-322, 2008.
+ * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis,
+ *
+ * <i>CEDD: Color and Edge Directivity Descriptor. A Compact Descriptor for Image Indexing and Retrieval</i>, A.
+ * Gasteratos, M. Vincze, and J.K. Tsotsos (Eds.): ICVS 2008, LNCS 5008, pp. 312-322, 2008.
  */
 public class CEDD extends AbstractFeatureDescriptor {
 
@@ -26,13 +19,11 @@ public class CEDD extends AbstractFeatureDescriptor {
     private double T2 = 0.98;
     private double T3 = 0.98;
     private boolean compact = false;
-    private de.lmu.dbs.jfeaturelib.features.lire.CEDD cedd;
 
     /**
      * Constructor with default parameters
      */
     public CEDD() {
-        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, compact);
     }
 
     /**
@@ -50,12 +41,11 @@ public class CEDD extends AbstractFeatureDescriptor {
         this.T2 = Th2;
         this.T3 = Th3;
         this.compact = compactDescriptor;
-        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, compact);
     }
 
     @Override
     public void run(ImageProcessor ip) {
-        cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, compact);
+        de.lmu.dbs.jfeaturelib.features.lire.CEDD cedd = new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, compact);
 
         firePropertyChange(Progress.START);
         cedd.extract(ip.getBufferedImage());
@@ -65,7 +55,7 @@ public class CEDD extends AbstractFeatureDescriptor {
 
     @Override
     public String getDescription() {
-        return cedd.getStringRepresentation();
+        return new de.lmu.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, compact).getStringRepresentation();
     }
 
     @Override
