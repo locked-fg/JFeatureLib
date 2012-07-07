@@ -23,7 +23,9 @@ public class Tamura extends AbstractFeatureDescriptor {
 
     @Override
     public String getDescription() {
-        return "Tamura features";
+        String s = "Tamura filter: ";
+        s += new de.lmu.dbs.jfeaturelib.features.lire.Tamura().getStringRepresentation();
+        return s;
     }
 
     @Override
