@@ -9,14 +9,13 @@ import java.util.EnumSet;
  */
 public class FuzzyHistogram extends AbstractFeatureDescriptor {
 
-    private final de.lmu.dbs.jfeaturelib.features.lire.FuzzyColorHistogram fuzzy;
-
     public FuzzyHistogram() {
-        fuzzy = new de.lmu.dbs.jfeaturelib.features.lire.FuzzyColorHistogram();
     }
 
     @Override
     public void run(ImageProcessor ip) {
+        de.lmu.dbs.jfeaturelib.features.lire.FuzzyColorHistogram fuzzy = new de.lmu.dbs.jfeaturelib.features.lire.FuzzyColorHistogram();
+
         firePropertyChange(Progress.START);
         fuzzy.extract(ip.getBufferedImage());
         addData(fuzzy.getData());
@@ -25,7 +24,7 @@ public class FuzzyHistogram extends AbstractFeatureDescriptor {
 
     @Override
     public String getDescription() {
-        return fuzzy.getStringRepresentation();
+        return new de.lmu.dbs.jfeaturelib.features.lire.FuzzyColorHistogram().getStringRepresentation();
     }
 
     @Override
