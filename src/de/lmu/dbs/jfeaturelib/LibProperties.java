@@ -6,9 +6,8 @@ import java.io.IOException;
 
 /**
  * The property wrapper class for
- * <code>jfeaturelib.properties</code>. This class is used to access the
- * properties of jfeaturelib.properties in an easier way without having to
- * request keys by magic strings.
+ * <code>jfeaturelib.properties</code>. This class is used to access the properties of jfeaturelib.properties in an
+ * easier way without having to request keys by magic strings.
  *
  * For example in order to obtain the value of
  * <code>sift.binary</code>, you can request
@@ -30,10 +29,10 @@ public class LibProperties extends PropertyContainer {
      * {@link http://www.cs.ubc.ca/~lowe/keypoints/}
      */
     public static final String SIFT_BINARY = "sift.binary";
+    public static final String IMAGE_FORMATS = "imageFormats";
 
     /**
-     * Constructor that initializes the properties container with the file
-     * defined in BASE_FILE.
+     * Constructor that initializes the properties container with the file defined in BASE_FILE.
      *
      * @see #BASE_FILE
      * @throws IOException
