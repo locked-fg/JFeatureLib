@@ -1,9 +1,0 @@
-de.lmu.dbs.jfeaturelib
-de.lmu.dbs.jfeaturelib.edgeDetector
-de.lmu.dbs.jfeaturelib.features
-de.lmu.dbs.jfeaturelib.features.lire
-de.lmu.dbs.jfeaturelib.features.sift
-de.lmu.dbs.jfeaturelib.features.surf
-de.lmu.dbs.jfeaturelib.pointDetector
-de.lmu.dbs.jfeaturelib.pointDetector.FAST
-de.lmu.dbs.jfeaturelib.utils
