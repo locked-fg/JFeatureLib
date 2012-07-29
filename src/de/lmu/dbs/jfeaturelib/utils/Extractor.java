@@ -26,6 +26,9 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 /**
+ * Class used as a commandline tool to extract features from directories of
+ * images. The features are then written to a outfile.
+ *
  * @author Franz
  */
 public class Extractor {
