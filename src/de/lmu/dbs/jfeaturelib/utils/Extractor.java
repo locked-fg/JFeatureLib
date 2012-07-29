@@ -78,15 +78,13 @@ public class Extractor {
         InputStream is = Extractor.class.getResourceAsStream("/META-INF/logging.properties");
         LogManager.getLogManager().readConfiguration(is);
 
-
         Extractor extractor = new Extractor();
         CmdLineParser parser = new CmdLineParser(extractor);
         try {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
-//            log.log(Level.WARNING, "", e);
             System.err.println(e.getMessage());
-            System.err.println("java -jar myprogram.jar [options...] arguments...");
+            System.err.println("java -jar JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
             parser.printUsage(System.err);
             return;
         }
