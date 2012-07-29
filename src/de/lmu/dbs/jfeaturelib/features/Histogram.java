@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.util.EnumSet;
 
 /**
- * Several Histograms
+ * Class that generates several types of histograms
+ *
+ * @author graf
  */
 public class Histogram extends AbstractFeatureDescriptor {
 
