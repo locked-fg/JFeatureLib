@@ -52,7 +52,7 @@ public class Extractor {
     @Option(name = "-D", usage = "use this feature descriptor (e.G: Sift)", required = true)
     private String descriptor = null;
     //
-    @Option(name = "-c", usage = "image class")
+    @Option(name = "-c", usage = "image class that should be written to the output file")
     private String imageClass = null;
     // other command line parameters than options
     // @Argument
