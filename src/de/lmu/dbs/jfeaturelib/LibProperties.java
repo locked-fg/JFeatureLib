@@ -28,7 +28,7 @@ public class LibProperties extends PropertyContainer {
      *
      * {@link http://www.cs.ubc.ca/~lowe/keypoints/}
      */
-    public static final String SIFT_BINARY = "sift.binary";
+    public static final String SIFT_BINARY = "feature.sift.binary";
     public static final String IMAGE_FORMATS = "imageFormats";
 
     /**
