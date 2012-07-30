@@ -42,17 +42,12 @@ import java.util.logging.Logger;
 public class Sift extends AbstractFeatureDescriptor {
 
     static final Logger log = Logger.getLogger(Sift.class.getName());
-    private final File siftBinary;
+    private File siftBinary = null;
 
     /**
-     * Initialize the Sift wrapper with the sift binary file given in the
-     * jfeaturelib.properties file.
-     *
-     * @see LibProperties#SIFT_BINARY
-     * @throws IOException
+     * Initialize the Sift wrapper without a binary being set!
      */
-    public Sift() throws IOException {
-        this(LibProperties.get().getFile(LibProperties.SIFT_BINARY));
+    public Sift() {
     }
 
     /**
@@ -66,6 +61,11 @@ public class Sift extends AbstractFeatureDescriptor {
             throw new IOException("Cannot execute sift binary at: " + siftBinary.getAbsolutePath());
         }
         this.siftBinary = siftBinary;
+    }
+
+    @Override
+    public void setProperties(LibProperties properties) throws IOException {
+        siftBinary = LibProperties.get().getFile(LibProperties.SIFT_BINARY);
     }
 
     /**

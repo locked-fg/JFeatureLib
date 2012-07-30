@@ -5,8 +5,9 @@ import ij.process.ImageProcessor;
 import java.util.EnumSet;
 
 /**
- * Implementation of a Gabor texture features done by Marko Keuschnig &
- * Christian Penz
+ * Implementation of a Gabor texture features
+ *
+ * @author Marko Keuschnig & Christian Penz
  */
 public class Gabor extends AbstractFeatureDescriptor {
 

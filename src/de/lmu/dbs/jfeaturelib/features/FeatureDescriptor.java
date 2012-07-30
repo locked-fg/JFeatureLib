@@ -1,6 +1,8 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Descriptor;
+import de.lmu.dbs.jfeaturelib.LibProperties;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,4 +34,12 @@ public interface FeatureDescriptor extends Descriptor {
      * @return semantic description of getFeatures or null.
      */
     String getDescription();
+
+    /**
+     * Injects the properties class that can be used to retrieve several
+     * properties.
+     * 
+     * @throws IOException if something went wrong 
+     */
+    void setProperties(LibProperties properties) throws IOException;
 }

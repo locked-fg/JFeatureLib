@@ -1,9 +1,10 @@
 package de.lmu.dbs.jfeaturelib.edgeDetector;
 
+import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
 import de.lmu.ifi.dbs.utilities.Arrays2;
+import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author Benedikt
  * @author Franz
  */
-public class Kernel implements FeatureDescriptor {
+public class Kernel implements Descriptor {
 
     /**
      * Standard 3x3 SOBEL mask (1 0 -1, 2, 0, -2, 1, 0, -1 )
@@ -231,29 +232,29 @@ public class Kernel implements FeatureDescriptor {
         return ret;
     }
 
-    /**
-     * Returns the image edges as INT_ARGB array. This can be used to create a
-     * buffered image, if the dimensions are known.
-     */
-    @Override
-    public List<double[]> getFeatures() {
-        if (result != null) {
-            ArrayList<double[]> thisResult = new ArrayList<>(1);
-            thisResult.add(Arrays2.convertToDouble(result));
-            return thisResult;
-        } else {
-            return Collections.EMPTY_LIST;
-        }
-    }
+//    /**
+//     * Returns the image edges as INT_ARGB array. This can be used to create a
+//     * buffered image, if the dimensions are known.
+//     */
+//    @Override
+//    public List<double[]> getFeatures() {
+//        if (result != null) {
+//            ArrayList<double[]> thisResult = new ArrayList<>(1);
+//            thisResult.add(Arrays2.convertToDouble(result));
+//            return thisResult;
+//        } else {
+//            return Collections.EMPTY_LIST;
+//        }
+//    }
 
-    /**
-     * Returns information about the getFeauture returns in a String array.
-     */
-    @Override
-    public String getDescription() {
-        String info = "Each pixel value";
-        return info;
-    }
+//    /**
+//     * Returns information about the getFeauture returns in a String array.
+//     */
+//    @Override
+//    public String getDescription() {
+//        String info = "Each pixel value";
+//        return info;
+//    }
 
     /**
      * Defines the capability of the algorithm.

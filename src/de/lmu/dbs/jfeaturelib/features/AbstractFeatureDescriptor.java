@@ -1,9 +1,11 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.LibProperties;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,5 +108,9 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     protected void firePropertyChange(Progress event) {
         pcs.firePropertyChange(Progress.getName(), previous, event);
         previous = event;
+    }
+
+    @Override
+    public void setProperties(LibProperties properties) throws IOException {
     }
 }

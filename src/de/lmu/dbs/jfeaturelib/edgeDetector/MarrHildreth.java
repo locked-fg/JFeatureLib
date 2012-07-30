@@ -1,25 +1,21 @@
 package de.lmu.dbs.jfeaturelib.edgeDetector;
 
+import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
-import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * The Marr Hildreth edge detector uses the Laplacian of the Gaussian function
  * to detect edges. Faster runtimes could by achieved by using Difference of
  * Gaussians instead.
  */
-public class MarrHildreth implements FeatureDescriptor {
+public class MarrHildreth implements Descriptor {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private ColorProcessor image;
@@ -183,29 +179,29 @@ public class MarrHildreth implements FeatureDescriptor {
     }
     //</editor-fold>
 
-    /**
-    * Returns the image edges as INT_ARGB array.
-    * This can be used to create a buffered image, if the dimensions are known.
-    */
-    @Override
-    public List<double[]> getFeatures() {
-        if(image != null){
-            int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
-            ArrayList<double[]> list = new ArrayList<>(1);
-            list.add(Arrays2.convertToDouble(data));
-            return list;
-        }
-        else{
-            return Collections.EMPTY_LIST;
-        }
-    } 
+//    /**
+//    * Returns the image edges as INT_ARGB array.
+//    * This can be used to create a buffered image, if the dimensions are known.
+//    */
+//    @Override
+//    public List<double[]> getFeatures() {
+//        if(image != null){
+//            int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
+//            ArrayList<double[]> list = new ArrayList<>(1);
+//            list.add(Arrays2.convertToDouble(data));
+//            return list;
+//        }
+//        else{
+//            return Collections.EMPTY_LIST;
+//        }
+//    } 
 
-    /**
-     * Returns information about the getFeauture returns in a String array.
-     */
-    @Override
-    public String getDescription() {
-        String info = "Each pixel value";
-        return info;
-    }
+//    /**
+//     * Returns information about the getFeauture returns in a String array.
+//     */
+//    @Override
+//    public String getDescription() {
+//        String info = "Each pixel value";
+//        return info;
+//    }
 }

@@ -28,8 +28,10 @@ public class LibProperties extends PropertyContainer {
      *
      * {@link http://www.cs.ubc.ca/~lowe/keypoints/}
      */
-    public static final String SIFT_BINARY = "feature.sift.binary";
+    public static final String SIFT_BINARY = "features.sift.binary";
     public static final String IMAGE_FORMATS = "imageFormats";
+    public static final String HISTOGRAMS_TYPE = "features.histogram.type";
+    public static final String HISTOGRAMS_BINS = "features.histogram.bins";
 
     /**
      * Constructor that initializes the properties container with the file defined in BASE_FILE.
