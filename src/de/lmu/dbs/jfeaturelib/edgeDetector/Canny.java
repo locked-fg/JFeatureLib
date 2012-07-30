@@ -1,9 +1,8 @@
 package de.lmu.dbs.jfeaturelib.edgeDetector;
 
+import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
-import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
-import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -23,7 +22,7 @@ import java.util.*;
  * @author Tom Gibara
  * @see http://www.tomgibara.com/computer-vision/canny-edge-detector
  */
-public class Canny implements FeatureDescriptor {
+public class Canny implements Descriptor {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     // statics
@@ -545,27 +544,19 @@ public class Canny implements FeatureDescriptor {
     }
     //</editor-fold>
 
-    /**
-     * Returns the image edges as INT_ARGB array. This can be used to create a
-     * buffered image, if the dimensions are known.
-     */
-    @Override
-    public List<double[]> getFeatures() {
-        if (data != null) {
-            ArrayList<double[]> thisResult = new ArrayList<>(1);
-            thisResult.add(Arrays2.convertToDouble(data));
-            return thisResult;
-        } else {
-            return Collections.EMPTY_LIST;
-        }
-    }
+//    /**
+//     * Returns the image edges as INT_ARGB array. This can be used to create a
+//     * buffered image, if the dimensions are known.
+//     */
+//    @Override
+//    public List<double[]> getFeatures() {
+//        if (data != null) {
+//            ArrayList<double[]> thisResult = new ArrayList<>(1);
+//            thisResult.add(Arrays2.convertToDouble(data));
+//            return thisResult;
+//        } else {
+//            return Collections.EMPTY_LIST;
+//        }
+//    }
 
-    /**
-     * Returns information about the getFeauture returns in a String array.
-     */
-    @Override
-    public String getDescription() {
-        String info = "Each pixel value";
-        return info;
-    }
 }

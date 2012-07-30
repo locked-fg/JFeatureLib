@@ -64,6 +64,8 @@ public class Extractor {
     // FIXME move to properties file
     private static final int WRITE_BUFFER = 1024 * 1024; // bytes
     private static final String NL = "\n";
+    //
+    private final LibProperties properties;
     private final String[] imageFormats;
     private String separator = ", ";
     private int lineCounter = 0;
@@ -93,8 +95,8 @@ public class Extractor {
     }
 
     private Extractor() throws IOException {
-        LibProperties lib = LibProperties.get();
-        imageFormats = lib.getString(LibProperties.IMAGE_FORMATS).split(" *, *");
+        properties = LibProperties.get();
+        imageFormats = properties.getString(LibProperties.IMAGE_FORMATS).split(" *, *");
         for (int i = 0; i < imageFormats.length; i++) {
             imageFormats[i] = imageFormats[i].trim();
         }
@@ -165,7 +167,7 @@ public class Extractor {
 
     private void processImages(Collection<File> images) {
         for (File file : images) {
-            pool.submit(new Task(file));
+            pool.submit(new Task(file, properties));
         }
     }
 
@@ -224,9 +226,11 @@ public class Extractor {
     private class Task implements Runnable {
 
         private final File file;
+        private final LibProperties properties;
 
-        public Task(File file) {
+        public Task(File file, LibProperties properties) {
             this.file = file;
+            this.properties = properties;
         }
 
         @Override
@@ -237,6 +241,7 @@ public class Extractor {
                 ImageProcessor processor = iplus.getProcessor();
 
                 FeatureDescriptor fd = (FeatureDescriptor) descriptorClazz.newInstance();
+                fd.setProperties(properties);
                 fd.run(processor);
                 List<double[]> features = fd.getFeatures();
 

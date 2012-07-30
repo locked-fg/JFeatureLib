@@ -8,11 +8,12 @@ import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.ColorModel;
-import java.io.IOException;
 import java.util.EnumSet;
 
 /**
- * Class that generates several types of histograms
+ * Class that generates several types of histograms.
+ *
+ * This class replaces RGBHistogram and GrayHistogram in previous versions.
  *
  * @author graf
  */
@@ -22,17 +23,16 @@ public class Histogram extends AbstractFeatureDescriptor {
 
         RGB, Red, Green, Blue, HSB, Hue, Saturation, Brightness, Gray
     };
-    private final TYPE type;
-    private final int bins;
+    private TYPE type;
+    private int bins;
 
-    /**
-     * Constructs a histogram with default parameters defined in the properties
-     * file.
-     */
-    public Histogram() throws IOException {
-        LibProperties props = LibProperties.get();
-        type = TYPE.valueOf(props.getString(LibProperties.HISTOGRAMS_TYPE));
-        bins = props.getInteger(LibProperties.HISTOGRAMS_BINS);
+    public Histogram() {
+    }
+
+    @Override
+    public void setProperties(LibProperties properties) {
+        type = TYPE.valueOf(properties.getString(LibProperties.HISTOGRAMS_TYPE));
+        bins = properties.getInteger(LibProperties.HISTOGRAMS_BINS);
     }
 
     /**
