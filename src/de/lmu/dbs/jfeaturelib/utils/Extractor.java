@@ -57,6 +57,10 @@ public class Extractor {
     //
     @Option(name = "-c", usage = "image class that should be written to the output file")
     private String imageClass = null;
+    //
+    @Option(name = "--help", usage = "show this screen")
+    private boolean showHelp = false;
+    
     // other command line parameters than options
     // @Argument
     // private List<String> arguments = new ArrayList<>();
@@ -89,6 +93,12 @@ public class Extractor {
             System.err.println("java -jar JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
             parser.printUsage(System.err);
             return;
+        }
+        
+        if (extractor.showHelp) {
+            System.err.println("java -jar JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
+            parser.printUsage(System.out);
+            System.exit(0);
         }
 
         extractor.run();
