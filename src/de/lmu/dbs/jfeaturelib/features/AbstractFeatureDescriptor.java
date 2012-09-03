@@ -7,6 +7,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -112,5 +113,10 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
 
     @Override
     public void setProperties(LibProperties properties) throws IOException {
+    }
+
+    @Override
+    public EnumSet<Supports> supports() {
+        return DOES_ALL;
     }
 }

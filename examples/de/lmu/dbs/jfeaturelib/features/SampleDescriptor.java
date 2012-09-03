@@ -2,7 +2,6 @@ package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
 import ij.process.ImageProcessor;
-import java.util.EnumSet;
 import java.util.logging.Logger;
 
 /**
@@ -12,16 +11,11 @@ import java.util.logging.Logger;
  */
 public class SampleDescriptor extends AbstractFeatureDescriptor {
 
-    static final Logger log = Logger.getLogger(Thumbnail.class.getName());
+    static final Logger log = Logger.getLogger(SampleDescriptor.class.getName());
 
     @Override
     public String getDescription() {
-        return "A sample descript that just returns some arbitray numbers";
-    }
-
-    @Override
-    public EnumSet<Supports> supports() {
-        return DOES_ALL;
+        return "A sample descript that just returns some arbitrary numbers";
     }
 
     @Override
