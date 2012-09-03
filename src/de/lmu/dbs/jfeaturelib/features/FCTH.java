@@ -13,10 +13,6 @@ import java.util.EnumSet;
  */
 public class FCTH extends AbstractFeatureDescriptor {
 
-    // Constructor
-    public FCTH() {
-    }
-
     @Override
     public void run(ImageProcessor ip) {
         de.lmu.dbs.jfeaturelib.features.lire.FCTH fcth = new de.lmu.dbs.jfeaturelib.features.lire.FCTH();

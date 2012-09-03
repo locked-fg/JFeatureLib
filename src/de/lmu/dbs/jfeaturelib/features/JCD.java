@@ -9,9 +9,6 @@ import java.util.EnumSet;
  */
 public class JCD extends AbstractFeatureDescriptor {
 
-    public JCD() {
-    }
-
     @Override
     public void run(ImageProcessor ip) {
         de.lmu.dbs.jfeaturelib.features.lire.JCD jcd = new de.lmu.dbs.jfeaturelib.features.lire.JCD();

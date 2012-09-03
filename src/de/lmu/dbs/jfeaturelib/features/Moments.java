@@ -16,11 +16,6 @@ import java.util.EnumSet;
 public class Moments extends AbstractFeatureDescriptor {
 
     @Override
-    public EnumSet<Supports> supports() {
-        return EnumSet.allOf(Supports.class);
-    }
-
-    @Override
     public void run(ImageProcessor ip) {
         int STATS = ImageStatistics.MEAN
                 + ImageStatistics.STD_DEV

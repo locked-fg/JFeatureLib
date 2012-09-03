@@ -223,23 +223,6 @@ public class Histogram extends AbstractFeatureDescriptor {
         }
     }
 
-    /**
-     * Defines the capability of the algorithm.
-     *
-     * @see PlugInFilter
-     * @see #supports()
-     */
-    @Override
-    public EnumSet<Supports> supports() {
-        EnumSet set = EnumSet.of(
-                Supports.NoChanges,
-                Supports.DOES_8C,
-                Supports.DOES_8G,
-                Supports.DOES_RGB,
-                Supports.Masking);
-        return set;
-    }
-
     @Override
     public String getDescription() {
         return "Histograms";
