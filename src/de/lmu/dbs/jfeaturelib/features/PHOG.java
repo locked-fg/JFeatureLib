@@ -7,6 +7,7 @@ import de.lmu.dbs.jfeaturelib.utils.Interpolated1DHistogram;
 import de.lmu.ifi.dbs.utilities.Math2;
 import de.lmu.ifi.dbs.utilities.Vectors;
 import de.lmu.ifi.dbs.utilities.primitiveArrays.DoubleArray;
+import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.awt.Rectangle;
 import java.util.EnumSet;
@@ -46,6 +47,10 @@ public class PHOG extends AbstractFeatureDescriptor {
     @Override
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
+        if (!(ip instanceof ByteProcessor)){
+            ip = ip.convertToByte(true);
+        }
+        
         gradientSource.setIp(ip);
         initFeature();
 
@@ -104,7 +109,8 @@ public class PHOG extends AbstractFeatureDescriptor {
 
     @Override
     public EnumSet<Supports> supports() {
-        return EnumSet.of(Supports.DOES_8G, Supports.Masking);
+        return EnumSet.of(Supports.DOES_8G, Supports.DOES_8C, Supports.DOES_16, 
+                Supports.DOES_32, Supports.Masking);
     }
 
     @Override
