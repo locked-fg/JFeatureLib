@@ -6,8 +6,9 @@ import java.io.IOException;
 
 /**
  * The property wrapper class for
- * <code>jfeaturelib.properties</code>. This class is used to access the properties of jfeaturelib.properties in an
- * easier way without having to request keys by magic strings.
+ * <code>jfeaturelib.properties</code>. This class is used to access the
+ * properties of jfeaturelib.properties in an easier way without having to
+ * request keys by magic strings.
  *
  * For example in order to obtain the value of
  * <code>sift.binary</code>, you can request
@@ -32,10 +33,23 @@ public class LibProperties extends PropertyContainer {
     public static final String IMAGE_FORMATS = "imageFormats";
     public static final String HISTOGRAMS_TYPE = "features.histogram.type";
     public static final String HISTOGRAMS_BINS = "features.histogram.bins";
+    // Phog
+    public static final String PHOG_BINS = "features.phog.bins";
+    public static final String PHOG_RECURSIONS = "features.phog.recursions";
+
+    // shapes
     public static final String POLYGON_EVOLUTION = "shapefeatures.polygonevolution.iterations";
+    // Edges
+    // canny
+    public static final String CANNY_LOW_THRESHOLD = "edge.canny.lowThreshold";
+    public static final String CANNY_HIGH_THRESHOLD = "edge.canny.highThreshold";
+    public static final String CANNY_KERNEL_RADIUS = "edge.canny.gaussianKernelRadius";
+    public static final String CANNY_KERNEL_WIDTH = "edge.canny.gaussianKernelWidth";
+    public static final String CANNY_NORMALIZE_CONTRAST = "edge.canny.contrastNormalized";
 
     /**
-     * Constructor that initializes the properties container with the file defined in BASE_FILE.
+     * Constructor that initializes the properties container with the file
+     * defined in BASE_FILE.
      *
      * @see #BASE_FILE
      * @throws IOException

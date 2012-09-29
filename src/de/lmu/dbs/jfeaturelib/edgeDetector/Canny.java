@@ -1,14 +1,14 @@
 package de.lmu.dbs.jfeaturelib.edgeDetector;
 
-import de.lmu.dbs.jfeaturelib.Descriptor;
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
+import de.lmu.dbs.jfeaturelib.LibProperties;
 import de.lmu.dbs.jfeaturelib.Progress;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -22,9 +22,8 @@ import java.util.*;
  * @author Tom Gibara
  * @see http://www.tomgibara.com/computer-vision/canny-edge-detector
  */
-public class Canny implements Descriptor {
+public class Canny extends ConfigurableDescriptor {
 
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     // statics
     private final static float GAUSSIAN_CUT_OFF = 0.005f;
     private final static float MAGNITUDE_SCALE = 100F;
@@ -57,6 +56,15 @@ public class Canny implements Descriptor {
         gaussianKernelRadius = 2f;
         gaussianKernelWidth = 16;
         contrastNormalized = false;
+    }
+
+    @Override
+    public void setProperties(LibProperties properties) throws IOException {
+        lowThreshold = properties.getFloat(LibProperties.CANNY_LOW_THRESHOLD);
+        highThreshold = properties.getFloat(LibProperties.CANNY_HIGH_THRESHOLD);
+        gaussianKernelRadius = properties.getFloat(LibProperties.CANNY_KERNEL_RADIUS);
+        gaussianKernelWidth = properties.getInteger(LibProperties.CANNY_KERNEL_WIDTH);
+        contrastNormalized = properties.getBoolean(LibProperties.CANNY_NORMALIZE_CONTRAST);
     }
 
     private void process() {
@@ -239,16 +247,15 @@ public class Canny implements Descriptor {
                  */
                 if (xGrad * yGrad <= (float) 0 /*(1)*/
                         ? Math.abs(xGrad) >= Math.abs(yGrad) /*(2)*/
-                                ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /*(3)*/
-                                        && tmp > Math.abs(yGrad * swMag - (xGrad + yGrad) * wMag) /*(4)*/
-                                : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * neMag - (yGrad + xGrad) * nMag) /*(3)*/
-                                        && tmp > Math.abs(xGrad * swMag - (yGrad + xGrad) * sMag) /*(4)*/
+                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * neMag - (xGrad + yGrad) * eMag) /*(3)*/
+                        && tmp > Math.abs(yGrad * swMag - (xGrad + yGrad) * wMag) /*(4)*/
+                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * neMag - (yGrad + xGrad) * nMag) /*(3)*/
+                        && tmp > Math.abs(xGrad * swMag - (yGrad + xGrad) * sMag) /*(4)*/
                         : Math.abs(xGrad) >= Math.abs(yGrad) /*(2)*/
-                                ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * seMag + (xGrad - yGrad) * eMag) /*(3)*/
-                                        && tmp > Math.abs(yGrad * nwMag + (xGrad - yGrad) * wMag) /*(4)*/
-                                : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * seMag + (yGrad - xGrad) * sMag) /*(3)*/
-                                        && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /*(4)*/
-                        ) {
+                        ? (tmp = Math.abs(xGrad * gradMag)) >= Math.abs(yGrad * seMag + (xGrad - yGrad) * eMag) /*(3)*/
+                        && tmp > Math.abs(yGrad * nwMag + (xGrad - yGrad) * wMag) /*(4)*/
+                        : (tmp = Math.abs(yGrad * gradMag)) >= Math.abs(xGrad * seMag + (yGrad - xGrad) * sMag) /*(3)*/
+                        && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /*(4)*/) {
                     magnitude[index] = gradMag >= MAGNITUDE_LIMIT ? MAGNITUDE_MAX : (int) (MAGNITUDE_SCALE * gradMag);
                     //NOTE: The orientation of the edge is not employed by this
                     //implementation. It is a simple matter to compute it at
@@ -401,22 +408,17 @@ public class Canny implements Descriptor {
      */
     @Override
     public void run(ImageProcessor ip) {
-        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
+        startProgress();
 
         setSourceImage(ip.getBufferedImage());
         process();
         writeResult(ip);
 
-        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
+        endProgress();
     }
 
     private void writeResult(ImageProcessor ip) {
         ip.insert(new ColorProcessor(edgesImage), 0, 0);
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
     }
 
     //<editor-fold defaultstate="collapsed" desc="accessor methods">
@@ -543,7 +545,6 @@ public class Canny implements Descriptor {
         this.sourceImage = srcImage;
     }
     //</editor-fold>
-
 //    /**
 //     * Returns the image edges as INT_ARGB array. This can be used to create a
 //     * buffered image, if the dimensions are known.
@@ -558,5 +559,4 @@ public class Canny implements Descriptor {
 //            return Collections.EMPTY_LIST;
 //        }
 //    }
-
 }

@@ -1,6 +1,8 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import de.lmu.dbs.jfeaturelib.LibProperties;
 import de.lmu.dbs.jfeaturelib.Progress;
+import de.lmu.dbs.jfeaturelib.edgeDetector.Canny;
 import de.lmu.dbs.jfeaturelib.utils.GradientImage;
 import de.lmu.dbs.jfeaturelib.utils.GradientSource;
 import de.lmu.dbs.jfeaturelib.utils.Interpolated1DHistogram;
@@ -10,7 +12,9 @@ import de.lmu.ifi.dbs.utilities.primitiveArrays.DoubleArray;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.EnumSet;
+import org.apache.log4j.Logger;
 
 /**
  * Generates Pyramid Histograms of Oriented Gradients, first introduced in
@@ -26,6 +30,7 @@ import java.util.EnumSet;
  */
 public class PHOG extends AbstractFeatureDescriptor {
 
+    private static final Logger log = Logger.getLogger(PHOG.class.getName());
     /*
      * Amount of bins for each histogram
      */
@@ -45,12 +50,18 @@ public class PHOG extends AbstractFeatureDescriptor {
     private Interpolated1DHistogram histogram;
 
     @Override
+    public void setProperties(LibProperties properties) throws IOException {
+        bins = properties.getInteger(LibProperties.PHOG_BINS);
+        recursions = properties.getInteger(LibProperties.PHOG_RECURSIONS);
+    }
+
+    @Override
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
-        if (!(ip instanceof ByteProcessor)){
+        if (!(ip instanceof ByteProcessor)) {
             ip = ip.convertToByte(true);
         }
-        
+
         gradientSource.setIp(ip);
         initFeature();
 
@@ -109,7 +120,7 @@ public class PHOG extends AbstractFeatureDescriptor {
 
     @Override
     public EnumSet<Supports> supports() {
-        return EnumSet.of(Supports.DOES_8G, Supports.DOES_8C, Supports.DOES_16, 
+        return EnumSet.of(Supports.DOES_8G, Supports.DOES_8C, Supports.DOES_16,
                 Supports.DOES_32, Supports.Masking);
     }
 
@@ -152,4 +163,32 @@ public class PHOG extends AbstractFeatureDescriptor {
         this.recursions = recursions;
     }
     //</editor-fold>
+
+    private static class CannyWrapper implements GradientSource {
+
+        private final Canny canny;
+        private boolean isProcessed = false;
+
+        private CannyWrapper(Canny canny) {
+            this.canny = canny;
+        }
+
+        @Override
+        public void setIp(ImageProcessor ip) {
+            if (isProcessed) {
+                throw new IllegalStateException();
+            }
+            canny.run(ip);
+        }
+
+        @Override
+        public double getLength(int x, int y) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public double getTheta(int x, int y) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
 }
