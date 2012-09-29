@@ -9,7 +9,7 @@ import ij.process.ImageProcessor;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Computes a normalized distance shape feature as Array List containing the

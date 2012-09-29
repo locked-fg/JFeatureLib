@@ -2,7 +2,7 @@ package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.Progress;
 import ij.process.ImageProcessor;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This is a sample descriptor

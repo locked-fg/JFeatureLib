@@ -9,8 +9,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingWorker;
+import org.apache.log4j.Logger;
 
 /**
  * Threadwrapper extends Swingworker and thus is used to instantiate a feature
@@ -52,7 +52,6 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
         this.descriptorClass = descriptorClass;
         this.file = file;
         this.number = number;
-        logger.setLevel(Level.FINEST);
 
         instantiate();
     }
@@ -62,7 +61,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
             descriptor = (FeatureDescriptor) descriptorClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             String msg = "Error during instantiation of " + descriptorClass.getSimpleName();
-            logger.severe(msg);
+            logger.warn(msg);
             throw new IllegalStateException(msg);
         }
 

@@ -19,8 +19,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -60,7 +61,6 @@ public class Extractor {
     //
     @Option(name = "--help", usage = "show this screen")
     private boolean showHelp = false;
-    
     // other command line parameters than options
     // @Argument
     // private List<String> arguments = new ArrayList<>();
@@ -94,7 +94,7 @@ public class Extractor {
             parser.printUsage(System.err);
             return;
         }
-        
+
         if (extractor.showHelp) {
             System.err.println("java -jar JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
             parser.printUsage(System.out);
@@ -131,19 +131,19 @@ public class Extractor {
                 throw new IllegalArgumentException("The class must derive from FeatureDescriptor");
             }
         } catch (ClassNotFoundException ex) {
-            log.log(Level.SEVERE, null, ex);
+            log.warn(ex.getMessage(), ex);
             throw new IllegalArgumentException("the descriptor class does not exist or cannot be created");
         }
         if (directory == null || !directory.isDirectory() || !directory.canRead()) {
             throw new IllegalArgumentException("the directory cannot be read or does not exist");
         }
         if (outFile == null || (outFile.exists() && !outFile.canWrite())) {
-            throw new IllegalArgumentException("the ourput file is not valid or not writable");
+            throw new IllegalArgumentException("the output file is not valid or not writable");
         }
         try {
             outFile.createNewFile();
         } catch (IOException ex) {
-            log.log(Level.SEVERE, null, ex);
+            log.warn(ex.getMessage(), ex);
             throw new IllegalArgumentException("the output file could not be created");
         }
         if (imageClass != null && !imageClass.matches("^\\w$")) {
@@ -161,7 +161,7 @@ public class Extractor {
         try {
             writer = new BufferedWriter(new FileWriter(outFile, append), WRITE_BUFFER);
         } catch (IOException ex) {
-            log.log(Level.SEVERE, null, ex);
+            log.warn(ex.getMessage(), ex);
             throw new IllegalStateException("could not open output file for writing");
         }
     }
@@ -170,7 +170,7 @@ public class Extractor {
         try {
             writer.close();
         } catch (IOException ex) {
-            log.log(Level.SEVERE, null, ex);
+            log.warn(ex.getMessage(), ex);
             throw new IllegalStateException("could not close output file");
         }
     }
@@ -190,7 +190,7 @@ public class Extractor {
             pool.shutdown();
             pool.awaitTermination(100, TimeUnit.DAYS);
         } catch (InterruptedException ex) {
-            log.log(Level.SEVERE, null, ex);
+            log.warn(ex.getMessage(), ex);
             throw new IllegalStateException("error while shutting down pool");
         }
     }
@@ -246,7 +246,7 @@ public class Extractor {
         @Override
         public void run() {
             try {
-                log.log(Level.INFO, "processing file {0}", file.getName());
+                log.info("processing file " + file.getName());
                 ImagePlus iplus = new Opener().openImage(file.getAbsolutePath());
                 ImageProcessor processor = iplus.getProcessor();
 
@@ -257,7 +257,7 @@ public class Extractor {
 
                 writeOutput(file, features);
             } catch (IOException | InstantiationException | IllegalAccessException ex) {
-                log.log(Level.SEVERE, null, ex);
+                log.warn(ex.getMessage(), ex);
             }
         }
     }

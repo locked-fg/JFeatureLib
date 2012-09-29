@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This descriptor is a wrapper class for the famous SIFT algorithm proposed by
@@ -92,7 +92,7 @@ public class Sift extends AbstractFeatureDescriptor {
             SiftWrapper siftWrapper = new SiftWrapper(siftBinary);
             addData(siftWrapper.getFeatures(ip));
         } catch (InterruptedException | IOException ex) {
-            log.log(Level.SEVERE, null, ex);
+            log.warn(ex.getMessage(), ex);
         }
     }
 

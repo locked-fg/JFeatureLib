@@ -5,7 +5,7 @@ import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Simple thumbnail representation that serializes the complete image to a pixel array.
@@ -53,7 +53,7 @@ public class Thumbnail extends AbstractFeatureDescriptor {
 
         } else {
             String message = "an array of type " + type.getCanonicalName() + " was not expected here.";
-            log.log(Level.WARNING, message);
+            log.warn(message);
             throw new IllegalStateException(message);
         }
 

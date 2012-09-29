@@ -8,19 +8,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Code that Wraps the Sift Executable.
- * 
+ *
  * <code>
  * SiftWrapper t = new SiftWrapper(new File("c:/temp/siftWin32.exe"));
  * List<double[]> features = t.getFeatures(new File("c:\\temp\\ant-sample.pgm"));
  * </code>
- * 
- * An image passed to this class is first saved as a .pgm in the systems temp 
+ *
+ * An image passed to this class is first saved as a .pgm in the systems temp
  * directory. This file is passed to the sift binary and deleted afterwards.
- * 
+ *
  * @author Franz Graf
  */
 public class SiftWrapper {
@@ -29,12 +29,14 @@ public class SiftWrapper {
     private static final String PREFIX = "JFeatureLib-SiftWrapper";
     private static final String SUFFIX = ".pgm";
     private static final Logger log = Logger.getLogger(SiftWrapper.class.getName());
-    /** process starting the executable */
+    /**
+     * process starting the executable
+     */
     private final ProcessBuilder processBuilder;
 
     /**
      * creates the sift wrapper
-     * 
+     *
      * @param siftBinary the SIFT executable
      * @throws IOException if exec is not an executable
      */
@@ -66,7 +68,7 @@ public class SiftWrapper {
     /**
      * Creates and returnes Sift-Features from the given file. The file MUST be
      * a PGM image.
-     * 
+     *
      * @param f PGM image
      * @return features
      * @throws IOException
@@ -76,7 +78,7 @@ public class SiftWrapper {
             InterruptedException {
         // primitive PGM check
         if (!f.getName().toLowerCase().endsWith(SUFFIX)) {
-            log.log(Level.WARNING, "File does not have a .pgm extension. Sure it is a PGM file?: {0}", f.getAbsolutePath());
+            log.warn("File does not have a .pgm extension. Sure it is a PGM file? " + f.getAbsolutePath());
         }
         return convertToArray(getFeatures(new FileInputStream(f)));
     }
@@ -93,12 +95,13 @@ public class SiftWrapper {
     }
 
     /**
-     * Extracts the features from the text input stream which is created by the sift binary.
-     * 
+     * Extracts the features from the text input stream which is created by the
+     * sift binary.
+     *
      * @param textInput
      * @return
      * @throws InterruptedException
-     * @throws IOException 
+     * @throws IOException
      */
     private List<SiftFeatureVector> getFeatures(InputStream textInput)
             throws InterruptedException, IOException {
@@ -120,16 +123,14 @@ public class SiftWrapper {
     /**
      * Extract features from the streamreader. Siftfeatures all have their
      * primary key = 0 and class = -1
-     * 
-     * @param isr
-     *            streamreader from which the input is read
+     *
+     * @param isr streamreader from which the input is read
      * @return array of {@link SiftFeatureVector}s (may be empty)
      * @throws IOException
      */
     List<SiftFeatureVector> extractFeatures(InputStreamReader isr)
             throws IOException {
-        List<SiftFeatureVector> vectors = new ArrayList<>(
-                100);
+        List<SiftFeatureVector> vectors = new ArrayList<>(100);
 
         BufferedReader inR = new BufferedReader(isr);
         String inLine = null;
@@ -142,8 +143,8 @@ public class SiftWrapper {
         while (null != (inLine = inR.readLine())) {
             linecount++;
 
-            if (log.isLoggable(Level.FINEST)) {
-                log.finest(inLine);
+            if (log.isTraceEnabled()) {
+                log.trace(inLine);
             }
             // line 1 is just a comment line
             if (linecount == 1) {
@@ -193,11 +194,9 @@ public class SiftWrapper {
 
     /**
      * writes the data to the process in order to analyze this data
-     * 
-     * @param os
-     *            destination
-     * @param in
-     *            source
+     *
+     * @param os destination
+     * @param in source
      * @throws IOException
      */
     private void dataToProcess(OutputStream os, InputStream in)
