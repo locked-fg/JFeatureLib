@@ -89,7 +89,9 @@
         <zip destfile="${dist.dir}/${release.zip}" compress="true">
             <zipfileset dir="${dist.dir}" prefix="${release.name}/bin" excludes="javadoc/**, ${release.zip}"/>
             <zipfileset dir="${dist.dir}/javadoc" prefix="${release.name}/api" excludes="${release.zip}"/>
-            <zipfileset dir="./" prefix="${release.name}/src" includes="${src.dir}, ${test.src.dir}"  />
+            <zipfileset dir="src" prefix="${release.name}/src/src"/>
+            <zipfileset dir="test" prefix="${release.name}/src/test"/>
+            <zipfileset dir="examples" prefix="${release.name}/src/examples"/>
         </zip>
     </target>
 </project>
