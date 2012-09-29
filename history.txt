@@ -1,5 +1,6 @@
 0.2.0: - added shape features (special thanks to Johannes Stadler and Johannes Niedermayer)
        - changed completely to log4j
+       - fixed buildfile
        - Fixed Issue 14
 0.1.2: - aggregates GrayHistogram and RGB Histogram in Histogram which also supports 
          separate extraction of R,G,B, HSB, H, S, B Histograms
