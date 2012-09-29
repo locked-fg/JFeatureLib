@@ -98,6 +98,7 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
         this.data.addAll(data);
     }
 
+
     /**
      * Propagates the given progress event using property change support.
      *
@@ -118,5 +119,13 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     @Override
     public EnumSet<Supports> supports() {
         return DOES_ALL;
+    }
+
+    protected void startProgress() {
+        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
+    }
+
+    protected void endProgress() {
+        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
 }

@@ -32,6 +32,7 @@ public class LibProperties extends PropertyContainer {
     public static final String IMAGE_FORMATS = "imageFormats";
     public static final String HISTOGRAMS_TYPE = "features.histogram.type";
     public static final String HISTOGRAMS_BINS = "features.histogram.bins";
+    public static final String POLYGON_EVOLUTION = "shapefeatures.polygonevolution.iterations";
 
     /**
      * Constructor that initializes the properties container with the file defined in BASE_FILE.
