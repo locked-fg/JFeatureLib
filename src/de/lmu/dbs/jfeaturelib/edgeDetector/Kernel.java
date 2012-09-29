@@ -9,10 +9,7 @@ import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * Performs convolution with a given Kernel directly on this image.
@@ -64,7 +61,7 @@ public class Kernel implements Descriptor {
     private float[] kernel;
     private int kernelWidth;
     private int treshold;
-    private int[] result;
+//    private int[] result;
 
     /**
      * Constructs a new detector with standart Sobel kernel
@@ -215,7 +212,7 @@ public class Kernel implements Descriptor {
         }
 
         image.setIntArray(imgA);
-        result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, width, height, null);
+//        result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, width, height, null);
 
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
