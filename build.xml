@@ -10,6 +10,8 @@
 <project name="JFeatureLib" default="default" basedir=".">
     <description>Builds, tests, and runs the project JFeatureLib.</description>
     <import file="nbproject/build-impl.xml"/>
+    <property name="docs.dir" value="docs" />
+    <property name="api.dir" value="docs/api" />
 
     <target name="-post-clean">
         <delete dir="${docs.dir}" />
@@ -36,5 +38,11 @@
             <zipfileset dir="test" prefix="${release.name}/src/test"/>
             <zipfileset dir="examples" prefix="${release.name}/src/examples"/>
         </zip>
+        
+        <!-- copy api -->
+        <mkdir dir="${api.dir}" />
+        <copy  todir="${api.dir}">
+            <fileset dir="${dist.dir}/javadoc/"/>
+        </copy>
     </target>
 </project>
