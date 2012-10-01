@@ -1,4 +1,5 @@
 0.3.0: - made Canny and PHOG configurable via properties
+       - extend properties and PHOG to combine PHOG and Canny
 0.2.0: - added shape features (special thanks to Johannes Stadler and Johannes Niedermayer)
        - changed completely to log4j
        - fixed buildfile
