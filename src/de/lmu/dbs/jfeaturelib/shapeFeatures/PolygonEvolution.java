@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
  * http://www.intechopen.com/articles/show/title/a_survey_of_shape_feature_extraction_techniques".
  *
  * @author Johannes Stadler
+ * @since 09/29/2012
  */
 public class PolygonEvolution extends AbstractFeatureDescriptor {
 

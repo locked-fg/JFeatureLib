@@ -4,13 +4,6 @@ import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
-import ij.process.ImageStatistics;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
 
 /**
  * Computes the Centroid according to "Bryan S. Morse (2000): Lecture 9: Shape
@@ -18,6 +11,7 @@ import java.util.List;
  * http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MORSE/region-props-and-moments.pdf".
  *
  * @author Johannes Stadler
+ * @since 09/29/2012
  */
 public class CentroidFeature extends AbstractFeatureDescriptor {
 

@@ -18,7 +18,7 @@ import java.util.Collections;
  * http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MORSE/region-props-and-moments.pdf".
  *
  * @author Johannes Stadler
- *
+ * @since 09/29/2012
  */
 class BoundingBox extends AbstractFeatureDescriptor {
 

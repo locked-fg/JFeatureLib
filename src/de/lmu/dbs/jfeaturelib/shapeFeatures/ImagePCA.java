@@ -5,6 +5,15 @@ import java.awt.Point;
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
+/**
+ * Utility class for 2d image PCA.
+ *
+ * As long as it is not fully clear that this class is used somewhere else as
+ * well, we'll keep it backage private.
+ *
+ * @author Johannes Stadler
+ * @since 09/29/2012
+ */
 class ImagePCA {
 
     private static final Logger log = Logger.getLogger(ImagePCA.class.getName());

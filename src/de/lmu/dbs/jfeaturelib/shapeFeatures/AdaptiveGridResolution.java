@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
  * as "adaptive grid resolution".
  *
  * @author Johannes Stadler
+ * @since 09/29/2012
  */
 public class AdaptiveGridResolution extends AbstractFeatureDescriptor {
 

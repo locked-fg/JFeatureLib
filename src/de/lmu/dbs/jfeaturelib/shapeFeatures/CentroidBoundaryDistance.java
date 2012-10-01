@@ -6,7 +6,6 @@ import de.lmu.dbs.jfeaturelib.edgeDetector.Susan;
 import de.lmu.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
@@ -23,6 +22,7 @@ import java.util.EnumSet;
  * " as "centroid-to-boundary distance approach".
  *
  * @author Johannes Stadler
+ * @since 09/29/2012
  */
 public class CentroidBoundaryDistance extends AbstractFeatureDescriptor {
 
