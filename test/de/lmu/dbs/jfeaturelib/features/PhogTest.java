@@ -1,14 +1,11 @@
 package de.lmu.dbs.jfeaturelib.features;
 
 import de.lmu.dbs.jfeaturelib.LibProperties;
-import de.lmu.dbs.jfeaturelib.utils.GradientSource;
-import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.EnumSet;
 import javax.imageio.ImageIO;
 import org.junit.After;
 import org.junit.AfterClass;
