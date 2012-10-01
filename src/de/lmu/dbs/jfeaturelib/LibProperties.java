@@ -34,6 +34,7 @@ public class LibProperties extends PropertyContainer {
     public static final String HISTOGRAMS_TYPE = "features.histogram.type";
     public static final String HISTOGRAMS_BINS = "features.histogram.bins";
     // Phog
+    public static final String PHOG_CANNY = "features.phog.canny";
     public static final String PHOG_BINS = "features.phog.bins";
     public static final String PHOG_RECURSIONS = "features.phog.recursions";
 

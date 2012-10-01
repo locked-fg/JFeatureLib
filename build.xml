@@ -21,14 +21,14 @@
         <copy file="history.txt" todir="${dist.dir}"/>
     </target>
     
-    <!-- prepare release files -->
+     prepare release files 
     <target name="release" depends="clean, jar, -javadoc-build">
-        <!-- import the version number -->
+         import the version number 
         <loadproperties srcFile="jfeaturelib.properties"/>
         <property name="release.name" value="${application.title}-${version}" />
         <property name="release.zip" value="${release.name}.zip" />
 
-        <!-- create realease zip -->
+         create realease zip 
         <zip destfile="${dist.dir}/${release.zip}" compress="true">
             <zipfileset dir="${dist.dir}" prefix="${release.name}/bin" excludes="javadoc/**, ${release.zip}"/>
             <zipfileset dir="${dist.dir}/javadoc" prefix="${release.name}/api" excludes="${release.zip}"/>

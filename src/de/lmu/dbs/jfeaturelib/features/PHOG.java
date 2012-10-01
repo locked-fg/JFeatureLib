@@ -9,11 +9,15 @@ import de.lmu.dbs.jfeaturelib.utils.Interpolated1DHistogram;
 import de.lmu.ifi.dbs.utilities.Math2;
 import de.lmu.ifi.dbs.utilities.Vectors;
 import de.lmu.ifi.dbs.utilities.primitiveArrays.DoubleArray;
+import ij.ImagePlus;
+import ij.io.FileSaver;
+import ij.io.ImageWriter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -48,19 +52,28 @@ public class PHOG extends AbstractFeatureDescriptor {
      */
     private GradientSource gradientSource = new GradientImage();
     private Interpolated1DHistogram histogram;
+    boolean useCanny;
+    private LibProperties properties;
 
     @Override
     public void setProperties(LibProperties properties) throws IOException {
-        bins = properties.getInteger(LibProperties.PHOG_BINS);
-        recursions = properties.getInteger(LibProperties.PHOG_RECURSIONS);
+        this.properties = properties;
+
+        bins = properties.getInteger(LibProperties.PHOG_BINS, 8);
+        recursions = properties.getInteger(LibProperties.PHOG_RECURSIONS, 1);
+        useCanny = properties.getBoolean(LibProperties.PHOG_CANNY, true);
     }
 
     @Override
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
+        if (useCanny) {
+            ip = applyCanny(ip);
+        }
         if (!(ip instanceof ByteProcessor)) {
             ip = ip.convertToByte(true);
         }
+
 
         gradientSource.setIp(ip);
         initFeature();
@@ -74,6 +87,18 @@ public class PHOG extends AbstractFeatureDescriptor {
 
         addData(feature.getData());
         firePropertyChange(Progress.END);
+    }
+
+    ImageProcessor applyCanny(ImageProcessor ip) throws IllegalStateException {
+        try {
+            Canny canny = new Canny();
+            canny.setProperties(properties);
+            canny.run(ip);
+        } catch (IOException ex) {
+            log.error("error in canny config", ex);
+            throw new IllegalStateException(ex);
+        }
+        return ip;
     }
 
     private void buildHistogramRecursively(Rectangle r, int recursion) {
@@ -163,32 +188,4 @@ public class PHOG extends AbstractFeatureDescriptor {
         this.recursions = recursions;
     }
     //</editor-fold>
-
-    private static class CannyWrapper implements GradientSource {
-
-        private final Canny canny;
-        private boolean isProcessed = false;
-
-        private CannyWrapper(Canny canny) {
-            this.canny = canny;
-        }
-
-        @Override
-        public void setIp(ImageProcessor ip) {
-            if (isProcessed) {
-                throw new IllegalStateException();
-            }
-            canny.run(ip);
-        }
-
-        @Override
-        public double getLength(int x, int y) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public double getTheta(int x, int y) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
 }
