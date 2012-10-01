@@ -9,28 +9,34 @@ import de.lmu.dbs.jfeaturelib.utils.Interpolated1DHistogram;
 import de.lmu.ifi.dbs.utilities.Math2;
 import de.lmu.ifi.dbs.utilities.Vectors;
 import de.lmu.ifi.dbs.utilities.primitiveArrays.DoubleArray;
-import ij.ImagePlus;
-import ij.io.FileSaver;
-import ij.io.ImageWriter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.EnumSet;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
- * Generates Pyramid Histograms of Oriented Gradients, first introduced in
- * "Representing shape with a spatial pyramid kernel" (2007). By Anna Bosch,
- * Andrew Zisserman, Xavier Munoz
+ * Generates Pyramid Histograms of Oriented Gradients (PHoG).
+ *
+ * Phogs were first introduced in "Representing shape with a spatial pyramid
+ * kernel" (2007). By Anna Bosch, Andrew Zisserman, Xavier Munoz
  *
  * See also http://www.robots.ox.ac.uk/~vgg/publications/2007/Bosch07/ and
  * http://dl.acm.org/citation.cfm?id=1282340 for further information.
  *
+ * In the original paper, canny edge extraction is applied prior to extracting
+ * the gradients. As edge detection can be performed in several ways, it is not
+ * hard wired. It can be enabled in the properties by setting
+ * features.phog.canny to true. The parameters for the canny operator are also
+ * taken from the properties file.
+ *
+ * If another edge detection operator should be used, simple set the canny
+ * parameter to false and call {@link #run(ij.process.ImageProcessor)} with an
+ * pre processed image.
+ * 
  * @author graf
  * @since 11/4/2011
- *
  */
 public class PHOG extends AbstractFeatureDescriptor {
 
