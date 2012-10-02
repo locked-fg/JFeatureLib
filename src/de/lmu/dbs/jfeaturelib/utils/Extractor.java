@@ -17,11 +17,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
+import org.apache.log4j.PropertyConfigurator;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -82,7 +80,7 @@ public class Extractor {
 
     public static void main(String[] args) throws IOException {
         InputStream is = Extractor.class.getResourceAsStream("/META-INF/logging.properties");
-        LogManager.getLogManager().readConfiguration(is);
+        PropertyConfigurator.configure(is);
 
         Extractor extractor = new Extractor();
         CmdLineParser parser = new CmdLineParser(extractor);
@@ -246,7 +244,7 @@ public class Extractor {
         @Override
         public void run() {
             try {
-                log.info("processing file " + file.getName());
+                log.debug("processing file " + file.getName());
                 ImagePlus iplus = new Opener().openImage(file.getAbsolutePath());
                 ImageProcessor processor = iplus.getProcessor();
 
