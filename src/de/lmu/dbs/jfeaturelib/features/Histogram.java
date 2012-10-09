@@ -208,13 +208,13 @@ public class Histogram extends AbstractFeatureDescriptor {
             cp.getHSB(H, S, B);
 
             ByteProcessor channel;
-            ColorModel cm = cp.getDefaultColorModel();
+            ColorModel colorModel = cp.getDefaultColorModel();
             if (type == TYPE.Hue) {
-                channel = new ByteProcessor(width, height, H, cm);
+                channel = new ByteProcessor(width, height, H, colorModel);
             } else if (type == TYPE.Saturation) {
-                channel = new ByteProcessor(width, height, S, cm);
+                channel = new ByteProcessor(width, height, S, colorModel);
             } else if (type == TYPE.Brightness) {
-                channel = new ByteProcessor(width, height, B, cm);
+                channel = new ByteProcessor(width, height, B, colorModel);
             } else {
                 throw new IllegalArgumentException("type must be H,S or B");
             }
