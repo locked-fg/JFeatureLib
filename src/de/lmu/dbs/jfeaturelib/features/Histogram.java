@@ -65,28 +65,38 @@ public class Histogram extends AbstractFeatureDescriptor {
 
         int[] hist = histogram.run(ip);
         double[] features = Arrays2.convertToDouble(hist);
-        features = scale(features);
+        features = scale(features, bins);
 
         addData(features);
         firePropertyChange(Progress.END);
     }
 
-    private double[] scale(double[] features) {
-        // scale doubleArr to a length of bins
-        if (features.length != bins) {
-            double[] target = new double[bins];
-            double factor = 1d * bins / features.length;
-            // bins: 64
+    /**
+     * Reduces the dimensions or src to a length of newLength.
+     *
+     * For example if the input array is 265 and newLength is 64, then the 256d
+     * are shifted/compressed down to the new 64. In example, dimension 1-4 will
+     * be added up in bin 1 of the target array
+     *
+     * @param src
+     * @param newLength
+     * @return new double array with newLength size
+     */
+    double[] scale(double[] src, int newLength) {
+        if (src.length != newLength) {
+            double[] target = new double[newLength];
+            double factor = 1d * newLength / src.length;
+            // newLength: 64
             // doubleArr: 256
             // factor: 1/4
-            for (int srcI = 0; srcI < features.length; srcI++) {
+            for (int srcI = 0; srcI < src.length; srcI++) {
                 int j = (int) Math.floor(srcI * factor);
-                target[j] += features[srcI];
+                target[j] += src[srcI];
             }
 
-            features = target;
+            src = target;
         }
-        return features;
+        return src;
     }
 
     private interface InnerHistogram {
