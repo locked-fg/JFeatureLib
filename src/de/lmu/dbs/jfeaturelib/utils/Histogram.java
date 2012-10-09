@@ -3,11 +3,13 @@ package de.lmu.dbs.jfeaturelib.utils;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 
 /**
- * A histogram class for counting occurences of values. Each bin of the
- * histogram stores a counter for the domain [min of bin, max of bin[.
+ * A histogram class for counting occurences of values.
+ *
+ * Each bin of the histogram stores a counter for the domain [min of bin, max of
+ * bin[.
  *
  * So if you create a Histogram with <tt>new Histogram(2,2)</tt> from 0 to 2
- * with two bins, you will get an error if you want to cal <tt>add(2)</tt> as
+ * with two bins, you will get an error if you want to call <tt>add(2)</tt> as
  * the domains are [0;1[, [1;2[.
  *
  * @author graf
