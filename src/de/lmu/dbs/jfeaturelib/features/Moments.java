@@ -21,10 +21,16 @@ public class Moments extends AbstractFeatureDescriptor {
                 + ImageStatistics.STD_DEV
                 + ImageStatistics.SKEWNESS
                 + ImageStatistics.KURTOSIS;
+        
         firePropertyChange(Progress.START);
         ImageStatistics stat = ImageStatistics.getStatistics(ip, STATS, null);
         addData(new double[]{stat.mean, stat.stdDev, stat.skewness, stat.kurtosis});
         firePropertyChange(Progress.END);
+    }
+
+    @Override
+    public EnumSet<Supports> supports() {
+        return DOES_ALL;
     }
 
     @Override
