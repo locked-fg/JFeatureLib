@@ -37,7 +37,6 @@ public class Gabor extends AbstractFeatureDescriptor {
                 Supports.DOES_8C,
                 Supports.DOES_8G,
                 Supports.DOES_RGB);
-        //set.addAll(DOES_ALL);
         return set;
     }
 }
