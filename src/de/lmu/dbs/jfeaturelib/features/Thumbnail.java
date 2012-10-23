@@ -4,7 +4,6 @@ import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ImageProcessor;
 import java.util.EnumSet;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
