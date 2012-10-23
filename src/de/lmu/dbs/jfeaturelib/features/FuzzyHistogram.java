@@ -33,7 +33,6 @@ public class FuzzyHistogram extends AbstractFeatureDescriptor {
                 Supports.NoChanges,
                 Supports.DOES_8C,
                 Supports.DOES_RGB);
-        //set.addAll(DOES_ALL);
         return set;
     }
 }
