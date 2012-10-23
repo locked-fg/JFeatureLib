@@ -3,6 +3,7 @@ package de.lmu.dbs.jfeaturelib.features;
 import de.lmu.dbs.jfeaturelib.LibProperties;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
+import ij.process.ImageProcessor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -37,6 +38,13 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
      * @see Sift
      */
     private List<double[]> data = new ArrayList<>(1);
+    /**
+     * Stores the mask of the passed image processor or NULL if the image
+     * processor did not have a mask applied.
+     *
+     * Pixels outside the mask have a value of zero.
+     */
+    private ImageProcessor mask = null;
 
     /**
      * Returns a reference to the data calculated by the according descriptor.
@@ -98,7 +106,6 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
         this.data.addAll(data);
     }
 
-
     /**
      * Propagates the given progress event using property change support.
      *
@@ -127,5 +134,31 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
 
     protected void endProgress() {
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
+    }
+
+    /**
+     * Sets / stores the mask applied to the referenced image processor.
+     *
+     * @param ip the image processor from which the mask should be taken
+     */
+    protected void setMask(ImageProcessor ip) {
+        if (ip == null) {
+            throw new NullPointerException("passed imageprocessor must not be null");
+        }
+        this.mask = ip.getMask();
+    }
+
+    /**
+     * Check wether a pixel is inside a set mask. If no mask is applied, then
+     * the method always returns true.
+     *
+     * If a pixel is in the mask, this means that it should be processed.
+     *
+     * @param x
+     * @param y
+     * @return true if the pixel is in the mask and should thus be processed.
+     */
+    protected boolean inMask(int x, int y) {
+        return mask == null || mask.get(x, y) != 0;
     }
 }

@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
  * If another edge detection operator should be used, simple set the canny
  * parameter to false and call {@link #run(ij.process.ImageProcessor)} with an
  * pre processed image.
- * 
+ *
  * @author graf
  * @since 11/4/2011
  */
@@ -73,13 +73,13 @@ public class PHOG extends AbstractFeatureDescriptor {
     @Override
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
+        setMask(ip);
         if (useCanny) {
             ip = applyCanny(ip);
         }
         if (!(ip instanceof ByteProcessor)) {
             ip = ip.convertToByte(true);
         }
-
 
         gradientSource.setIp(ip);
         initFeature();
@@ -114,7 +114,7 @@ public class PHOG extends AbstractFeatureDescriptor {
         final int borderBottom = r.y + r.height;
         for (int x = r.x; x < borderRight; x++) {
             for (int y = r.y; y < borderBottom; y++) {
-                if (gradientSource.getLength(x, y) != 0) {
+                if (inMask(x, y) && gradientSource.getLength(x, y) != 0) {
                     histogram.add(gradientSource.getTheta(x, y),
                             gradientSource.getLength(x, y));
                 }
