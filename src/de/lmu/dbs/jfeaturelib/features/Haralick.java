@@ -110,8 +110,11 @@ public class Haralick extends AbstractFeatureDescriptor {
      */
     @Override
     public EnumSet<Supports> supports() {
-        EnumSet set = EnumSet.of(Supports.NoChanges);
-        set.addAll(DOES_ALL);
+        EnumSet set = EnumSet.of(
+                Supports.NoChanges,
+                Supports.DOES_8C,
+                Supports.DOES_8G,
+                Supports.DOES_RGB);
         return set;
     }
 
