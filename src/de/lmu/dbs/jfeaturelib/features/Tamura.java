@@ -23,9 +23,7 @@ public class Tamura extends AbstractFeatureDescriptor {
 
     @Override
     public String getDescription() {
-        String s = "Tamura filter: ";
-        s += new de.lmu.dbs.jfeaturelib.features.lire.Tamura().getStringRepresentation();
-        return s;
+        return "Tamura filter";
     }
 
     @Override
@@ -35,7 +33,6 @@ public class Tamura extends AbstractFeatureDescriptor {
                 Supports.DOES_8C,
                 Supports.DOES_8G,
                 Supports.DOES_RGB);
-        //set.addAll(DOES_ALL);
         return set;
     }
 }
