@@ -3,7 +3,6 @@ package de.lmu.dbs.jfeaturelib.features;
 import de.lmu.dbs.jfeaturelib.LibProperties;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
-import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -71,8 +70,19 @@ public class Histogram extends AbstractFeatureDescriptor {
         firePropertyChange(Progress.END);
     }
 
+    @Override
+    public EnumSet<Supports> supports() {
+        EnumSet set = EnumSet.of(
+                Supports.NoChanges,
+                Supports.DOES_8C,
+                Supports.DOES_8G,
+                Supports.DOES_RGB,
+                Supports.Masking);
+        return set;
+    }
+
     /**
-     * Reduces the dimensions or src to a length of newLength.
+     * Reduces the dimensions of src to a length of newLength.
      *
      * For example if the input array is 265 and newLength is 64, then the 256d
      * are shifted/compressed down to the new 64. In example, dimension 1-4 will
