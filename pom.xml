@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.lmu.ifi.dbs</groupId>
+  <artifactId>jfeaturelib</artifactId>
+  <version>0.3.1-SNAPSHOT</version>
+  <name>JFeaturelib</name>
+  <description>The aim of JFeatureLib is to provide a free library that provides implementations
+for several kinds of image features and also several point/region detectors used 
+mainly in the research field of ComputerVision. </description>
+  <url>http://code.google.com/p/jfeaturelib/</url>
+  <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>${maven.compiler.source}</source> 
+                  <target>${maven.compiler.target}</target> 
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+        <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.10</version>
+                <scope>test</scope>
+        </dependency>
+        <dependency>
+                <groupId>args4j</groupId>
+                <artifactId>args4j</artifactId>
+                <version>2.0.16</version>
+        </dependency>
+        <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
+        </dependency>
+        <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+        </dependency>
+        <dependency>
+                <groupId>gov.nist.math</groupId>
+                <artifactId>jama</artifactId>
+                <version>1.0.2</version>
+        </dependency>
+        <dependency>
+                <groupId>de.lmu.ifi.dbs</groupId>
+                <artifactId>commons-extension-lib</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+                <groupId>gov.nih.imagej</groupId>
+                <artifactId>imagej</artifactId>
+                <version>1.46</version>
+        </dependency>
+        
+        <!--  These dependencies must be installed with lib/mvn-install-libs.sh -->
+        <dependency>
+                <groupId>at.lux</groupId>
+                <artifactId>imageanalysis</artifactId>
+                <version>1.0.0</version>
+        </dependency>
+        <dependency>
+                <groupId>net.semanticmetadata</groupId>
+                <artifactId>lire</artifactId>
+                <version>1.0.0</version>
+        </dependency>
+  </dependencies>
+</project>
