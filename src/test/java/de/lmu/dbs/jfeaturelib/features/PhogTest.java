@@ -3,6 +3,7 @@ package de.lmu.dbs.jfeaturelib.features;
 import de.lmu.dbs.jfeaturelib.LibProperties;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -51,7 +52,7 @@ public class PhogTest {
 
     @Test
     public void testRun() throws IOException, URISyntaxException {
-        URL url = this.getClass().getResource("test.jpg").toURI().toURL();
+        File url = new File("src/test/resources/test.jpg");
 
         LibProperties props = LibProperties.get();
         props.setProperty(LibProperties.PHOG_CANNY, true);

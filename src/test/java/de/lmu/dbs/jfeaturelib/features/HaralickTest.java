@@ -20,7 +20,7 @@ public class HaralickTest {
 
     @Test
     public void haralick() throws IOException, URISyntaxException {
-        URL url = this.getClass().getResource("test.jpg").toURI().toURL();
+        File url = new File("src/test/resources/test.jpg");
         Haralick h = new Haralick();
         h.run(new ColorProcessor(ImageIO.read(url)));
         List<double[]> features = h.getFeatures();
@@ -29,13 +29,4 @@ public class HaralickTest {
         assertArrayEquals(exp, features.get(0), 0.1);
     }
     
-       
-    
-//    @BeforeClass
-//    public static void setUpClass() throws Exception {
-//    }
-//
-//    @AfterClass
-//    public static void tearDownClass() throws Exception {
-//    }
 }

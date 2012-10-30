@@ -10,9 +10,10 @@ public class SusanTest {
     
     @Test
     public void testRun() throws IOException {
-        ColorProcessor cp = new ColorProcessor(ImageIO.read(new File("test/checkerboard.png")));
+        System.out.println(new File(".").getAbsolutePath());
+        ColorProcessor cp = new ColorProcessor(ImageIO.read(new File("src/test/resources/checkerboard.png")));
         new Susan().run(cp);
-        File out = new File("test/out_susan.png");
+        File out = new File("src/test/resources/out_susan.png");
         ImageIO.write(cp.getBufferedImage(), "PNG", out);
     }
 
