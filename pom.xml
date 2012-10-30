@@ -1,78 +1,267 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>de.lmu.ifi.dbs</groupId>
-  <artifactId>jfeaturelib</artifactId>
-  <version>0.3.1-SNAPSHOT</version>
-  <name>JFeaturelib</name>
-  <description>The aim of JFeatureLib is to provide a free library that provides implementations
-for several kinds of image features and also several point/region detectors used 
-mainly in the research field of ComputerVision. </description>
-  <url>http://code.google.com/p/jfeaturelib/</url>
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.lmu.ifi.dbs</groupId>
+    <artifactId>jfeaturelib</artifactId>
+    <version>0.3.1-SNAPSHOT</version>
+    <name>JFeaturelib</name>
+    <description>The aim of JFeatureLib is to provide a free library that provides implementations
+        for several kinds of image features and also several point/region detectors used 
+        mainly in the research field of ComputerVision. 
+    </description>
+    <url>http://code.google.com/p/jfeaturelib/</url>
+    <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-  </properties>
-  
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>${maven.compiler.source}</source> 
-                  <target>${maven.compiler.target}</target> 
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  <dependencies>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skipSigning>true</skipSigning>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License v3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://code.google.com/p/jfeaturelib/</url>
+        <connection>https://code.google.com/p/jfeaturelib/</connection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>fgraf</id>
+            <name>Franz Graf</name>
+            <email>locked@gmail.com</email>
+        </developer>
+        <developer>
+            <id>rzelhofer</id>
+            <name>Robert Zelhofer</name>
+            <email>robert.zelhofer@gmail.com</email>
+        </developer>
+        <developer>
+            <id>bzierer</id>
+            <name>Benedikt Zierer</name>
+            <email>benejz@gmail.com</email>
+        </developer>
+        <developer>
+            <id>bvad</id>
+            <name>Beatrix Vad</name>
+            <email>beatrix.vad@gmail.com</email>
+        </developer>
+        <developer>
+            <id>azimek</id>
+            <name>Arthur Zimek</name>
+            <email>zimek@dbs.ifi.lmu.de</email>
+        </developer>
+        <developer>
+            <id>mschelle</id>
+            <name>Matthias Schelle</name>
+            <email>schellematthias@gmail.com</email>
+        </developer>
+        <developer>
+            <id>ashwinitonge</id>
+            <name>Ashwinitonge</name>
+            <email>ashwinitonge01@gmail.com</email>
+        </developer>
+        <developer>
+            <id>nseiler</id>
+            <name>Nepomuk Seiler</name>
+            <email>nepomuk.seiler@gmail.com</email>
+        </developer>
+    </developers>
+    
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <name>lib</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+            <!-- Attached source.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Attached javadoc.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Sign jars with pgp -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- trigger with -DskipSigning=false for pgp signing -->
+                <configuration>
+                    <skip>${skipSigning}</skip>
+                </configuration>
+            </plugin>
+
+            <!-- Assembly to single jar -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                        <descriptorRef>bin</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Install non-maven-central jars -->
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-caliph-emir</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <file>${basedir}/lib/caliph-emir-cbir.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>at.lux</groupId>
+                            <artifactId>imageanalysis</artifactId>
+                            <version>1.0.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>install-lire</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <file>${basedir}/lib/lire.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>net.semanticmetadata</groupId>
+                            <artifactId>lire</artifactId>
+                            <version>1.0.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+        </plugins>
+    </build>
+    <dependencies>
         <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.10</version>
-                <scope>test</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-                <groupId>args4j</groupId>
-                <artifactId>args4j</artifactId>
-                <version>2.0.16</version>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+            <version>2.0.16</version>
         </dependency>
         <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.4</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
         </dependency>
         <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.17</version>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
         </dependency>
         <dependency>
-                <groupId>gov.nist.math</groupId>
-                <artifactId>jama</artifactId>
-                <version>1.0.2</version>
+            <groupId>gov.nist.math</groupId>
+            <artifactId>jama</artifactId>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
-                <groupId>de.lmu.ifi.dbs</groupId>
-                <artifactId>commons-extension-lib</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+            <groupId>gov.nih.imagej</groupId>
+            <artifactId>imagej</artifactId>
+            <version>1.45</version>
+            <type>jar</type>
         </dependency>
+
+        <!-- local libs-->
         <dependency>
-                <groupId>gov.nih.imagej</groupId>
-                <artifactId>imagej</artifactId>
-                <version>1.46</version>
+            <groupId>de.lmu.ifi.dbs</groupId>
+            <artifactId>commons-extension-lib</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>at.lux</groupId>
+            <artifactId>imageanalysis</artifactId>
+            <version>1.0.0</version>
         </dependency>
         
-        <!--  These dependencies must be installed with lib/mvn-install-libs.sh -->
         <dependency>
-                <groupId>at.lux</groupId>
-                <artifactId>imageanalysis</artifactId>
-                <version>1.0.0</version>
+            <groupId>net.semanticmetadata</groupId>
+            <artifactId>lire</artifactId>
+            <version>1.0.0</version>
         </dependency>
-        <dependency>
-                <groupId>net.semanticmetadata</groupId>
-                <artifactId>lire</artifactId>
-                <version>1.0.0</version>
-        </dependency>
-  </dependencies>
+    </dependencies>
 </project>

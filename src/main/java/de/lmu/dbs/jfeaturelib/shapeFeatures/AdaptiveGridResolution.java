@@ -3,7 +3,6 @@ package de.lmu.dbs.jfeaturelib.shapeFeatures;
 import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.Progress;
 import de.lmu.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
-import de.lmu.dbs.jfeaturelib.features.SampleDescriptor;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import org.apache.log4j.Logger;
  */
 public class AdaptiveGridResolution extends AbstractFeatureDescriptor {
 
-    private static final Logger log = Logger.getLogger(SampleDescriptor.class.getName());
+    private static final Logger log = Logger.getLogger(AdaptiveGridResolution.class.getName());
     private QuadTreeNode quadtree;
     private int backgroundColor = 0;
     private int resizeSize = 64;
