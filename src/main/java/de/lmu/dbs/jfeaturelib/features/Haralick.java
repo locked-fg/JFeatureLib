@@ -26,6 +26,24 @@ import java.util.EnumSet;
  *  }
  * </pre>
  *
+ * The feature descriptor is composed of the following features:
+ * <ol>
+ *  <li>Angular 2nd moment</li>
+ *  <li>Contrast</li>
+ *  <li>Correlation</li>
+ *  <li>variance</li>
+ *  <li>Inverse Difference Moment</li>
+ *  <li>Sum Average</li>
+ *  <li>Sum Variance</li>
+ *  <li>Sum Entropy</li>
+ *  <li>Entropy</li>
+ *  <li>Difference Variance</li>
+ *  <li>Difference Entropy</li>
+ *  <li>Information Measures of Correlation</li>
+ *  <li>Information Measures of Correlation</li>
+ *  <li>Maximum Correlation COefficient</li>
+ * </ol>
+ * 
  * @author graf
  */
 public class Haralick extends AbstractFeatureDescriptor {
