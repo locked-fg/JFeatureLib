@@ -1,5 +1,6 @@
 0.x.x: - changed build system to maven
        - checked the support values of all feature extractors
+       - Fixed Issue 18 (masking support in PHOG)
 0.3.1: - annoying Logging.properties fix in Extractor
 0.3.0: - made Canny and PHOG configurable via properties
        - extend properties and PHOG to combine PHOG and Canny
