@@ -22,8 +22,8 @@ public class Histogram extends AbstractFeatureDescriptor {
 
         RGB, Red, Green, Blue, HSB, Hue, Saturation, Brightness, Gray
     };
-    private TYPE type;
-    private int bins;
+    TYPE type;
+    int bins;
 
     public Histogram() {
     }
