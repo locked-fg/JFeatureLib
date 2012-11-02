@@ -98,13 +98,13 @@ public class Extractor {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.err.println("java -jar JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
+            System.err.println("java -cp JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
             parser.printUsage(System.err);
             return;
         }
 
         if (extractor.showHelp) {
-            System.err.println("java -jar JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
+            System.err.println("java -cp JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
             parser.printUsage(System.out);
             System.exit(0);
         }
