@@ -1,5 +1,10 @@
 package de.lmu.dbs.jfeaturelib.features;
 
+import ij.gui.Roi;
+import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
+import java.awt.Color;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -9,6 +14,50 @@ import static org.junit.Assert.*;
 public class HistogramTest {
 
     public HistogramTest() {
+    }
+
+    @Test
+    public void testWithoutMasking() {
+        ColorProcessor blackRed = new ColorProcessor(10, 10);
+        blackRed.setColor(Color.black);
+        blackRed.fill();
+        blackRed.setColor(Color.red);
+        blackRed.fill(new Roi(0, 5, 10, 5));
+
+        Histogram histogram = new Histogram();
+        histogram.type = Histogram.TYPE.Red;
+        histogram.bins = 2;
+        histogram.run(blackRed);
+        List<double[]> features = histogram.getFeatures();
+        assertEquals(features.get(0).length, 2);
+        assertEquals(50, features.get(0)[0], 0.001);
+        assertEquals(50, features.get(0)[1], 0.001);
+    }
+
+    @Test
+    public void testWithMasking() {
+        ColorProcessor blackRed = new ColorProcessor(10, 10);
+        blackRed.setColor(Color.black);
+        blackRed.fill();
+        blackRed.setColor(Color.red);
+        blackRed.fill(new Roi(0, 6, 10, 5));
+
+        ByteProcessor mask = new ByteProcessor(10, 10);
+        mask.setColor(Color.black);
+        mask.fill();
+        mask.setColor(Color.white);
+        mask.fill(new Roi(0, 9, 10, 1));
+        
+        blackRed.setMask(mask);
+
+        Histogram histogram1 = new Histogram();
+        histogram1.type = Histogram.TYPE.Red;
+        histogram1.bins = 2;
+        histogram1.run(blackRed);
+        List<double[]> features = histogram1.getFeatures();
+        assertEquals(features.get(0).length, 2);
+        assertEquals(0, features.get(0)[0], 0.001);
+        assertEquals(10, features.get(0)[1], 0.001);
     }
 
     /**
