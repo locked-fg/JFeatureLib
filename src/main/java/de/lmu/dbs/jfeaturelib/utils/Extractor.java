@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -125,7 +126,7 @@ public class Extractor {
         Collection<File> imageList = createFileList(imageDirectory);
         HashMap<File, File> tuples = findTuples(imageList, maskList);
 
-        processImages(imageList);
+        processImages(tuples);
         closePool();
 
         closeWriter();
@@ -204,9 +205,9 @@ public class Extractor {
         }
     }
 
-    private void processImages(Collection<File> images) {
-        for (File file : images) {
-            pool.submit(new Task(file, properties));
+    private void processImages(HashMap<File, File> tuples) {
+        for (Map.Entry<File, File> entry : tuples.entrySet()) {
+            pool.submit(new ExtractionTask(entry.getKey(), entry.getValue(), properties));
         }
     }
 
@@ -331,33 +332,78 @@ public class Extractor {
         return map;
     }
 
-    private class Task implements Runnable {
+    /**
+     * This task is used to read image data from disk, extract features and
+     * initiate writing the output
+     */
+    private class ExtractionTask implements Runnable {
+        // the image file which should be processed
 
-        private final File file;
+        private final File image;
+        // 
+        private final File mask;
         private final LibProperties properties;
 
-        public Task(File file, LibProperties properties) {
-            this.file = file;
+        ExtractionTask(File image, File mask, LibProperties properties) {
+            if (image == null) {
+                throw new NullPointerException("image must not be null");
+            }
+            this.image = image;
+            this.mask = mask;
             this.properties = properties;
         }
 
         @Override
         public void run() {
             try {
-                log.debug("processing file " + file.getName());
-                ImagePlus iplus = new Opener().openImage(file.getAbsolutePath());
-                ImageProcessor processor = iplus.getProcessor();
-//                ImageProcessor mask = getMask();
+                long time = System.currentTimeMillis();
 
+                // create some logging output
+                if (log.isDebugEnabled()) {
+                    String msg = "processing file " + image.getName();
+                    if (mask != null) {
+                        msg += " using mask: " + mask.getName();
+                    }
+                    log.debug(msg);
+                }
+
+                // read image and mask (if set)
+                ImageProcessor processor = getProcessor(image);
+                ImageProcessor maskProcessor = getProcessor(mask);
+                processor.setMask(maskProcessor);
+
+                // extraction
                 FeatureDescriptor fd = (FeatureDescriptor) descriptorClazz.newInstance();
                 fd.setProperties(properties);
                 fd.run(processor);
                 List<double[]> features = fd.getFeatures();
 
-                writeOutput(file, features);
+                // log some stats
+                if (log.isDebugEnabled()) {
+                    time = System.currentTimeMillis() - time;
+                    log.debug("processed " + image.getName() + " in " + time + "ms");
+                }
+
+                // synchronously write to file
+                writeOutput(image, features);
             } catch (IOException | InstantiationException | IllegalAccessException ex) {
                 log.warn(ex.getMessage(), ex);
             }
+        }
+
+        /**
+         * Null safe image reader.
+         *
+         * @param path to the image file
+         * @return image processor or null
+         */
+        private ImageProcessor getProcessor(File path) {
+            ImageProcessor ip = null;
+            if (path != null) {
+                ImagePlus iplus = new Opener().openImage(path.getAbsolutePath());
+                ip = iplus.getProcessor();
+            }
+            return ip;
         }
     }
 }
