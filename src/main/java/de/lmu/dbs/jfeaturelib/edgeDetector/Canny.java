@@ -68,30 +68,35 @@ public class Canny extends ConfigurableDescriptor {
     }
 
     private void process() {
+        startProgress();
+
         width = sourceImage.getWidth();
         height = sourceImage.getHeight();
         picsize = width * height;
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(10, "properties initialized"));
+
         initialize();
         pcs.firePropertyChange(Progress.getName(), null, new Progress(20, "arrays initialized"));
+
         readLuminance();
         pcs.firePropertyChange(Progress.getName(), null, new Progress(30, "luminance read"));
+
         if (contrastNormalized) {
             normalizeContrast();
+            pcs.firePropertyChange(Progress.getName(), null, new Progress(40, "contrast normalized"));
         }
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(40, "contrast normalized"));
+
         computeGradients(gaussianKernelRadius, gaussianKernelWidth);
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(50, "gradients computed"));
         int low = Math.round(lowThreshold * MAGNITUDE_SCALE);
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(60, "low rounded"));
         int high = Math.round(highThreshold * MAGNITUDE_SCALE);
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(70, "high rounded"));
         performHysteresis(low, high);
         pcs.firePropertyChange(Progress.getName(), null, new Progress(80, "hysteresis performed"));
+
         thresholdEdges();
         pcs.firePropertyChange(Progress.getName(), null, new Progress(90, "edges tresholded"));
+
         writeEdges(data);
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "edges written"));
+
+        endProgress();
     }
 
     private void initialize() {
@@ -397,7 +402,8 @@ public class Canny extends ConfigurableDescriptor {
      */
     @Override
     public EnumSet<Supports> supports() {
-        EnumSet set = EnumSet.of(Supports.DOES_RGB);
+        EnumSet set = EnumSet.of(Supports.DOES_8G, Supports.DOES_8C, Supports.DOES_16,
+                Supports.DOES_32, Supports.DOES_RGB);
         return set;
     }
 
