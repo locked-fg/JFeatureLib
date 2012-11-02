@@ -237,7 +237,7 @@ public class Extractor {
 
     private void processImages(HashMap<File, File> tuples) {
         for (Map.Entry<File, File> entry : tuples.entrySet()) {
-            pool.submit(new ExtractionTask(entry.getKey(), entry.getValue(), properties));
+            pool.submit(new ExtractionTask(entry.getKey(), entry.getValue()));
         }
     }
 
@@ -366,21 +366,23 @@ public class Extractor {
      * This task is used to read image data from disk, extract features and
      * initiate writing the output
      */
-    private class ExtractionTask implements Runnable {
-        // the image file which should be processed
+    class ExtractionTask implements Runnable {
 
+        /**
+         * the image file which should be processed
+         */
         private final File image;
-        // 
+        /**
+         * possibly set mask (may be null)
+         */
         private final File mask;
-        private final LibProperties properties;
 
-        ExtractionTask(File image, File mask, LibProperties properties) {
+        ExtractionTask(File image, File mask) {
             if (image == null) {
                 throw new NullPointerException("image must not be null");
             }
             this.image = image;
             this.mask = mask;
-            this.properties = properties;
         }
 
         @Override

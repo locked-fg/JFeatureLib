@@ -4,12 +4,6 @@
  */
 package de.lmu.dbs.jfeaturelib.utils;
 
-import ij.ImagePlus;
-import ij.gui.Roi;
-import ij.io.FileSaver;
-import ij.process.ColorProcessor;
-import ij.process.ImageProcessor;
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -67,19 +61,6 @@ public class ExtractorTest {
 
     @Test
     public void testFindTuples() throws IOException {
-//        // create 50x50 image, upper half is black, lower half is red
-//        ColorProcessor blackRed = new ColorProcessor(50, 50);
-//        blackRed.setColor(0);
-//        blackRed.fill();
-//        blackRed.setColor(Color.red);
-//        blackRed.fill(new Roi(0, 25, 50, 25));
-//
-//        // save the files
-//        ImagePlus imagePlus = new ImagePlus("img", blackRed);
-//        new FileSaver(imagePlus).saveAsJpeg(imgFile.getAbsolutePath());
-//        new FileSaver(imagePlus).saveAsPng(maskFile.getAbsolutePath());
-
-        // NOW start the actual test
         Extractor extractor = new Extractor();
         extractor.maskDirectory = maskDir.toFile();
         extractor.imageDirectory = imgDir.toFile();
@@ -95,14 +76,14 @@ public class ExtractorTest {
         assertTrue(tuples.keySet().iterator().next().toString().endsWith("image.jpg"));
         assertTrue(tuples.values().iterator().next().toString().endsWith("image.png"));
     }
-    
+
     @Test
     public void testFindTuples2() throws IOException {
         // NOW start the actual test
         Extractor extractor = new Extractor();
         extractor.maskDirectory = maskDir.toFile();
         extractor.imageDirectory = imgDir.toFile();
-        
+
         maskFile.delete();
 
         Collection<File> imageList = extractor.createFileList(imgDir.toFile());
