@@ -1,5 +1,6 @@
 package de.lmu.dbs.jfeaturelib.utils;
 
+import de.lmu.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.dbs.jfeaturelib.LibProperties;
 import de.lmu.dbs.jfeaturelib.features.FeatureDescriptor;
 import de.lmu.ifi.dbs.utilities.Arrays2;
@@ -29,7 +30,9 @@ import org.kohsuke.args4j.Option;
 
 /**
  * Class used as a commandline tool to extract features from directories of
- * images. The features are then written to a outfile.
+ * images.
+ *
+ * The features are then written to a outfile.
  *
  * @author Franz
  */
@@ -47,7 +50,7 @@ public class Extractor {
     private boolean recursive = false;
     //
     @Option(name = "-o", aliases = {"--output-dir"}, usage = "output to this file (default: features.csv)")
-    private File outFile;
+    private File outFile = new File("features.csv");
     //
     @Option(name = "-m", aliases = {"--masks-dir"}, usage = "directory containing masks")
     File maskDirectory = null;
@@ -106,26 +109,41 @@ public class Extractor {
             System.exit(0);
         }
 
-        extractor.run();
+        extractor.process();
     }
 
     Extractor() throws IOException {
         properties = LibProperties.get();
-        imageFormats = properties.getString(LibProperties.IMAGE_FORMATS).split(" *, *");
-        for (int i = 0; i < imageFormats.length; i++) {
-            imageFormats[i] = imageFormats[i].trim();
-        }
+        imageFormats = initImageFormats(properties);
     }
 
-    private void run() {
-        validateInput();
-        openWriter();
+    /**
+     * Read the image formats from the properties.
+     *
+     * @param libProperties
+     * @return array of image formats
+     */
+    private String[] initImageFormats(LibProperties libProperties) {
+        String[] formats = libProperties.getString(LibProperties.IMAGE_FORMATS).split(" *, *");
+        for (int i = 0; i < formats.length; i++) {
+            formats[i] = formats[i].trim();
+        }
+        return formats;
+    }
 
-        openPool();
+    /**
+     * start the actual work
+     */
+    private void process() {
+        validateInput();
+
         Collection<File> maskList = createFileList(maskDirectory);
         Collection<File> imageList = createFileList(imageDirectory);
         HashMap<File, File> tuples = findTuples(imageList, maskList);
 
+        openWriter();
+
+        openPool();
         processImages(tuples);
         closePool();
 
@@ -134,21 +152,33 @@ public class Extractor {
 
     private void validateInput() throws IllegalArgumentException {
         try {
+            // check if the descriptor class is valid
             String base = FeatureDescriptor.class.getPackage().getName();
             descriptorClazz = Class.forName(base + "." + descriptor);
             if (!FeatureDescriptor.class.isAssignableFrom(descriptorClazz)) {
                 throw new IllegalArgumentException("The class must derive from FeatureDescriptor");
             }
-        } catch (ClassNotFoundException ex) {
+
+            // check if masking is required and supported
+            FeatureDescriptor fd = (FeatureDescriptor) descriptorClazz.newInstance();
+            boolean supportsMasking = fd.supports().contains(Supports.Masking);
+            if (maskDirectory != null && !supportsMasking) {
+                log.warn("A masking directory is set but the chosen descriptor does NOT support masking. Masking will be ignored!");
+                maskDirectory = null;
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             log.warn(ex.getMessage(), ex);
             throw new IllegalArgumentException("the descriptor class does not exist or cannot be created");
         }
+
         if (imageDirectory == null || !imageDirectory.isDirectory() || !imageDirectory.canRead()) {
             throw new IllegalArgumentException("the source directory cannot be read or does not exist");
         }
+
         if (maskDirectory != null && (!maskDirectory.isDirectory() || !maskDirectory.canRead())) {
             throw new IllegalArgumentException("the mask directory cannot be read or does not exist");
         }
+
         if (outFile == null || (outFile.exists() && !outFile.canWrite())) {
             throw new IllegalArgumentException("the output file is not valid or not writable");
         }
@@ -174,7 +204,7 @@ public class Extractor {
      */
     Collection<File> createFileList(File dir) {
         if (dir == null) {
-            log.info("directory is null, returning empty list");
+            log.debug("directory is null, returning empty list");
             return Collections.EMPTY_LIST;
         } else {
             return FileUtils.listFiles(dir, imageFormats, recursive);
