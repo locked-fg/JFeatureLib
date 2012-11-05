@@ -64,6 +64,7 @@ public class CEDD extends AbstractFeatureDescriptor {
                 Supports.NoChanges,
                 Supports.DOES_8C,
                 Supports.DOES_8G,
+                Supports.DOES_32,
                 Supports.DOES_RGB);
         return set;
     }
