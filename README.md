@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/muuki88/JFeatureLib.png)](http://trhttps://secure.travis-ci.org/muuki88/JFeatureLib.pngavis-ci.org/muuki88/JFeatureLib)
+[![Build Status](https://secure.travis-ci.org/muuki88/JFeatureLib.png)](http://travis-ci.org/muuki88/JFeatureLib)
 
 JFeatureLib
 ===========
