@@ -1,4 +1,8 @@
 JFeatureLib
 ===========
 
-Free Java library for image features and point/region detectors used in ComputerVision
+A free library that provides implementations for several kinds of image features 
+and also several point/region detectors used mainly in the research field of 
+ComputerVision.
+
+This Github repo is a mirror of https://jfeaturelib.googlecode.com
