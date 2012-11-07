@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/muuki88/JFeatureLib.png)](http://travis-ci.org/muuki88/JFeatureLib)
+
 JFeatureLib
 ===========
 
