@@ -173,7 +173,7 @@
             </plugin>
 
             <!-- Install non-maven-central jars -->
-<!--            <plugin>
+            <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>
@@ -246,14 +246,13 @@
             <version>1.45</version>
             <type>jar</type>
         </dependency>
-
-        <!-- local libs-->
         <dependency>
-            <groupId>de.lmu.ifi.dbs</groupId>
-            <artifactId>commons-extension-lib</artifactId>
-            <version>1.0.2</version>
+            <groupId>de.lmu.ifi.dbs.utilities</groupId>
+            <artifactId>common-extension-lib</artifactId>
+            <version>1.0.0</version>
         </dependency>
-
+        
+        <!-- local libs-->
         <dependency>
             <groupId>at.lux</groupId>
             <artifactId>imageanalysis</artifactId>
@@ -265,5 +264,6 @@
             <artifactId>lire</artifactId>
             <version>1.0.0</version>
         </dependency>
+
     </dependencies>
 </project>
