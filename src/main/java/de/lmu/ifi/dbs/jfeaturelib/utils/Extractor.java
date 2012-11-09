@@ -243,8 +243,7 @@ public class Extractor {
             throw new NullPointerException("descriptor must not be null");
         }
 
-        try {
-            // check if the descriptor class is valid
+        try { // check if the descriptor class is valid
             String base = FeatureDescriptor.class.getPackage().getName();
             descriptorClazz = Class.forName(base + "." + descriptor);
             if (!FeatureDescriptor.class.isAssignableFrom(descriptorClazz)) {
@@ -327,6 +326,11 @@ public class Extractor {
         }
     }
 
+    /**
+     * submits an ExtractionTask for each tuple to the thread pool
+     *
+     * @param tuples
+     */
     private void processImages(HashMap<File, File> tuples) {
         for (Map.Entry<File, File> entry : tuples.entrySet()) {
             pool.submit(new ExtractionTask(entry.getKey(), entry.getValue()));
@@ -334,14 +338,14 @@ public class Extractor {
     }
 
     /**
-     * creates a new Threadpool for the image extraction tasks
+     * creates a new thread pool for the image extraction tasks
      */
     private void openPool() {
         pool = Executors.newFixedThreadPool(threads);
     }
 
     /**
-     * closes the threadpool and awaits termination
+     * closes the thread pool and awaits termination
      */
     private void closePool() {
         try {
