@@ -2,6 +2,7 @@ package de.lmu.ifi.dbs.jfeaturelib.utils;
 
 import de.lmu.ifi.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
+import de.lmu.ifi.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
 import de.lmu.ifi.dbs.jfeaturelib.features.FeatureDescriptor;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.ImagePlus;
@@ -11,10 +12,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Writer;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +24,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+//import static com.google.common.base.Preconditions.*;
 /**
  * Class used as a commandline tool to extract features from directories of
  * images.
@@ -39,7 +43,12 @@ import org.kohsuke.args4j.Option;
 public class Extractor {
 
     private static final Logger log = Logger.getLogger(Extractor.class.getName());
+    /**
+     * Timeout used for the threadpool. Just set it to a large enough value so
+     * that all threads will terminate.
+     */
     private static final int TERMINATION_TIMEOUT = 100;
+    //
     @Option(name = "--threads", usage = "amount of threads (defaults to amount of available processors))")
     private int threads = Runtime.getRuntime().availableProcessors();
     // 
@@ -61,11 +70,14 @@ public class Extractor {
     @Option(name = "-nh", usage = "omit headerline")
     private boolean omitHeader = false;
     //
-    @Option(name = "-D", aliases = {"--descriptor"}, usage = "use this feature descriptor (e.G: Sift)", required = true)
+    @Option(name = "-D", aliases = {"--descriptor"}, usage = "use this feature descriptor (e.G: Sift)")
     private String descriptor = null;
     //
     @Option(name = "-c", usage = "image class that should be written to the output file")
     private String imageClass = null;
+    //
+    @Option(name = "--list-capabilities", usage = "list the registered FeatureDescriptors and the output of their supports() method")
+    private boolean listCapabilities = false;
     //
     @Option(name = "--help", usage = "show this screen")
     private boolean showHelp = false;
@@ -89,8 +101,7 @@ public class Extractor {
     private ExecutorService pool;
 
     public static void main(String[] args) throws IOException {
-        InputStream is = Extractor.class.getResourceAsStream("/META-INF/logging.properties");
-        PropertyConfigurator.configure(is);
+        initLoggingProperties();
 
         Extractor extractor = new Extractor();
         CmdLineParser parser = new CmdLineParser(extractor);
@@ -98,20 +109,91 @@ public class Extractor {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.err.println("java -cp JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
+            System.err.println("java -cp JFeatureLib.jar " + Extractor.class.getCanonicalName() + " [arguments]");
             parser.printUsage(System.err);
             return;
         }
 
+        // process commands that do not start the extractor
         if (extractor.showHelp) {
-            System.err.println("java -cp JFeatureLib.jar de.lmu.dbs.jfeaturelib.utils.Extractor [arguments]");
             parser.printUsage(System.out);
             System.exit(0);
-        }
 
-        extractor.process();
+        } else if (extractor.listCapabilities) {
+            listFeatureDescriptorCapabilities();
+            System.exit(0);
+
+        } else {
+            // okay everything is fine, start
+            extractor.process();
+        }
     }
 
+    /**
+     * Initialize the logging properties.
+     *
+     * If a ./logging.properties is found that this file will be used.
+     * Otherwise, the configuration from /META-INF/logging.properties will be
+     * read.
+     */
+    private static void initLoggingProperties() {
+        // read logging properties
+        String path;
+        if (new File("./logging.properties").exists()) {
+            path = "./logging.properties";
+        } else {
+            path = "/META-INF/logging.properties";
+        }
+        PropertyConfigurator.configure(Extractor.class.getResourceAsStream(path));
+        log.debug("read logging configuration from " + path);
+    }
+
+    /**
+     * Create an output string for the supports capabilities of the feature
+     * descriptors.
+     */
+    private static void listFeatureDescriptorCapabilities() {
+        try {
+            // search for the descriptors
+            Package fdPackage = AbstractFeatureDescriptor.class.getPackage();
+            PackageScanner<FeatureDescriptor> scanner = new PackageScanner<>();
+            List<Class<FeatureDescriptor>> classes = scanner.scanForClass(fdPackage, FeatureDescriptor.class);
+
+            // find the longest name to make a nice output
+            int maxNameLength = 0;
+            for (Class<FeatureDescriptor> fd : classes) {
+                maxNameLength = Math.max(fd.getName().length(), maxNameLength);
+            }
+
+            // sort the classes by class name
+            Collections.sort(classes, new Comparator<Class>() {
+                @Override
+                public int compare(Class o1, Class o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+
+            // now we know the longest descriptor name - build the output string
+            String outString = "";
+            for (Class<FeatureDescriptor> fd : classes) {
+                outString += StringUtils.rightPad(fd.getName(), maxNameLength);
+                outString += " : ";
+                outString += fd.newInstance().supports().toString();
+                outString += "\n";
+            }
+            System.out.println(outString);
+        } catch (InstantiationException | IllegalAccessException | IOException | URISyntaxException ex) {
+            System.err.println("error, please file a bug including the log file");
+            log.warn("Error: ", ex);
+        }
+    }
+
+    /**
+     * The constructor that should not be called outside this class (Except
+     * Testclasses)
+     *
+     * @throws IOException
+     */
     Extractor() throws IOException {
         properties = LibProperties.get();
         imageFormats = initImageFormats(properties);
@@ -150,7 +232,17 @@ public class Extractor {
         closeWriter();
     }
 
+    /**
+     * Validates the input parameters like descriptor names (nullchecks) and
+     * ensures that the required files and directories are existent.
+     *
+     * @throws IllegalArgumentException
+     */
     private void validateInput() throws IllegalArgumentException {
+        if (descriptor == null) {
+            throw new NullPointerException("descriptor must not be null");
+        }
+
         try {
             // check if the descriptor class is valid
             String base = FeatureDescriptor.class.getPackage().getName();
