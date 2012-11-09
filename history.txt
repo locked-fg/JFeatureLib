@@ -1,4 +1,5 @@
 1.0.0: - corrected package path from de.lmu.dbs.jfeaturelib to de.lmu.ifi.dbs.jfeaturelib (added ifi)
+       - Fixed Issue 19 (possibility to list feature descriptor capabilities in CLI)
 0.4.0: - changed build system to maven
        - checked the support values of all feature extractors
        - Fixed Issue 18 (masking support in PHOG)
@@ -17,5 +18,5 @@
        - added settings to properties
        - added more convenient way of setting properties even through Extractor
 0.1.1: introduced Abstract Feature Descriptor
-       fixed bug in Haralick feature (issue #11)
+       fixed bug in Haralick feature (Issue 11)
 0.1.0: start of history file
