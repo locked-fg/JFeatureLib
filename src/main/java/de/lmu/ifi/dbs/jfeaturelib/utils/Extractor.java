@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.kohsuke.args4j.CmdLineException;
@@ -81,11 +82,12 @@ public class Extractor {
     //
     @Option(name = "--help", usage = "show this screen")
     private boolean showHelp = false;
+    //
+    @Option(name = "-v", usage = "show JFeatureLib debug messages")
+    private boolean debugJFeatureLib = false;
     // other command line parameters than options
     // @Argument
     // private List<String> arguments = new ArrayList<>();
-    // 
-    // FIXME move to properties file
     private static final int WRITE_BUFFER = 1024 * 1024; // bytes
     private static final String NL = "\n";
     //
@@ -100,32 +102,53 @@ public class Extractor {
     private Writer writer;
     private ExecutorService pool;
 
-    public static void main(String[] args) throws IOException {
-        initLoggingProperties();
-
-        Extractor extractor = new Extractor();
-        CmdLineParser parser = new CmdLineParser(extractor);
+    public static void main(String[] args) throws Exception {
         try {
-            parser.parseArgument(args);
-        } catch (CmdLineException e) {
-            System.err.println(e.getMessage());
-            System.err.println("java -cp JFeatureLib.jar " + Extractor.class.getCanonicalName() + " [arguments]");
-            parser.printUsage(System.err);
-            return;
-        }
+            initLoggingProperties();
 
-        // process commands that do not start the extractor
-        if (extractor.showHelp) {
-            parser.printUsage(System.out);
-            System.exit(0);
+            Extractor extractor = new Extractor();
+            CmdLineParser parser = new CmdLineParser(extractor);
 
-        } else if (extractor.listCapabilities) {
-            listFeatureDescriptorCapabilities();
-            System.exit(0);
+            try {
+                parser.parseArgument(args);
+            } catch (CmdLineException e) {
+                log.warn(e);
+                System.err.println("java -cp JFeatureLib.jar " + Extractor.class.getCanonicalName() + " [arguments]");
+                parser.printUsage(System.err);
+                System.exit(1);
+            }
 
-        } else {
-            // okay everything is fine, start
-            extractor.process();
+            // maybe adjust log level according to CL value
+            if (extractor.debugJFeatureLib) {
+                Logger.getLogger("de.lmu.ifi.dbs.jfeaturelib").setLevel(Level.DEBUG);
+            }
+
+            // process commands that should not start execution
+            if (extractor.showHelp) {
+                parser.printUsage(System.out);
+                System.exit(0);
+
+            } else if (extractor.listCapabilities) {
+                extractor.listFeatureDescriptorCapabilities();
+                System.exit(0);
+
+            } else {
+                // okay everything is fine, validate input
+                try {
+                    extractor.validateInput();
+                } catch (Throwable t) {
+                    log.debug("input validation failed.", t);
+                    parser.printUsage(System.err);
+                    System.err.println(t.getMessage());
+                    System.exit(1);
+                }
+
+                // and finally, if validation is fine, start
+                extractor.process();
+            }
+        } catch (Throwable t) {
+            log.warn("Uncaught Exception: ", t);
+            throw t;
         }
     }
 
@@ -149,43 +172,42 @@ public class Extractor {
     }
 
     /**
-     * Create an output string for the supports capabilities of the feature
-     * descriptors.
+     * Prints the supports capabilities of the feature descriptors and prints
+     * the string to system.out.
      */
-    private static void listFeatureDescriptorCapabilities() {
-        try {
-            // search for the descriptors
-            Package fdPackage = AbstractFeatureDescriptor.class.getPackage();
-            PackageScanner<FeatureDescriptor> scanner = new PackageScanner<>();
-            List<Class<FeatureDescriptor>> classes = scanner.scanForClass(fdPackage, FeatureDescriptor.class);
+    private void listFeatureDescriptorCapabilities() throws InstantiationException, IllegalAccessException,
+            IOException, URISyntaxException {
+        Package fdPackage = FeatureDescriptor.class.getPackage();
+        int offset = fdPackage.getName().length() + 1;
 
-            // find the longest name to make a nice output
-            int maxNameLength = 0;
-            for (Class<FeatureDescriptor> fd : classes) {
-                maxNameLength = Math.max(fd.getName().length(), maxNameLength);
-            }
+        // search for the descriptors
+        PackageScanner<FeatureDescriptor> scanner = new PackageScanner<>();
+        List<Class<FeatureDescriptor>> classes = scanner.scanForClass(fdPackage, FeatureDescriptor.class);
 
-            // sort the classes by class name
-            Collections.sort(classes, new Comparator<Class>() {
-                @Override
-                public int compare(Class o1, Class o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
-
-            // now we know the longest descriptor name - build the output string
-            String outString = "";
-            for (Class<FeatureDescriptor> fd : classes) {
-                outString += StringUtils.rightPad(fd.getName(), maxNameLength);
-                outString += " : ";
-                outString += fd.newInstance().supports().toString();
-                outString += "\n";
-            }
-            System.out.println(outString);
-        } catch (InstantiationException | IllegalAccessException | IOException | URISyntaxException ex) {
-            System.err.println("error, please file a bug including the log file");
-            log.warn("Error: ", ex);
+        // find the longest name to make a nice output
+        int maxNameLength = 0;
+        for (Class<FeatureDescriptor> fd : classes) {
+            maxNameLength = Math.max(fd.getName().length() - offset, maxNameLength);
         }
+
+        // sort the classes by class name
+        Collections.sort(classes, new Comparator<Class>() {
+            @Override
+            public int compare(Class o1, Class o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+        // now we know the longest descriptor name - build the output string
+        String outString = "";
+        for (Class<FeatureDescriptor> fd : classes) {
+            String name = fd.getName().substring(offset);
+            outString += StringUtils.rightPad(name, maxNameLength);
+            outString += " : ";
+            outString += fd.newInstance().supports().toString();
+            outString += "\n";
+        }
+        System.out.println(outString);
     }
 
     /**
