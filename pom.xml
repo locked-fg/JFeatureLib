@@ -281,9 +281,6 @@
     <profiles>
         <profile>
             <id>release-sign-artifacts</id>
-            <properties>
-                <skipSigning>false</skipSigning>
-            </properties>
             <activation>
                 <property>
                     <name>performRelease</name>
