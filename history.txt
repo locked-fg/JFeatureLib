@@ -1,5 +1,6 @@
 1.0.0: - corrected package path from de.lmu.dbs.jfeaturelib to de.lmu.ifi.dbs.jfeaturelib (added ifi)
        - Fixed Issue 19 (possibility to list feature descriptor capabilities in CLI)
+       - published to maven https://oss.sonatype.org/content/groups/public/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
 0.4.0: - changed build system to maven
        - checked the support values of all feature extractors
        - Fixed Issue 18 (masking support in PHOG)
