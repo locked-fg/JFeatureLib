@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/muuki88/JFeatureLib.png)](http://travis-ci.org/muuki88/JFeatureLib)
+[![Build Status](https://secure.travis-ci.org/locked-fg/JFeatureLib.png?branch=v1.0.0)](https://travis-ci.org/locked-fg/JFeatureLib)
 
 JFeatureLib
 ===========
@@ -8,3 +8,6 @@ and also several point/region detectors used mainly in the research field of
 ComputerVision.
 
 This Github repo is a mirror of https://jfeaturelib.googlecode.com
+
+Current releases can also be found at maven:
+https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
