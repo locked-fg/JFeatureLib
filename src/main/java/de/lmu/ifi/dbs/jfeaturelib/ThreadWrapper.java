@@ -8,7 +8,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
 import javax.swing.SwingWorker;
 import org.apache.log4j.Logger;
 
@@ -20,7 +19,9 @@ import org.apache.log4j.Logger;
  * the computation, the values range from 0 to 100.
  *
  * @author Benedikt
+ * @deprecated since after v1.0.0
  */
+@Deprecated
 public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
         implements PropertyChangeListener {
 
