@@ -4,27 +4,27 @@ import de.lmu.ifi.dbs.utilities.Arrays2;
 import java.util.Arrays;
 
 /**
- * The <code>Interpolated1DHistogram</code> class is used to create interpolates 
- * histograms for a certain range of values ([min,max[) with a defined range of 
- * bins.
- * Values that are added to the histogram are interpolated to ne nearest 
- * neighboring bin according to the distance of the value to the center of the 
- * bin. If the according neighbor is out of the range of the histogram, then the 
- * according interpolated value is skipped silently and the value of one bin is 
+ * The
+ * <code>Interpolated1DHistogram</code> class is used to create interpolates
+ * histograms for a certain range of values ([min,max[) with a defined range of
+ * bins. Values that are added to the histogram are interpolated to ne nearest
+ * neighboring bin according to the distance of the value to the center of the
+ * bin. If the according neighbor is out of the range of the histogram, then the
+ * according interpolated value is skipped silently and the value of one bin is
  * raised only:
- * 
+ *
  * <pre>
  * Interpolated1DHistogram ih = new Interpolated1DHistogram(0,3,3);
  * ih.add(0);    // histogram: 0.5, 0, 0
  * ih.add(1.5);  // histogram: 0.5, 1, 0
  * </pre>
- * 
+ *
  * @author graf
  * @since 11/4/2011
  */
 public class Interpolated1DHistogram {
 
-    /** 
+    /**
      * inclusive minimum value of the histogram range
      */
     final double min;
@@ -47,7 +47,7 @@ public class Interpolated1DHistogram {
 
     /**
      * Initializes the histogram with user defined min, max and count values
-     * 
+     *
      * @param min inclusive lower bound
      * @param max exclusive upper bound
      * @param binCount amount of bins between min and max
@@ -70,7 +70,7 @@ public class Interpolated1DHistogram {
     /**
      * Raises the histogram at the specivied key position by 1 (might decrease
      * due to interpolation).
-     * 
+     *
      * @param pos in the range of [min, max[
      */
     public void add(double pos) {
@@ -78,11 +78,11 @@ public class Interpolated1DHistogram {
     }
 
     /**
-     * Raises the histogram at the specivied key position by <code>value</code> 
-     * (might decrease due to interpolation).
-     * 
+     * Raises the histogram at the specivied key position by
+     * <code>value</code> (might decrease due to interpolation).
+     *
      * @param pos in the range of [min, max[
-     * @param value 
+     * @param value
      */
     public void add(double pos, double value) {
         if (pos < min || pos >= max || Double.isNaN(pos)) {
@@ -119,8 +119,8 @@ public class Interpolated1DHistogram {
 
     /**
      * Returns a reference(!) to the data array.
-     * 
-     * @return 
+     *
+     * @return
      */
     public double[] getData() {
         return bins;
@@ -135,14 +135,15 @@ public class Interpolated1DHistogram {
 
     /**
      * Returns the array index for the given value.
+     *
      * As this is not a public method, the input and outputs are NOT checked for
      * ArrayIndexOutOfBounds!
-     * 
+     *
      * <pre>
      * i = new Interpolated1DHistogram(0,10,10);
      * i.getBinFor(0.1); // returns 0
      * </pre>
-     * 
+     *
      * @param pos
      * @return array index
      */
@@ -157,8 +158,15 @@ public class Interpolated1DHistogram {
         }
     }
 
+    /**
+     * Returns a string representation of the histogram.
+     *
+     * The string is a comma separated concatenation of the values
+     *
+     * @return
+     */
     @Override
     public String toString() {
-        return Arrays2.join(bins, ", ", "%7.2f");
+        return "[" + Arrays2.join(bins, ", ", "%7.2f") + "]";
     }
 }
