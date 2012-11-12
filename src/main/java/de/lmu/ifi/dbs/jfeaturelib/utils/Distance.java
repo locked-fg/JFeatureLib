@@ -3,6 +3,8 @@ package de.lmu.ifi.dbs.jfeaturelib.utils;
 import de.lmu.ifi.dbs.jfeaturelib.ImagePoint;
 
 /**
+ * An abstract definition of a distance measure between two coordinates or image
+ * points.
  *
  * @author graf
  */
