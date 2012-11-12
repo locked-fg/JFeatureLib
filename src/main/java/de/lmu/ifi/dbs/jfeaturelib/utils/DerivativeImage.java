@@ -49,6 +49,7 @@ public class DerivativeImage {
         ipY.convolve(kernelY, 1, 3);
     }
 
+    @Override
     public String toString() {
         return "DerivativeImage{" + "kernelX=" + Arrays2.join(kernelX, " ") + ", kernelY=" + Arrays2.join(kernelY," ") + '}';
     }
