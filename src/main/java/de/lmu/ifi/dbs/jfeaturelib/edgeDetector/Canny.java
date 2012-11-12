@@ -551,18 +551,4 @@ public class Canny extends ConfigurableDescriptor {
         this.sourceImage = srcImage;
     }
     //</editor-fold>
-//    /**
-//     * Returns the image edges as INT_ARGB array. This can be used to create a
-//     * buffered image, if the dimensions are known.
-//     */
-//    @Override
-//    public List<double[]> getFeatures() {
-//        if (data != null) {
-//            ArrayList<double[]> thisResult = new ArrayList<>(1);
-//            thisResult.add(Arrays2.convertToDouble(data));
-//            return thisResult;
-//        } else {
-//            return Collections.EMPTY_LIST;
-//        }
-//    }
 }
