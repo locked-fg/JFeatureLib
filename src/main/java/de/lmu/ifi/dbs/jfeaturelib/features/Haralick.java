@@ -14,36 +14,21 @@ import java.util.EnumSet;
  *
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
- * @article{haralick1973textural,
- *   title={Textural features for image classification},
- *   author={Haralick, R.M. and Shanmugam, K. and Dinstein, I.},
- *   journal={Systems, Man and Cybernetics, IEEE Transactions on},
- *   volume={3},
- *   number={6},
- *   pages={610--621},
- *   year={1973},
- *   publisher={IEEE}
- *  }
+ *
+ * @article{haralick1973textural, title={Textural features for image
+ * classification}, author={Haralick, R.M. and Shanmugam, K. and Dinstein, I.},
+ * journal={Systems, Man and Cybernetics, IEEE Transactions on}, volume={3},
+ * number={6}, pages={610--621}, year={1973}, publisher={IEEE} }
  * </pre>
  *
- * The feature descriptor is composed of the following features:
- * <ol>
- *  <li>Angular 2nd moment</li>
- *  <li>Contrast</li>
- *  <li>Correlation</li>
- *  <li>variance</li>
- *  <li>Inverse Difference Moment</li>
- *  <li>Sum Average</li>
- *  <li>Sum Variance</li>
- *  <li>Sum Entropy</li>
- *  <li>Entropy</li>
- *  <li>Difference Variance</li>
- *  <li>Difference Entropy</li>
- *  <li>Information Measures of Correlation</li>
- *  <li>Information Measures of Correlation</li>
- *  <li>Maximum Correlation COefficient</li>
- * </ol>
- * 
+ * The feature descriptor is composed of the following features: <ol>
+ * <li>Angular 2nd moment</li> <li>Contrast</li> <li>Correlation</li>
+ * <li>variance</li> <li>Inverse Difference Moment</li> <li>Sum Average</li>
+ * <li>Sum Variance</li> <li>Sum Entropy</li> <li>Entropy</li> <li>Difference
+ * Variance</li> <li>Difference Entropy</li> <li>Information Measures of
+ * Correlation</li> <li>Information Measures of Correlation</li> <li>Maximum
+ * Correlation COefficient</li> </ol>
+ *
  * @author graf
  */
 public class Haralick extends AbstractFeatureDescriptor {
@@ -320,7 +305,9 @@ public class Haralick extends AbstractFeatureDescriptor {
     }
 
     /**
-     * Returns the logarithm of the specified value.
+     * Returns the bound logarithm of the specified value.
+     *
+     * If Math.log would be Double.NEGATIVE_INFINITY, 0 is returned
      *
      * @param value the value for which the logarithm should be returned
      * @return the logarithm of the specified value
@@ -333,6 +320,13 @@ public class Haralick extends AbstractFeatureDescriptor {
         return log;
     }
 
+    /**
+     * Normalizes the array by the given sum. by dividing each 2nd dimension
+     * array componentwise by the sum.
+     *
+     * @param A
+     * @param sum
+     */
     private void normalize(double[][] A, double sum) {
         for (int i = 0; i < A.length; i++) {
             Arrays2.div(A[i], sum);
