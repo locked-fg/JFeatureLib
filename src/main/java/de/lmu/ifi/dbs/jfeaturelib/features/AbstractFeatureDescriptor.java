@@ -31,11 +31,10 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
      */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     /**
-     * The data arrays which hold the calculated features. Most of the
-     * descriptors will only return a single array. Yet there are some
-     * descriptors like Sift which return a bag of features.
+     * The data arrays which hold the calculated features.
      *
-     * @see Sift
+     * Most of the descriptors will only return a single array. Yet there are
+     * some descriptors like Sift which return a bag of features.
      */
     private List<double[]> data = new ArrayList<>(1);
     /**
