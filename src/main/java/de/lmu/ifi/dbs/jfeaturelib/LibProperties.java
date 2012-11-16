@@ -26,7 +26,7 @@ public class LibProperties extends PropertyContainer {
     /**
      * The file name of the properties file.
      */
-    private static final File BASE_FILE = new File("jfeaturelib.properties");
+    public static final File BASE_FILE = new File("jfeaturelib.properties");
     /**
      * Path to the sift binary which can be obtained from the SIFT homepage.
      *
@@ -81,7 +81,7 @@ public class LibProperties extends PropertyContainer {
     public static LibProperties get() throws IOException {
 
         if (singleton == null) {
-            if (BASE_FILE.exists()) { // read fomr file
+            if (BASE_FILE.exists()) { // read from file
                 log.debug("reading properties from file: " + BASE_FILE.getAbsolutePath());
                 singleton = new LibProperties(BASE_FILE);
 
