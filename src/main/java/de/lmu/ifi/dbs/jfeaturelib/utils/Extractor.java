@@ -2,7 +2,6 @@ package de.lmu.ifi.dbs.jfeaturelib.utils;
 
 import de.lmu.ifi.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
-import de.lmu.ifi.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
 import de.lmu.ifi.dbs.jfeaturelib.features.FeatureDescriptor;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.ImagePlus;
@@ -10,10 +9,15 @@ import ij.io.Opener;
 import ij.process.ImageProcessor;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.net.URISyntaxException;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -85,6 +89,9 @@ public class Extractor {
     //
     @Option(name = "-v", usage = "show JFeatureLib debug messages")
     private boolean debugJFeatureLib = false;
+    //
+    @Option(name = "--unpack-properties", usage = "extracts the default properties file into the current directory")
+    private boolean unpackProperties = false;
     // other command line parameters than options
     // @Argument
     // private List<String> arguments = new ArrayList<>();
@@ -132,6 +139,10 @@ public class Extractor {
                 extractor.listFeatureDescriptorCapabilities();
                 System.exit(0);
 
+            } else if (extractor.unpackProperties) {
+                extractor.unpackProperties();
+                System.exit(0);
+
             } else {
                 // okay everything is fine, validate input
                 try {
@@ -169,6 +180,24 @@ public class Extractor {
         }
         PropertyConfigurator.configure(Extractor.class.getResourceAsStream(path));
         log.debug("read logging configuration from " + path);
+    }
+
+    /**
+     * reads the shipped properties file and copies it into the current
+     * execution directory
+     */
+    private void unpackProperties() {
+        try {
+            InputStream is = LibProperties.class.getResourceAsStream("/" + LibProperties.BASE_FILE.getName());
+            FileChannel dst = new FileOutputStream(LibProperties.BASE_FILE).getChannel();
+            dst.transferFrom(Channels.newChannel(is), 0, Integer.MAX_VALUE);
+            dst.close();
+            is.close();
+            log.info("wrote jfeaturelib.properties");
+        } catch (IOException ex) {
+            log.debug("the file could not be extracted.", ex);
+            log.warn("The file could not be extracted. PLease see the log for more information.");
+        }
     }
 
     /**
