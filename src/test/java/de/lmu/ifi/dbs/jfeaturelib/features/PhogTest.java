@@ -56,6 +56,7 @@ public class PhogTest {
         File url = new File("src/test/resources/test.jpg");
 
         LibProperties props = LibProperties.get();
+        assertNotNull(props);
         props.setProperty(LibProperties.PHOG_CANNY, true);
 
         PHOG phog = new PHOG();

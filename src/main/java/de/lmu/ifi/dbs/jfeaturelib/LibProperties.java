@@ -3,6 +3,8 @@ package de.lmu.ifi.dbs.jfeaturelib;
 import de.lmu.ifi.dbs.utilities.PropertyContainer;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import org.apache.log4j.Logger;
 
 /**
  * The property wrapper class for
@@ -19,6 +21,7 @@ import java.io.IOException;
  */
 public class LibProperties extends PropertyContainer {
 
+    private static final Logger log = Logger.getLogger(LibProperties.class);
     private static LibProperties singleton;
     /**
      * The file name of the properties file.
@@ -37,7 +40,6 @@ public class LibProperties extends PropertyContainer {
     public static final String PHOG_CANNY = "features.phog.canny";
     public static final String PHOG_BINS = "features.phog.bins";
     public static final String PHOG_RECURSIONS = "features.phog.recursions";
-
     // shapes
     public static final String POLYGON_EVOLUTION = "shapefeatures.polygonevolution.iterations";
     // Edges
@@ -49,14 +51,25 @@ public class LibProperties extends PropertyContainer {
     public static final String CANNY_NORMALIZE_CONTRAST = "edge.canny.contrastNormalized";
 
     /**
-     * Constructor that initializes the properties container with the file
-     * defined in BASE_FILE.
+     * Constructor that initializes the properties container with the given
+     * file.
      *
-     * @see #BASE_FILE
+     * @param file
      * @throws IOException
      */
-    LibProperties() throws IOException {
-        super(BASE_FILE);
+    LibProperties(File file) throws IOException {
+        super(file);
+    }
+
+    /**
+     * Constructor that initializes the properties container with the given
+     * input stream.
+     *
+     * @param file
+     * @throws IOException
+     */
+    LibProperties(InputStream is) throws IOException {
+        super(is);
     }
 
     /**
@@ -66,8 +79,20 @@ public class LibProperties extends PropertyContainer {
      * @throws IOException
      */
     public static LibProperties get() throws IOException {
+
         if (singleton == null) {
-            singleton = new LibProperties();
+            if (BASE_FILE.exists()) { // read fomr file
+                log.debug("reading properties from file: " + BASE_FILE.getAbsolutePath());
+                singleton = new LibProperties(BASE_FILE);
+
+            } else {
+                log.debug("reading properties from jar file as no " + BASE_FILE.getName() + " was found");
+                try (InputStream is = LibProperties.class.getResourceAsStream("/" + BASE_FILE.getName())) {
+                    singleton = new LibProperties(is);
+                }
+            }
+
+            assert singleton != null : "properties should not be null";
         }
         return singleton;
     }
