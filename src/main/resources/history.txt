@@ -1,3 +1,6 @@
+1.0.1: - fixed error that properties were not found
+       - added possibility to extract jfeaturelib.properties from jar by using the Extractor
+       - added possibility to extract logging.properties from jar by using the Extractor
 1.0.0: - corrected package path from de.lmu.dbs.jfeaturelib to de.lmu.ifi.dbs.jfeaturelib (added ifi)
        - Fixed Issue 19 (possibility to list feature descriptor capabilities in CLI)
        - published to maven https://oss.sonatype.org/content/groups/public/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/

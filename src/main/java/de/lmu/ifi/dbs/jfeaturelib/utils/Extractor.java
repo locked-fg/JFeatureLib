@@ -90,7 +90,7 @@ public class Extractor {
     @Option(name = "-v", usage = "show JFeatureLib debug messages")
     private boolean debugJFeatureLib = false;
     //
-    @Option(name = "--unpack-properties", usage = "extracts the default properties file into the current directory")
+    @Option(name = "--unpack-properties", usage = "extracts the default properties and loggiing properties into the current directory")
     private boolean unpackProperties = false;
     // other command line parameters than options
     // @Argument
@@ -170,13 +170,9 @@ public class Extractor {
      * Otherwise, the configuration from /logging.properties will be read.
      */
     private static void initLoggingProperties() {
-        // read logging properties
-        if (new File("./logging.properties").exists()) {
+        if (new File("./log4j.properties").exists()) {
             log.debug("read logging configuration from file");
-            PropertyConfigurator.configure("./logging.properties");
-        } else {
-            log.debug("read logging configuration from jar");
-            PropertyConfigurator.configure(Extractor.class.getResourceAsStream("/logging.properties"));
+            PropertyConfigurator.configure("./log4j.properties");
         }
     }
 
@@ -189,11 +185,16 @@ public class Extractor {
             try (InputStream is = LibProperties.class.getResourceAsStream("/" + LibProperties.BASE_FILE.getName());
                     FileChannel dst = new FileOutputStream(LibProperties.BASE_FILE).getChannel()) {
                 dst.transferFrom(Channels.newChannel(is), 0, Integer.MAX_VALUE);
+                log.info("wrote jfeaturelib.properties");
             }
-            log.info("wrote jfeaturelib.properties");
+            try (InputStream is = LibProperties.class.getResourceAsStream("/log4j.properties");
+                    FileChannel dst = new FileOutputStream("log4j.properties").getChannel()) {
+                dst.transferFrom(Channels.newChannel(is), 0, Integer.MAX_VALUE);
+                log.info("wrote log4j.properties");
+            }
         } catch (IOException ex) {
-            log.debug("the file could not be extracted.", ex);
-            log.warn("The file could not be extracted. PLease see the log for more information.");
+            log.debug("the properties could not be extracted.", ex);
+            log.warn("The properties could not be extracted. Please see the log for more information.");
         }
     }
 
