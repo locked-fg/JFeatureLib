@@ -167,19 +167,17 @@ public class Extractor {
      * Initialize the logging properties.
      *
      * If a ./logging.properties is found that this file will be used.
-     * Otherwise, the configuration from /META-INF/logging.properties will be
-     * read.
+     * Otherwise, the configuration from /logging.properties will be read.
      */
     private static void initLoggingProperties() {
         // read logging properties
-        String path;
         if (new File("./logging.properties").exists()) {
-            path = "./logging.properties";
+            log.debug("read logging configuration from file");
+            PropertyConfigurator.configure("./logging.properties");
         } else {
-            path = "/META-INF/logging.properties";
+            log.debug("read logging configuration from jar");
+            PropertyConfigurator.configure(Extractor.class.getResourceAsStream("/logging.properties"));
         }
-        PropertyConfigurator.configure(Extractor.class.getResourceAsStream(path));
-        log.debug("read logging configuration from " + path);
     }
 
     /**
@@ -188,11 +186,10 @@ public class Extractor {
      */
     private void unpackProperties() {
         try {
-            InputStream is = LibProperties.class.getResourceAsStream("/" + LibProperties.BASE_FILE.getName());
-            FileChannel dst = new FileOutputStream(LibProperties.BASE_FILE).getChannel();
-            dst.transferFrom(Channels.newChannel(is), 0, Integer.MAX_VALUE);
-            dst.close();
-            is.close();
+            try (InputStream is = LibProperties.class.getResourceAsStream("/" + LibProperties.BASE_FILE.getName());
+                    FileChannel dst = new FileOutputStream(LibProperties.BASE_FILE).getChannel()) {
+                dst.transferFrom(Channels.newChannel(is), 0, Integer.MAX_VALUE);
+            }
             log.info("wrote jfeaturelib.properties");
         } catch (IOException ex) {
             log.debug("the file could not be extracted.", ex);
