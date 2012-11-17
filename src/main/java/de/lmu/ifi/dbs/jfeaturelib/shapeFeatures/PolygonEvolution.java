@@ -2,7 +2,6 @@ package de.lmu.ifi.dbs.jfeaturelib.shapeFeatures;
 
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
-import de.lmu.ifi.dbs.jfeaturelib.features.Histogram;
 import de.lmu.ifi.dbs.jfeaturelib.utils.Distance;
 import de.lmu.ifi.dbs.jfeaturelib.utils.DistanceL2;
 import ij.process.ImageProcessor;

@@ -17,7 +17,6 @@ import java.io.Writer;
 import java.net.URISyntaxException;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;

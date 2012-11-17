@@ -1,9 +1,5 @@
 package de.lmu.ifi.dbs.jfeaturelib.features.surf;
 
-import ij.IJ;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.*;
 
 /**

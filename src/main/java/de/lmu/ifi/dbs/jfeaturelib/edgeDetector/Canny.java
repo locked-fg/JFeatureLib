@@ -7,7 +7,6 @@ import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.*;
 

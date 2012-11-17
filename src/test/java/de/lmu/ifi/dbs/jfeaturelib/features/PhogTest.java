@@ -7,7 +7,6 @@ import ij.process.ImageProcessor;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import javax.imageio.ImageIO;
 import org.junit.After;
 import org.junit.AfterClass;

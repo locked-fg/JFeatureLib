@@ -2,7 +2,6 @@ package de.lmu.ifi.dbs.jfeaturelib.utils;
 
 import de.lmu.ifi.dbs.jfeaturelib.utils.Interpolated1DHistogram;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 

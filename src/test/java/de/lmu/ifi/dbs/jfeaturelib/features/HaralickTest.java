@@ -1,14 +1,7 @@
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
-import de.lmu.ifi.dbs.jfeaturelib.features.Haralick;
-import ij.process.ColorProcessor;
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
-import javax.imageio.ImageIO;
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 
 /**
