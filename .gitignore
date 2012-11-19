@@ -5,3 +5,8 @@
 /nbproject/genfiles.properties
 /target/
 /nb-configuration.xml
+
+# Eclipse IDE
+.classpath
+.project
+.settings/
