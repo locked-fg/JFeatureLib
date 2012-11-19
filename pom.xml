@@ -17,6 +17,11 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipSigning>true</skipSigning>
+        <findbugs.version>2.5.2</findbugs.version>
+        <checkstyle.version>2.9.1</checkstyle.version>
+        <surefire.reportplugin.version>2.12.4</surefire.reportplugin.version>
+        <changelog.version>2.2</changelog.version>
+        <javadoc.version>2.9</javadoc.version>
     </properties>
 
     <licenses>
@@ -29,8 +34,23 @@
 
     <scm>
         <url>https://code.google.com/p/jfeaturelib/</url>
-        <connection>https://code.google.com/p/jfeaturelib/</connection>
+        <connection>scm:git:https://code.google.com/p/jfeaturelib/</connection>
     </scm>
+
+    <issueManagement>
+        <system>GoogleCode</system>
+        <url>http://code.google.com/p/jfeaturelib/issues/list</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+          <name>JFeatureLib User List</name>
+          <subscribe>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</subscribe>
+          <unsubscribe>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</unsubscribe>
+          <post>jfeaturelib@googlegroups.com</post>
+          <archive>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</archive>
+        </mailingList>
+    </mailingLists>
 
     <developers>
         <developer>
@@ -95,6 +115,44 @@
             <url>file://${project.basedir}/lib</url>
         </repository>
     </repositories>
+
+    <!-- Reporting -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${surefire.reportplugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changelog-plugin</artifactId>
+                <version>${changelog.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.version}</version>
+                <configuration>
+                </configuration>
+            </plugin>
+         </plugins>
+    </reporting>
     
     <build>
         <plugins>
@@ -105,6 +163,18 @@
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                     <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+            <!-- Findbugs Mojo -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.version}</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <!-- Optional directory to put findbugs xdoc xml report -->
+                    <xmlOutputDirectory>target/site/findbugs.report</xmlOutputDirectory>
                 </configuration>
             </plugin>
             <!-- Attached source.jar -->
