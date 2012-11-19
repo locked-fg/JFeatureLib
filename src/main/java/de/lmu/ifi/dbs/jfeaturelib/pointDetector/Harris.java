@@ -97,7 +97,7 @@ public class Harris implements PointDetector {
     public void run(ImageProcessor ip) {
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
 
-        ByteProcessor bp = Supporto.copyByteProcessor(ip);
+        ByteProcessor bp = (ByteProcessor) ip.convertToByte(true);
         int width = bp.getWidth();
         int height = bp.getHeight();
         int potenza = (int) Math.pow(2, piramidi - 1);
@@ -385,12 +385,12 @@ class Supporto {
 
     static ByteProcessor smussaEsottocampiona(ByteProcessor input, int window, float sigma)
             throws IllegalArgumentException {
-        ByteProcessor prepocessing = copyByteProcessor(input);
+        ByteProcessor prepocessing = (ByteProcessor) input.duplicate();
         float gauss[] = initGaussianKernel(window, sigma);
         Convolver convolver = new Convolver();
         ImageProcessor temp = prepocessing.convertToFloat();
         convolver.convolve(temp, gauss, (int) Math.sqrt(gauss.length), (int) Math.sqrt(gauss.length));
-        prepocessing = copyByteProcessor(temp);
+        prepocessing = (ByteProcessor) input.duplicate();
         int prepocessingWidth = prepocessing.getWidth();
         int prepocessingHeight = prepocessing.getHeight();
         ByteProcessor out = new ByteProcessor(prepocessingWidth / 2, prepocessingHeight / 2);
@@ -408,25 +408,6 @@ class Supporto {
             x++;
         }
         return out;
-    }
-
-    /**
-     * MY METHODS
-     */
-    /**
-     * Method to copy an ImageProcessor in a ByteProcessor.
-     *
-     * @param ip input ImageProcessor.
-     * @return ByteProcessor.
-     */
-    static ByteProcessor copyByteProcessor(ImageProcessor ip) {
-        ByteProcessor bp = new ByteProcessor(ip.getWidth(), ip.getHeight());
-        for (int y = 0; y < ip.getHeight(); y++) {
-            for (int x = 0; x < ip.getWidth(); x++) {
-                bp.set(x, y, ip.getPixel(x, y));
-            }
-        }
-        return bp;
     }
 
     /**
@@ -477,6 +458,4 @@ class Supporto {
             throw new IllegalArgumentException("Sigma of the gaussian is zero or negative.");
         }
     }
-
-
 }
