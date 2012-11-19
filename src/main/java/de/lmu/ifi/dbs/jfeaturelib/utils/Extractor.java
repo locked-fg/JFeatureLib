@@ -476,7 +476,8 @@ public class Extractor {
         for (File imageFile : imageList) {
             File correspondingMask = null;
 
-            if (maskDirectory != null) {
+            // only search for a mask - well - if a mask directory was set
+            if (maskDirectory != null && maskDirectory.exists()) {
                 // get base image path starting from the imageDirectory
                 // -> foo/bar/image.jpeg
                 String imgPart = imageFile.getAbsolutePath().replace(imageBasePath, "");
