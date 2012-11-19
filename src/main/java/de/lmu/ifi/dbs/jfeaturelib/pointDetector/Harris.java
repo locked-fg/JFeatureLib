@@ -3,8 +3,10 @@ package de.lmu.ifi.dbs.jfeaturelib.pointDetector;
 import de.lmu.ifi.dbs.jfeaturelib.ImagePoint;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import ij.plugin.filter.Convolver;
+import ij.plugin.filter.GaussianBlur;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
+import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import java.awt.Image;
 import java.beans.PropertyChangeListener;
@@ -105,18 +107,10 @@ public class Harris implements PointDetector {
             piramidi = 1;
         }
 
-//        ByteProcessor newbp;
-//        List<int[]> tmp = new ArrayList<>();
-//        int[] numero = new int[this.piramidi];
-
         for (int i = 0; i < this.piramidi; i++) {
             corners = new ArrayList<>();
             resultingCorners = new ArrayList<>();
             filter(bp, this.minMeasure, this.minDistance, i);
-//            for (int[] n : corners) {
-//                tmp.add(n);
-//            }
-//            numero[i] = corners.size();
             bp = Supporto.smussaEsottocampiona(bp, 3, this.gaussiansigma);
         }
 
@@ -299,163 +293,164 @@ public class Harris implements PointDetector {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
-}
-
-/**
- * Gradient vector classe to calculate the smoothed gradient, using both the x and y derivatives of a gaussian function
- *
- * @author Messina Mariagrazia
- *
- */
-class GradientVector {
-
-    int halfwindow = 1;
-    double sigma2 = 1.2;
-    double[][] kernelGx = new double[2 * halfwindow + 1][2 * halfwindow + 1];
-    double[][] kernelGy = new double[2 * halfwindow + 1][2 * halfwindow + 1];
 
     /**
-     * Metodo costruttore
+     * Gradient vector classe to calculate the smoothed gradient, using both the x and y derivatives of a gaussian
+     * function
+     *
+     * @author Messina Mariagrazia
      *
      */
-    public GradientVector() {
-        for (int y = -halfwindow; y <= halfwindow; y++) {
-            for (int x = -halfwindow; x <= halfwindow; x++) {
-                kernelGx[halfwindow + y][halfwindow + x] = Gx(x, y);
-                kernelGy[halfwindow + y][halfwindow + x] = Gy(x, y);
-            }
-        }
-    }
+    static class GradientVector {
 
-    /**
-     * Function to smooth an image through a gaussian to then compute its x-derivative (Drog operator)
-     *
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @return value of the gaussian in x,y
-     */
-    private double Gx(int x, int y) {
-        double t = (x * x + y * y) / (2 * sigma2);
-        double d2t = -x / sigma2;
-        double e = d2t * Math.exp(-t);
-        return e;
-    }
+        int halfwindow = 1;
+        double sigma2 = 1.2;
+        double[][] kernelGx = new double[2 * halfwindow + 1][2 * halfwindow + 1];
+        double[][] kernelGy = new double[2 * halfwindow + 1][2 * halfwindow + 1];
 
-    /**
-     * Function to smooth an image through a gaussian to then compute its y-derivative (Drog operator)
-     *
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @return value of the gaussian in x,y
-     */
-    private double Gy(int x, int y) {
-        double t = (x * x + y * y) / (2 * sigma2);
-        double d2t = -y / sigma2;
-        double e = d2t * Math.exp(-t);
-        return e;
-    }
-
-    /**
-     * Function that puts in a vector the value of the gradient of all the points within a window (returns the Gradient
-     * value in the pixel (x,y))
-     *
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @param c image
-     * @return value of the x and y gradient in all the points of the window
-     */
-    public double[] getVector(ByteProcessor c, int x, int y) {
-        double gx = 0, gy = 0;
-        for (int dy = -halfwindow; dy <= halfwindow; dy++) {
-            for (int dx = -halfwindow; dx <= halfwindow; dx++) {
-                int xk = x + dx;
-                int yk = y + dy;
-                double vk = c.getPixel(xk, yk); // <-- value of the pixel
-                gx += kernelGx[halfwindow - dy][halfwindow - dx] * vk;
-                gy += kernelGy[halfwindow - dy][halfwindow - dx] * vk;
+        /**
+         * Metodo costruttore
+         *
+         */
+        public GradientVector() {
+            for (int y = -halfwindow; y <= halfwindow; y++) {
+                for (int x = -halfwindow; x <= halfwindow; x++) {
+                    kernelGx[halfwindow + y][halfwindow + x] = Gx(x, y);
+                    kernelGy[halfwindow + y][halfwindow + x] = Gy(x, y);
+                }
             }
         }
 
-        double[] gradientVector = new double[]{gx, gy};
-        return gradientVector;
-    }
-}
+        /**
+         * Function to smooth an image through a gaussian to then compute its x-derivative (Drog operator)
+         *
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @return value of the gaussian in x,y
+         */
+        private double Gx(int x, int y) {
+            double t = (x * x + y * y) / (2 * sigma2);
+            double d2t = -x / sigma2;
+            double e = d2t * Math.exp(-t);
+            return e;
+        }
 
-class Supporto {
+        /**
+         * Function to smooth an image through a gaussian to then compute its y-derivative (Drog operator)
+         *
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @return value of the gaussian in x,y
+         */
+        private double Gy(int x, int y) {
+            double t = (x * x + y * y) / (2 * sigma2);
+            double d2t = -y / sigma2;
+            double e = d2t * Math.exp(-t);
+            return e;
+        }
 
-    static ByteProcessor smussaEsottocampiona(ByteProcessor input, int window, float sigma)
-            throws IllegalArgumentException {
-        ByteProcessor prepocessing = (ByteProcessor) input.duplicate();
-        float gauss[] = initGaussianKernel(window, sigma);
-        Convolver convolver = new Convolver();
-        ImageProcessor temp = prepocessing.convertToFloat();
-        convolver.convolve(temp, gauss, (int) Math.sqrt(gauss.length), (int) Math.sqrt(gauss.length));
-        prepocessing = (ByteProcessor) input.duplicate();
-        int prepocessingWidth = prepocessing.getWidth();
-        int prepocessingHeight = prepocessing.getHeight();
-        ByteProcessor out = new ByteProcessor(prepocessingWidth / 2, prepocessingHeight / 2);
-        if (prepocessingWidth % 2 != 0) {
-            prepocessingWidth--;
-        }
-        if (prepocessingHeight % 2 != 0) {
-            prepocessingHeight--;
-        }
-        for (int i = 0, x = 0; i < prepocessingWidth; i = i + 2) {
-            for (int j = 0, y = 0; j < prepocessingHeight; j = j + 2) {
-                out.set(x, y, prepocessing.get(i, j));
-                y++;
+        /**
+         * Function that puts in a vector the value of the gradient of all the points within a window (returns the
+         * Gradient value in the pixel (x,y))
+         *
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @param c image
+         * @return value of the x and y gradient in all the points of the window
+         */
+        public double[] getVector(ByteProcessor c, int x, int y) {
+            double gx = 0, gy = 0;
+            for (int dy = -halfwindow; dy <= halfwindow; dy++) {
+                for (int dx = -halfwindow; dx <= halfwindow; dx++) {
+                    int xk = x + dx;
+                    int yk = y + dy;
+                    double vk = c.getPixel(xk, yk); // <-- value of the pixel
+                    gx += kernelGx[halfwindow - dy][halfwindow - dx] * vk;
+                    gy += kernelGy[halfwindow - dy][halfwindow - dx] * vk;
+                }
             }
-            x++;
-        }
-        return out;
-    }
 
-    /**
-     * Creates the gaussian and inserts the values in an array
-     *
-     * @param window rows and columns of the gaussian matrix. It has to be odd
-     * @param sigma
-     * @return gaussian array
-     * @throws IllegalArgumentException if the window is negative, zero or even or if sigma is zero or even.
-     */
-     static float[] initGaussianKernel(int window, float sigma) throws IllegalArgumentException {
-        controlInput(window, sigma);
-        short aperture = (short) (window / 2);
-        float[][] gaussianKernel = new float[2 * aperture + 1][2 * aperture + 1];
-        float out[] = new float[(2 * aperture + 1) * (2 * aperture + 1)];
-        int k = 0;
-        float sum = 0;
-        for (int dy = -aperture; dy <= aperture; dy++) {
-            for (int dx = -aperture; dx <= aperture; dx++) {
-                gaussianKernel[dx + aperture][dy + aperture] = (float) Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma));
-                sum += gaussianKernel[dx + aperture][dy + aperture];
-            }
+            double[] gradientVector = new double[]{gx, gy};
+            return gradientVector;
         }
-        for (int dy = -aperture; dy <= aperture; dy++) {
-            for (int dx = -aperture; dx <= aperture; dx++) {
-                out[k++] = gaussianKernel[dx + aperture][dy + aperture] / sum;
-            }
-        }
-        return out;
     }
 
-    /**
-     * checks the gaussian's values
-     *
-     * @param window the gaussian's window.
-     * @param sigma the gaussian's sigma value
-     * @throws IllegalArgumentException if the window is negative, zero or even or if sigma is zero or even.
-     */
-    private static void controlInput(int window, float sigma) throws
-            IllegalArgumentException {
-        if (window % 2 == 0) {
-            throw new IllegalArgumentException("Window isn't an odd.");
+    static class Supporto {
+
+        static ByteProcessor smussaEsottocampiona(ByteProcessor input, int window, float sigma)
+                throws IllegalArgumentException {
+            ByteProcessor prepocessing = (ByteProcessor) input.duplicate();
+            float gauss[] = initGaussianKernel(window, sigma);
+            Convolver convolver = new Convolver();
+            ImageProcessor temp = prepocessing.convertToFloat();
+            convolver.convolve(temp, gauss, (int) Math.sqrt(gauss.length), (int) Math.sqrt(gauss.length));
+            prepocessing = (ByteProcessor) input.duplicate();
+            int prepocessingWidth = prepocessing.getWidth();
+            int prepocessingHeight = prepocessing.getHeight();
+            ByteProcessor out = new ByteProcessor(prepocessingWidth / 2, prepocessingHeight / 2);
+            if (prepocessingWidth % 2 != 0) {
+                prepocessingWidth--;
+            }
+            if (prepocessingHeight % 2 != 0) {
+                prepocessingHeight--;
+            }
+            for (int i = 0, x = 0; i < prepocessingWidth; i = i + 2) {
+                for (int j = 0, y = 0; j < prepocessingHeight; j = j + 2) {
+                    out.set(x, y, prepocessing.get(i, j));
+                    y++;
+                }
+                x++;
+            }
+            return out;
         }
-        if (window <= 0) {
-            throw new IllegalArgumentException("Window is negative or zero");
+
+        /**
+         * Creates the gaussian and inserts the values in an array
+         *
+         * @param window rows and columns of the gaussian matrix. It has to be odd
+         * @param sigma
+         * @return gaussian array
+         * @throws IllegalArgumentException if the window is negative, zero or even or if sigma is zero or even.
+         */
+        static float[] initGaussianKernel(int window, float sigma) throws IllegalArgumentException {
+            controlInput(window, sigma);
+            short aperture = (short) (window / 2);
+            float[][] gaussianKernel = new float[2 * aperture + 1][2 * aperture + 1];
+            float out[] = new float[(2 * aperture + 1) * (2 * aperture + 1)];
+            int k = 0;
+            float sum = 0;
+            for (int dy = -aperture; dy <= aperture; dy++) {
+                for (int dx = -aperture; dx <= aperture; dx++) {
+                    gaussianKernel[dx + aperture][dy + aperture] = (float) Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma));
+                    sum += gaussianKernel[dx + aperture][dy + aperture];
+                }
+            }
+            for (int dy = -aperture; dy <= aperture; dy++) {
+                for (int dx = -aperture; dx <= aperture; dx++) {
+                    out[k++] = gaussianKernel[dx + aperture][dy + aperture] / sum;
+                }
+            }
+            return out;
         }
-        if (sigma <= 0) {
-            throw new IllegalArgumentException("Sigma of the gaussian is zero or negative.");
+
+        /**
+         * checks the gaussian's values
+         *
+         * @param window the gaussian's window.
+         * @param sigma the gaussian's sigma value
+         * @throws IllegalArgumentException if the window is negative, zero or even or if sigma is zero or even.
+         */
+        private static void controlInput(int window, float sigma) throws
+                IllegalArgumentException {
+            if (window % 2 == 0) {
+                throw new IllegalArgumentException("Window isn't an odd.");
+            }
+            if (window <= 0) {
+                throw new IllegalArgumentException("Window is negative or zero");
+            }
+            if (sigma <= 0) {
+                throw new IllegalArgumentException("Sigma of the gaussian is zero or negative.");
+            }
         }
     }
 }
