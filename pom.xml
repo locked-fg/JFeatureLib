@@ -44,11 +44,11 @@
 
     <mailingLists>
         <mailingList>
-          <name>JFeatureLib User List</name>
-          <subscribe>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</subscribe>
-          <unsubscribe>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</unsubscribe>
-          <post>jfeaturelib@googlegroups.com</post>
-          <archive>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</archive>
+            <name>JFeatureLib User List</name>
+            <subscribe>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</subscribe>
+            <unsubscribe>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</unsubscribe>
+            <post>jfeaturelib@googlegroups.com</post>
+            <archive>https://groups.google.com/forum/?fromgroups#!forum/JFeatureLib</archive>
         </mailingList>
     </mailingLists>
 
@@ -146,7 +146,7 @@
                 <configuration>
                 </configuration>
             </plugin>
-         </plugins>
+        </plugins>
     </reporting>
     
     <build>
@@ -243,45 +243,6 @@
                 </executions>
             </plugin>
 
-            <!-- Install non-maven-central jars -->
-            <!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>install-caliph-emir</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <file>${basedir}/lib/caliph-emir-cbir.jar</file>
-                            <repositoryLayout>default</repositoryLayout>
-                            <groupId>at.lux</groupId>
-                            <artifactId>imageanalysis</artifactId>
-                            <version>1.0.0</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>install-lire</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <file>${basedir}/lib/lire.jar</file>
-                            <repositoryLayout>default</repositoryLayout>
-                            <groupId>net.semanticmetadata</groupId>
-                            <artifactId>lire</artifactId>
-                            <version>1.0.0</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
         </plugins>
     </build>
     <dependencies>
