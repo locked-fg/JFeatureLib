@@ -308,10 +308,6 @@ public class Harris implements PointDetector {
         double[][] kernelGx = new double[2 * halfwindow + 1][2 * halfwindow + 1];
         double[][] kernelGy = new double[2 * halfwindow + 1][2 * halfwindow + 1];
 
-        /**
-         * Metodo costruttore
-         *
-         */
         public GradientVector() {
             for (int y = -halfwindow; y <= halfwindow; y++) {
                 for (int x = -halfwindow; x <= halfwindow; x++) {
