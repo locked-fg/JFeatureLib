@@ -10,3 +10,5 @@
 .classpath
 .project
 .settings/
+/jFeatureLib.log
+/nbactions.xml

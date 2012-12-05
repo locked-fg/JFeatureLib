@@ -1,3 +1,4 @@
+*      - added config option for haralick distance
 1.0.1: - fixed error that properties were not found
        - added possibility to extract jfeaturelib.properties from jar by using the Extractor
        - added possibility to extract logging.properties from jar by using the Extractor

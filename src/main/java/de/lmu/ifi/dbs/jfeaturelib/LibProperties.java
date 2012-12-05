@@ -8,9 +8,8 @@ import org.apache.log4j.Logger;
 
 /**
  * The property wrapper class for
- * <code>jfeaturelib.properties</code>. This class is used to access the
- * properties of jfeaturelib.properties in an easier way without having to
- * request keys by magic strings.
+ * <code>jfeaturelib.properties</code>. This class is used to access the properties of jfeaturelib.properties in an
+ * easier way without having to request keys by magic strings.
  *
  * For example in order to obtain the value of
  * <code>sift.binary</code>, you can request
@@ -27,21 +26,27 @@ public class LibProperties extends PropertyContainer {
      * The file name of the properties file.
      */
     public static final File BASE_FILE = new File("jfeaturelib.properties");
+    public static final String IMAGE_FORMATS = "imageFormats";
+    // ###########################################
+    // Features
     /**
      * Path to the sift binary which can be obtained from the SIFT homepage.
      *
      * {@link http://www.cs.ubc.ca/~lowe/keypoints/}
      */
     public static final String SIFT_BINARY = "features.sift.binary";
-    public static final String IMAGE_FORMATS = "imageFormats";
     public static final String HISTOGRAMS_TYPE = "features.histogram.type";
     public static final String HISTOGRAMS_BINS = "features.histogram.bins";
     // Phog
     public static final String PHOG_CANNY = "features.phog.canny";
     public static final String PHOG_BINS = "features.phog.bins";
     public static final String PHOG_RECURSIONS = "features.phog.recursions";
-    // shapes
+    // Haralick
+    public static final String HARALICK_DISTANCE = "features.haralick.distance";
+    // ###########################################
+    // Shapes
     public static final String POLYGON_EVOLUTION = "shapefeatures.polygonevolution.iterations";
+    // ###########################################
     // Edges
     // canny
     public static final String CANNY_LOW_THRESHOLD = "edge.canny.lowThreshold";
@@ -51,8 +56,7 @@ public class LibProperties extends PropertyContainer {
     public static final String CANNY_NORMALIZE_CONTRAST = "edge.canny.contrastNormalized";
 
     /**
-     * Constructor that initializes the properties container with the given
-     * file.
+     * Constructor that initializes the properties container with the given file.
      *
      * @param file
      * @throws IOException
@@ -62,8 +66,7 @@ public class LibProperties extends PropertyContainer {
     }
 
     /**
-     * Constructor that initializes the properties container with the given
-     * input stream.
+     * Constructor that initializes the properties container with the given input stream.
      *
      * @param file
      * @throws IOException

@@ -1,11 +1,13 @@
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
 import Jama.Matrix;
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 
@@ -21,13 +23,11 @@ import java.util.EnumSet;
  * number={6}, pages={610--621}, year={1973}, publisher={IEEE} }
  * </pre>
  *
- * The feature descriptor is composed of the following features: <ol>
- * <li>Angular 2nd moment</li> <li>Contrast</li> <li>Correlation</li>
- * <li>variance</li> <li>Inverse Difference Moment</li> <li>Sum Average</li>
- * <li>Sum Variance</li> <li>Sum Entropy</li> <li>Entropy</li> <li>Difference
- * Variance</li> <li>Difference Entropy</li> <li>Information Measures of
- * Correlation</li> <li>Information Measures of Correlation</li> <li>Maximum
- * Correlation COefficient</li> </ol>
+ * The feature descriptor is composed of the following features: <ol> <li>Angular 2nd moment</li> <li>Contrast</li>
+ * <li>Correlation</li> <li>variance</li> <li>Inverse Difference Moment</li> <li>Sum Average</li> <li>Sum Variance</li>
+ * <li>Sum Entropy</li> <li>Entropy</li> <li>Difference Variance</li> <li>Difference Entropy</li> <li>Information
+ * Measures of Correlation</li> <li>Information Measures of Correlation</li> <li>Maximum Correlation COefficient</li>
+ * </ol>
  *
  * @author graf
  */
@@ -99,10 +99,10 @@ public class Haralick extends AbstractFeatureDescriptor {
     /**
      * Constructs a haralick detector.
      *
-     * @param haralickDist Integer for haralick distribution
+     * @param haralickDist Integer for haralick distribution (>= 1)
      */
     public Haralick(int haralickDist) {
-        this.haralickDist = haralickDist;
+        setHaralickDist(haralickDist);
     }
 
     /**
@@ -119,6 +119,11 @@ public class Haralick extends AbstractFeatureDescriptor {
                 Supports.DOES_8G,
                 Supports.DOES_RGB);
         return set;
+    }
+
+    @Override
+    public void setProperties(LibProperties properties) throws IOException {
+        setHaralickDist(properties.getInteger(LibProperties.HARALICK_DISTANCE, 1));
     }
 
     /**
@@ -321,8 +326,7 @@ public class Haralick extends AbstractFeatureDescriptor {
     }
 
     /**
-     * Normalizes the array by the given sum. by dividing each 2nd dimension
-     * array componentwise by the sum.
+     * Normalizes the array by the given sum. by dividing each 2nd dimension array componentwise by the sum.
      *
      * @param A
      * @param sum
@@ -346,9 +350,12 @@ public class Haralick extends AbstractFeatureDescriptor {
     /**
      * Setter for haralick distributions
      *
-     * @param haralickDist int for haralick distributions
+     * @param haralickDist int for haralick distributions (must be >= 1)
      */
     public void setHaralickDist(int haralickDist) {
+        if (haralickDist <= 0) {
+            throw new IllegalArgumentException("the distance for haralick must be >= 1 but was " + haralickDist);
+        }
         this.haralickDist = haralickDist;
     }
     //</editor-fold>
@@ -474,8 +481,7 @@ class Coocurrence {
     }
 
     /**
-     * Incremets the coocurrence matrix at the specified positions (g1,g2) and
-     * (g2,g1).
+     * Incremets the coocurrence matrix at the specified positions (g1,g2) and (g2,g1).
      *
      * @param g1 the gray value of the first pixel
      * @param g2 the gray value of the second pixel
