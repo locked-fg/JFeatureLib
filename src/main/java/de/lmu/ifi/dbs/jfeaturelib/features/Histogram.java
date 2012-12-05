@@ -18,7 +18,7 @@ import java.util.EnumSet;
  */
 public class Histogram extends AbstractFeatureDescriptor {
 
-    enum TYPE {
+    public static enum TYPE {
 
         RGB, Red, Green, Blue, HSB, Hue, Saturation, Brightness, Gray
     };
