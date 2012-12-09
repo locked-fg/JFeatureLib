@@ -134,25 +134,6 @@ public class Profiles extends AbstractFeatureDescriptor {
         return "horizontal, vertical and diagonal Profiles";
     }
 
-    private void shortenProfiles() {
-        ProfileTuple t1;
-        t1 = shortenProfile(horizontalProfile);
-        this.horizontalProfile = new int[horizontalProfile.length - t1.getStart() - t1.getEnd()];
-        reinsert(this.horizontalProfile, horizontalProfile, t1);
-
-        t1 = shortenProfile(verticalProfile);
-        this.verticalProfile = new int[verticalProfile.length - t1.getStart() - t1.getEnd()];
-        reinsert(this.verticalProfile, verticalProfile, t1);
-
-        t1 = shortenProfile(TLProfile);
-        this.TLProfile = new int[TLProfile.length - t1.getStart() - t1.getEnd()];
-        reinsert(this.TLProfile, TLProfile, t1);
-
-        t1 = shortenProfile(BLProfile);
-        this.BLProfile = new int[BLProfile.length - t1.getStart() - t1.getEnd()];
-        reinsert(this.BLProfile, BLProfile, t1);
-    }
-
     private ImageProcessor transformAndConvert(ImageProcessor ip) throws IllegalArgumentException {
         ImagePCA pca2d = new ImagePCA(ip, 0);
         if (Double.isNaN(pca2d.getAngle())) {
