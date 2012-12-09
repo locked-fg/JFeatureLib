@@ -41,36 +41,51 @@ public class Profiles extends AbstractFeatureDescriptor {
         startProgress();
         ip = transformAndConvert(ip);
 
-        horizontalProfile = new int[ip.getWidth()];
-        verticalProfile = new int[ip.getHeight()];
-        TLProfile = new int[ip.getWidth() + ip.getHeight()];
-        BLProfile = new int[ip.getHeight() + ip.getWidth()];
+        int[] currentHorizontalProfile = new int[ip.getWidth()];
+        int[] currentVerticalProfile = new int[ip.getHeight()];
+        int[] currentTLProfile = new int[ip.getWidth() + ip.getHeight()];
+        int[] currentBLProfile = new int[ip.getHeight() + ip.getWidth()];
 
         for (int i = 0; i < ip.getWidth(); i++) {
             for (int j = 0; j < ip.getHeight(); j++) {
                 if (ip.getPixel(i, j) != backgroundColor) {
-                    horizontalProfile[i]++;
-                    verticalProfile[j]++;
+                    currentHorizontalProfile[i]++;
+                    currentVerticalProfile[j]++;
                     if (i > j) {
-                        BLProfile[ip.getHeight() + (i - j)]++;
+                        currentBLProfile[ip.getHeight() + (i - j)]++;
                     } else {
-                        BLProfile[ip.getHeight() - (j - i)]++;
+                        currentBLProfile[ip.getHeight() - (j - i)]++;
                     }
                     if (j < ip.getWidth()) {
-                        TLProfile[i + j]++;
+                        currentTLProfile[i + j]++;
                     } else {
-                        TLProfile[ip.getWidth() + (j - ip.getWidth())]++;
+                        currentTLProfile[ip.getWidth() + (j - ip.getWidth())]++;
                     }
                 }
             }
         }
 
-        shortenProfiles();
+        ProfileTuple t1 = shortenProfile(currentHorizontalProfile);
+        this.horizontalProfile = new int[currentHorizontalProfile.length-t1.getStart()-t1.getEnd()];
+        reinsert(this.horizontalProfile, currentHorizontalProfile, t1);
+        
+        t1 = shortenProfile(currentVerticalProfile);
+        this.verticalProfile = new int[currentVerticalProfile.length-t1.getStart()-t1.getEnd()];
+        reinsert(this.verticalProfile, currentVerticalProfile, t1);
+        
+        t1 = shortenProfile(currentTLProfile);
+        this.TLProfile = new int[currentTLProfile.length-t1.getStart()-t1.getEnd()];
+        reinsert(this.TLProfile, currentTLProfile, t1);
+        
+        t1 = shortenProfile(currentBLProfile);
+        this.BLProfile = new int[currentBLProfile.length-t1.getStart()-t1.getEnd()];
+        reinsert(this.BLProfile, currentBLProfile, t1);
+        
         createFeature();
         endProgress();
     }
 
-    private Tuple shortenProfile(int[] profile) {
+    ProfileTuple shortenProfile(int[] profile) {
         int start = 0;
         boolean stop = false;
         while (start < profile.length && !stop) {
@@ -90,10 +105,10 @@ public class Profiles extends AbstractFeatureDescriptor {
                 end--;
             }
         }
-        return new Tuple(start, profile.length - end);
+        return new ProfileTuple(start, profile.length - end);
     }
 
-    private void reinsert(int[] newProfile, int[] oldProfile, Tuple t1) {
+    void reinsert(int[] newProfile, int[] oldProfile, ProfileTuple t1) {
         for (int i = t1.getStart(); i < oldProfile.length - t1.getEnd(); i++) {
             newProfile[i - t1.getStart()] = oldProfile[i];
         }
@@ -126,7 +141,7 @@ public class Profiles extends AbstractFeatureDescriptor {
     }
 
     private void shortenProfiles() {
-        Tuple t1;
+        ProfileTuple t1;
         t1 = shortenProfile(horizontalProfile);
         this.horizontalProfile = new int[horizontalProfile.length - t1.getStart() - t1.getEnd()];
         reinsert(this.horizontalProfile, horizontalProfile, t1);
@@ -156,12 +171,12 @@ public class Profiles extends AbstractFeatureDescriptor {
         return ip;
     }
 
-    private class Tuple {
+    class ProfileTuple {
 
         int start;
         int end;
 
-        Tuple(int start, int end) {
+        ProfileTuple(int start, int end) {
             this.start = start;
             this.end = end;
         }

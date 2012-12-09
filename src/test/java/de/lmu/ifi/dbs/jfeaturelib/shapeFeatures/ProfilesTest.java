@@ -1,5 +1,6 @@
 package de.lmu.ifi.dbs.jfeaturelib.shapeFeatures;
 
+import de.lmu.ifi.dbs.jfeaturelib.shapeFeatures.Profiles.ProfileTuple;
 import ij.process.ImageProcessor;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -13,6 +14,20 @@ public class ProfilesTest {
     public ProfilesTest() {
     }
 
+    @Test
+    public void testShortenProfile(){
+        int[] arr = {0,0,1,2,0,3,4,0,0};
+        Profiles p = new Profiles();
+        ProfileTuple tuple = p.shortenProfile(arr);
+        assertEquals(2, tuple.start);
+        assertEquals(3, tuple.end);
+    }
+    
+    @Test
+    public void reinsert(){
+        
+    }
+    
     @Test
     public void testCreateFeature() {
         Profiles p = new Profiles();
