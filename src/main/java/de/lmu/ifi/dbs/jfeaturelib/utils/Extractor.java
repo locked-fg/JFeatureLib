@@ -37,8 +37,7 @@ import org.kohsuke.args4j.Option;
 
 //import static com.google.common.base.Preconditions.*;
 /**
- * Class used as a commandline tool to extract features from directories of
- * images.
+ * Class used as a commandline tool to extract features from directories of images.
  *
  * The features are then written to a outfile.
  *
@@ -48,10 +47,9 @@ public class Extractor {
 
     private static final Logger log = Logger.getLogger(Extractor.class.getName());
     /**
-     * Timeout used for the threadpool. Just set it to a large enough value so
-     * that all threads will terminate.
+     * Timeout used for the thread pool. Just set it to a large enough value so that all threads will terminate.
      */
-    private static final int TERMINATION_TIMEOUT = 100;
+    private static final int TERMINATION_TIMEOUT = 100; // days
     //
     @Option(name = "--threads", usage = "amount of threads (defaults to amount of available processors))")
     private int threads = Runtime.getRuntime().availableProcessors();
@@ -74,7 +72,9 @@ public class Extractor {
     @Option(name = "-nh", usage = "omit headerline")
     private boolean omitHeader = false;
     //
-    @Option(name = "-D", aliases = {"--descriptor"}, usage = "use this feature descriptor (e.G: Sift)")
+    @Option(name = "-D", aliases = {"--descriptor"}, usage = "Use this feature descriptor (e.G: Sift). The string "
+    + "specified here must be one of the classes in de.lmu.ifi.dbs.jfeaturelib.features. If in doupt, "
+    + "--list-capabilities can be used to get an overview.")
     private String descriptor = null;
     //
     @Option(name = "-c", usage = "image class that should be written to the output file")
@@ -114,6 +114,7 @@ public class Extractor {
 
             Extractor extractor = new Extractor();
             CmdLineParser parser = new CmdLineParser(extractor);
+            parser.setUsageWidth(100);
 
             try {
                 parser.parseArgument(args);
@@ -156,7 +157,7 @@ public class Extractor {
                 // and finally, if validation is fine, start
                 extractor.process();
             }
-        } catch (Throwable t) {
+        } catch (IOException | InstantiationException | IllegalAccessException | URISyntaxException t) {
             log.warn("Uncaught Exception: ", t);
             throw t;
         }
@@ -165,8 +166,8 @@ public class Extractor {
     /**
      * Initialize the logging properties.
      *
-     * If a ./logging.properties is found that this file will be used.
-     * Otherwise, the configuration from /logging.properties will be read.
+     * If a ./logging.properties is found that this file will be used. Otherwise, the configuration from
+     * /logging.properties will be read.
      */
     private static void initLoggingProperties() {
         if (new File("./log4j.properties").exists()) {
@@ -176,8 +177,7 @@ public class Extractor {
     }
 
     /**
-     * reads the shipped properties file and copies it into the current
-     * execution directory
+     * reads the shipped properties file and copies it into the current execution directory
      */
     private void unpackProperties() {
         try {
@@ -198,8 +198,7 @@ public class Extractor {
     }
 
     /**
-     * Prints the supports capabilities of the feature descriptors and prints
-     * the string to system.out.
+     * Prints the supports capabilities of the feature descriptors and prints the string to system.out.
      */
     private void listFeatureDescriptorCapabilities() throws InstantiationException, IllegalAccessException,
             IOException, URISyntaxException {
@@ -237,8 +236,7 @@ public class Extractor {
     }
 
     /**
-     * The constructor that should not be called outside this class (Except
-     * Testclasses)
+     * The constructor that should not be called outside this class (Except Testclasses)
      *
      * @throws IOException
      */
@@ -281,8 +279,8 @@ public class Extractor {
     }
 
     /**
-     * Validates the input parameters like descriptor names (nullchecks) and
-     * ensures that the required files and directories are existent.
+     * Validates the input parameters like descriptor names (nullchecks) and ensures that the required files and
+     * directories are existent.
      *
      * @throws IllegalArgumentException
      */
@@ -310,23 +308,29 @@ public class Extractor {
             throw new IllegalArgumentException("the descriptor class does not exist or cannot be created");
         }
 
+        // can the image directory be accessed
         if (imageDirectory == null || !imageDirectory.isDirectory() || !imageDirectory.canRead()) {
             throw new IllegalArgumentException("the source directory cannot be read or does not exist");
         }
 
+        // can the mask directory be accessed
         if (maskDirectory != null && (!maskDirectory.isDirectory() || !maskDirectory.canRead())) {
             throw new IllegalArgumentException("the mask directory cannot be read or does not exist");
         }
 
+        // can the output file be written?
         if (outFile == null || (outFile.exists() && !outFile.canWrite())) {
             throw new IllegalArgumentException("the output file is not valid or not writable");
         }
-        try {
+
+        try { // cretae the output file or fail
             outFile.createNewFile();
         } catch (IOException ex) {
             log.warn(ex.getMessage(), ex);
             throw new IllegalArgumentException("the output file could not be created");
         }
+
+        // check if an image class is set and valid
         if (imageClass != null && !imageClass.matches("^\\w$")) {
             throw new IllegalArgumentException("the image class must only contain word characters");
         }
@@ -335,8 +339,7 @@ public class Extractor {
     }
 
     /**
-     * creates a list of image files in the specified directory and all
-     * subdirectories (if recursive is enabled)
+     * creates a list of image files in the specified directory and all subdirectories (if recursive is enabled)
      *
      * @param dir directory to start from
      * @return a list of image files in this directory (possibly empty)
@@ -406,8 +409,7 @@ public class Extractor {
     }
 
     /**
-     * Synchronized method to write all features that were extracted from the
-     * given file to the output writer.
+     * Synchronized method to write all features that were extracted from the given file to the output writer.
      *
      * @param file
      * @param features
@@ -454,10 +456,8 @@ public class Extractor {
     /**
      * Try to find and map image files and mask files together.
      *
-     * Thereby the relative path (starting from imageDirectory and
-     * maskDirectory) must be equal. A different file suffix is allowed. Thus,
-     * an image [imageDirectory]/classA/car.jpg can have a mask file
-     * [maskDirectory]/classA/car.png
+     * Thereby the relative path (starting from imageDirectory and maskDirectory) must be equal. A different file suffix
+     * is allowed. Thus, an image [imageDirectory]/classA/car.jpg can have a mask file [maskDirectory]/classA/car.png
      *
      * @param imageList
      * @param maskList
@@ -508,8 +508,7 @@ public class Extractor {
     }
 
     /**
-     * This task is used to read image data from disk, extract features and
-     * initiate writing the output
+     * This task is used to read image data from disk, extract features and initiate writing the output
      */
     class ExtractionTask implements Runnable {
 
