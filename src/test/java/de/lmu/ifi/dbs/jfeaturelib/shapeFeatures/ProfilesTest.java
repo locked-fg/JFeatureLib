@@ -25,7 +25,14 @@ public class ProfilesTest {
     
     @Test
     public void reinsert(){
+        int[] arr1 = {0,0,1,2,0,3,4,0,0};
+        int[] arr2 = new int[arr1.length];
+        int[] exp = {1,2,0,3,4,0,0,0,0};
         
+        Profiles p = new Profiles();
+        ProfileTuple tuple = p.shortenProfile(arr1);        
+        p.reinsert(arr2, arr1, tuple);
+        assertArrayEquals(exp, arr2);
     }
     
     @Test

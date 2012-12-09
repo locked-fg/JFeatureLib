@@ -92,22 +92,26 @@ public class Profiles extends AbstractFeatureDescriptor {
         }
 
         int end = profile.length - 1;
-        while (end > 0 && profile[end] == 0) {
+        while (end > start && profile[end] == 0) {
             end--;
         }
         return new ProfileTuple(start, profile.length - end);
     }
 
     void reinsert(int[] newProfile, int[] oldProfile, ProfileTuple t1) {
-        for (int i = t1.getStart(); i < oldProfile.length - t1.getEnd(); i++) {
-            newProfile[i - t1.getStart()] = oldProfile[i];
-        }
+        // for (int i = t1.getStart(); i < oldProfile.length - t1.getEnd(); i++) { // isnt there a +1 missing?
+        //   newProfile[i - t1.getStart()] = oldProfile[i];
+        // }
+        int length = oldProfile.length - t1.getStart() - t1.getEnd() + 1;
+        System.arraycopy(oldProfile, t1.start, newProfile, 0, length);
     }
 
     void createFeature() {
         double[] data = new double[horizontalProfile.length
                 + verticalProfile.length + TLProfile.length + BLProfile.length];
 
+        // the int-arrays are copied concatenated to the double array
+        // thus a system.arraycopy does not work here
         int i = 0;
         for (int j = 0; j < horizontalProfile.length; j++) {
             data[i++] = horizontalProfile[j];
