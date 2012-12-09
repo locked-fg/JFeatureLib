@@ -46,20 +46,22 @@ public class Profiles extends AbstractFeatureDescriptor {
         int[] currentTLProfile = new int[ip.getWidth() + ip.getHeight()];
         int[] currentBLProfile = new int[ip.getHeight() + ip.getWidth()];
 
-        for (int i = 0; i < ip.getWidth(); i++) {
-            for (int j = 0; j < ip.getHeight(); j++) {
-                if (ip.getPixel(i, j) != backgroundColor) {
-                    currentHorizontalProfile[i]++;
-                    currentVerticalProfile[j]++;
-                    if (i > j) {
-                        currentBLProfile[ip.getHeight() + (i - j)]++;
+        int height = ip.getHeight();
+        int width = ip.getWidth();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (ip.getPixel(x, y) != backgroundColor) {
+                    currentHorizontalProfile[x]++;
+                    currentVerticalProfile[y]++;
+                    if (x > y) {
+                        currentBLProfile[height + (x - y)]++;
                     } else {
-                        currentBLProfile[ip.getHeight() - (j - i)]++;
+                        currentBLProfile[height - (y - x)]++;
                     }
-                    if (j < ip.getWidth()) {
-                        currentTLProfile[i + j]++;
+                    if (y < width) {
+                        currentTLProfile[x + y]++;
                     } else {
-                        currentTLProfile[ip.getWidth() + (j - ip.getWidth())]++;
+                        currentTLProfile[width + (y - width)]++;
                     }
                 }
             }
