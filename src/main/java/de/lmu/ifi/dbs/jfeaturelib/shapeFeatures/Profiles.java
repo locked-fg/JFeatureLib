@@ -1,16 +1,15 @@
 package de.lmu.ifi.dbs.jfeaturelib.shapeFeatures;
 
 import de.lmu.ifi.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
+import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
 /**
- * Computes the horizontal, vertical and diagonal (starting top left for
- * TLProfile analog bottom left for BLProfile) Profiles according to "Bryan S.
- * Morse (2000): Lecture 9: Shape Description (Regions), Brigham Young
- * University, Available from:
- * http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MORSE/region-props-and-moments.pdf".
+ * Computes the horizontal, vertical and diagonal (starting top left for TLProfile analog bottom left for BLProfile)
+ * Profiles according to "Bryan S. Morse (2000): Lecture 9: Shape Description (Regions), Brigham Young University,
+ * Available from: http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MORSE/region-props-and-moments.pdf".
  *
- * @author Johannes Stadler
+ * @author Johannes Stadler, Johannes Niedermaier
  * @since 09/29/2012
  */
 public class Profiles extends AbstractFeatureDescriptor {
@@ -40,7 +39,15 @@ public class Profiles extends AbstractFeatureDescriptor {
     @Override
     public void run(ImageProcessor ip) {
         startProgress();
-
+        ImagePCA pca2d = new ImagePCA(ip, 0);
+        if (Double.isNaN(pca2d.getAngle())) {
+            throw new IllegalArgumentException("The mask in this image is empty.");
+        }
+        
+        ip = pca2d.getResultImage();
+        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
+            ip = (ByteProcessor) ip.convertToByte(true);
+        }
         horizontalProfile = new int[ip.getWidth()];
         verticalProfile = new int[ip.getHeight()];
         TLProfile = new int[ip.getWidth() + ip.getHeight()];
@@ -55,7 +62,6 @@ public class Profiles extends AbstractFeatureDescriptor {
                     } else {
                         BLProfile[ip.getHeight() - (j - i)]++;
                     }
-
                     if (j < ip.getWidth()) {
                         TLProfile[i + j]++;
                     } else {
@@ -65,13 +71,54 @@ public class Profiles extends AbstractFeatureDescriptor {
             }
         }
 
+        Tuple t1;
+        t1 = shortenProfile(horizontalProfile);
+        this.horizontalProfile = new int[horizontalProfile.length - t1.getStart() - t1.getEnd()];
+        reinsert(this.horizontalProfile, horizontalProfile, t1);
+
+        t1 = shortenProfile(verticalProfile);
+        this.verticalProfile = new int[verticalProfile.length - t1.getStart() - t1.getEnd()];
+        reinsert(this.verticalProfile, verticalProfile, t1);
+
+        t1 = shortenProfile(TLProfile);
+        this.TLProfile = new int[TLProfile.length - t1.getStart() - t1.getEnd()];
+        reinsert(this.TLProfile, TLProfile, t1);
+
+        t1 = shortenProfile(BLProfile);
+        this.BLProfile = new int[BLProfile.length - t1.getStart() - t1.getEnd()];
+        reinsert(this.BLProfile, BLProfile, t1);
+
         createFeature();
         endProgress();
     }
 
-    @Override
-    public String getDescription() {
-        return "horizontal, vertical and diagonal Profiles";
+    private Tuple shortenProfile(int[] profile) {
+        int start = 0;
+        boolean stop = false;
+        while (start < profile.length && !stop) {
+            if (profile[start] != 0) {
+                stop = true;
+            } else {
+                start++;
+            }
+        }
+
+        int end = profile.length - 1;
+        stop = false;
+        while (end >= 0 && !stop) {
+            if (profile[end] != 0) {
+                stop = true;
+            } else {
+                end--;
+            }
+        }
+        return new Tuple(start, profile.length - end);
+    }
+
+    private void reinsert(int[] newProfile, int[] oldProfile, Tuple t1) {
+        for (int i = t1.getStart(); i < oldProfile.length - t1.getEnd(); i++) {
+            newProfile[i - t1.getStart()] = oldProfile[i];
+        }
     }
 
     private void createFeature() {
@@ -93,5 +140,29 @@ public class Profiles extends AbstractFeatureDescriptor {
         }
 
         addData(data);
+    }
+
+    @Override
+    public String getDescription() {
+        return "horizontal, vertical and diagonal Profiles";
+    }
+
+    private class Tuple {
+
+        int start;
+        int end;
+
+        public Tuple(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        int getStart() {
+            return start;
+        }
+
+        int getEnd() {
+            return end;
+        }
     }
 }
