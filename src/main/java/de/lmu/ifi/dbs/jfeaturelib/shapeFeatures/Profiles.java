@@ -14,10 +14,10 @@ import ij.process.ImageProcessor;
  */
 public class Profiles extends AbstractFeatureDescriptor {
 
-    private int[] horizontalProfile;
-    private int[] verticalProfile;
-    private int[] TLProfile;
-    private int[] BLProfile;
+    int[] horizontalProfile;
+    int[] verticalProfile;
+    int[] TLProfile;
+    int[] BLProfile;
     private int backgroundColor = 0;
 
     public int[] getHorizontalProfile() {
@@ -99,7 +99,7 @@ public class Profiles extends AbstractFeatureDescriptor {
         }
     }
 
-    private void createFeature() {
+    void createFeature() {
         double[] data = new double[horizontalProfile.length
                 + verticalProfile.length + TLProfile.length + BLProfile.length];
 
