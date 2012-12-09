@@ -66,44 +66,34 @@ public class Profiles extends AbstractFeatureDescriptor {
         }
 
         ProfileTuple t1 = shortenProfile(currentHorizontalProfile);
-        this.horizontalProfile = new int[currentHorizontalProfile.length-t1.getStart()-t1.getEnd()];
+        this.horizontalProfile = new int[currentHorizontalProfile.length - t1.getStart() - t1.getEnd()];
         reinsert(this.horizontalProfile, currentHorizontalProfile, t1);
-        
+
         t1 = shortenProfile(currentVerticalProfile);
-        this.verticalProfile = new int[currentVerticalProfile.length-t1.getStart()-t1.getEnd()];
+        this.verticalProfile = new int[currentVerticalProfile.length - t1.getStart() - t1.getEnd()];
         reinsert(this.verticalProfile, currentVerticalProfile, t1);
-        
+
         t1 = shortenProfile(currentTLProfile);
-        this.TLProfile = new int[currentTLProfile.length-t1.getStart()-t1.getEnd()];
+        this.TLProfile = new int[currentTLProfile.length - t1.getStart() - t1.getEnd()];
         reinsert(this.TLProfile, currentTLProfile, t1);
-        
+
         t1 = shortenProfile(currentBLProfile);
-        this.BLProfile = new int[currentBLProfile.length-t1.getStart()-t1.getEnd()];
+        this.BLProfile = new int[currentBLProfile.length - t1.getStart() - t1.getEnd()];
         reinsert(this.BLProfile, currentBLProfile, t1);
-        
+
         createFeature();
         endProgress();
     }
 
     ProfileTuple shortenProfile(int[] profile) {
         int start = 0;
-        boolean stop = false;
-        while (start < profile.length && !stop) {
-            if (profile[start] != 0) {
-                stop = true;
-            } else {
-                start++;
-            }
+        while (start < profile.length && profile[start] == 0) {
+            start++;
         }
 
         int end = profile.length - 1;
-        stop = false;
-        while (end >= 0 && !stop) {
-            if (profile[end] != 0) {
-                stop = true;
-            } else {
-                end--;
-            }
+        while (end > 0 && profile[end] == 0) {
+            end--;
         }
         return new ProfileTuple(start, profile.length - end);
     }
