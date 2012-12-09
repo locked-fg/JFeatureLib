@@ -50,7 +50,8 @@ public class Profiles extends AbstractFeatureDescriptor {
         int width = ip.getWidth();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (ip.getPixel(x, y) != backgroundColor) {
+                // if (ip.getPixel(x, y) != backgroundColor) {
+                if (ip.get(x, y) != backgroundColor) {
                     currentHorizontalProfile[x]++;
                     currentVerticalProfile[y]++;
                     if (x > y) {
