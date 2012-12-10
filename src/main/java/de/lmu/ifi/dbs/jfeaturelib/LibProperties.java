@@ -1,6 +1,6 @@
 package de.lmu.ifi.dbs.jfeaturelib;
 
-import de.lmu.ifi.dbs.utilities.PropertyContainer;
+import de.lmu.ifi.dbs.utilities.properties.PropertyContainer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
