@@ -9,7 +9,13 @@ import ij.process.ImageProcessor;
  * Profiles according to "Bryan S. Morse (2000): Lecture 9: Shape Description (Regions), Brigham Young University,
  * Available from: http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MORSE/region-props-and-moments.pdf".
  *
- * @author Johannes Stadler, Johannes Niedermaier
+ * The descriptor itself returns a list of features. The features are the generated horizontal, vertical, TL and BL
+ * arrays that can also be obtained by the approtiate getter methods.
+ *
+ * Since version 1.1 this descriptor returnes a list of features insread of a concatenated array that concatenated all
+ * the profiles together into one array.
+ *
+ * @author Johannes Stadler, Johannes Niedermaier, Franz Graf
  * @since 09/29/2012
  */
 public class Profiles extends AbstractFeatureDescriptor {
@@ -36,6 +42,12 @@ public class Profiles extends AbstractFeatureDescriptor {
         return BLProfile;
     }
 
+    /**
+     * The descriptor generates a list of features.
+     *
+     * The features are the generated horizontal, vertical, TL and BL arrays that can also be obtained by the approtiate
+     * getter methods.
+     */
     @Override
     public void run(ImageProcessor ip) {
         startProgress();
@@ -68,26 +80,22 @@ public class Profiles extends AbstractFeatureDescriptor {
             }
         }
 
-        ProfileTuple t1 = shortenProfile(currentHorizontalProfile);
-        this.horizontalProfile = new int[currentHorizontalProfile.length - t1.getStart() - t1.getEnd()];
-        reinsert(this.horizontalProfile, currentHorizontalProfile, t1);
+        this.horizontalProfile = reinsert(currentHorizontalProfile);
+        this.verticalProfile = reinsert(currentVerticalProfile);
+        this.TLProfile = reinsert(currentTLProfile);
+        this.BLProfile = reinsert(currentBLProfile);
 
-        t1 = shortenProfile(currentVerticalProfile);
-        this.verticalProfile = new int[currentVerticalProfile.length - t1.getStart() - t1.getEnd()];
-        reinsert(this.verticalProfile, currentVerticalProfile, t1);
-
-        t1 = shortenProfile(currentTLProfile);
-        this.TLProfile = new int[currentTLProfile.length - t1.getStart() - t1.getEnd()];
-        reinsert(this.TLProfile, currentTLProfile, t1);
-
-        t1 = shortenProfile(currentBLProfile);
-        this.BLProfile = new int[currentBLProfile.length - t1.getStart() - t1.getEnd()];
-        reinsert(this.BLProfile, currentBLProfile, t1);
-
-        createFeature();
+        createFeatures();
         endProgress();
     }
 
+    /**
+     * Identifies the indices enclosing the real content (=first index after leading zeros and last index before
+     * trailing zeros).
+     *
+     * @param profile
+     * @return
+     */
     ProfileTuple shortenProfile(int[] profile) {
         int start = 0;
         while (start < profile.length && profile[start] == 0) {
@@ -101,35 +109,25 @@ public class Profiles extends AbstractFeatureDescriptor {
         return new ProfileTuple(start, profile.length - end);
     }
 
-    void reinsert(int[] newProfile, int[] oldProfile, ProfileTuple t1) {
-        // for (int i = t1.getStart(); i < oldProfile.length - t1.getEnd(); i++) { // isnt there a +1 missing?
-        //   newProfile[i - t1.getStart()] = oldProfile[i];
-        // }
+    /**
+     * Extracts the content part of the given array.
+     *
+     * @param oldProfile
+     * @return array without leading/trailing zeros
+     */
+    int[] reinsert(int[] oldProfile) {
+        ProfileTuple t1 = shortenProfile(oldProfile);
         int length = oldProfile.length - t1.getStart() - t1.getEnd() + 1;
-        System.arraycopy(oldProfile, t1.start, newProfile, 0, length);
+        int[] newProfileX = new int[length];
+        System.arraycopy(oldProfile, t1.start, newProfileX, 0, newProfileX.length);
+        return newProfileX;
     }
 
-    void createFeature() {
-        double[] data = new double[horizontalProfile.length
-                + verticalProfile.length + TLProfile.length + BLProfile.length];
-
-        // the int-arrays are copied concatenated to the double array
-        // thus a system.arraycopy does not work here
-        int i = 0;
-        for (int j = 0; j < horizontalProfile.length; j++) {
-            data[i++] = horizontalProfile[j];
-        }
-        for (int j = 0; j < verticalProfile.length; j++) {
-            data[i++] = verticalProfile[j];
-        }
-        for (int j = 0; j < TLProfile.length; j++) {
-            data[i++] = TLProfile[j];
-        }
-        for (int j = 0; j < BLProfile.length; j++) {
-            data[i++] = BLProfile[j];
-        }
-
-        addData(data);
+    void createFeatures() {
+        addData(horizontalProfile);
+        addData(verticalProfile);
+        addData(TLProfile);
+        addData(BLProfile);
     }
 
     @Override
