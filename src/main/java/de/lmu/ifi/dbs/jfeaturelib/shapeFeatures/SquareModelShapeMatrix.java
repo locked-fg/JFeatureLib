@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
  * retrieval,” ACM Multimedia System Journal, vol. 7(2), pp. 165-174, 1999.
  *
  * @author Johannes Stadler
+ * @since v1.1.0
  */
 public class SquareModelShapeMatrix extends AbstractFeatureDescriptor {
 
