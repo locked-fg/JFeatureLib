@@ -55,6 +55,7 @@ public interface Descriptor {
      * uses DOES_ALL and new types for SUPPORT are added.
      */
     public final EnumSet<Supports> DOES_ALL = EnumSet.of(
+            Supports.DOES_32,
             Supports.DOES_16,
             Supports.DOES_8C,
             Supports.DOES_8G,
