@@ -46,6 +46,8 @@ public class LibProperties extends PropertyContainer {
     // ###########################################
     // Shapes
     public static final String POLYGON_EVOLUTION = "shapefeatures.polygonevolution.iterations";
+    public static final String SMSM_BG_COLOR = "shapefeatures.SquareModelShapeMatrix.background";
+    public static final String SMSM_DIMENSIONS = "shapefeatures.SquareModelShapeMatrix.dimensions";
     // ###########################################
     // Edges
     // canny

@@ -1,4 +1,6 @@
-*      - made Histogram.TYPE public static
+1.1.0: - added SquareModelShapeMatrix and according properties
+       - changed de.lmu.ifi.dbs.jfeaturelib.shapeFeatures.Profiles to a new implemenation provided by Johannes Niedermayer
+       - made Histogram.TYPE public static
        - added config option for haralick distance
 1.0.1: - fixed error that properties were not found
        - added possibility to extract jfeaturelib.properties from jar by using the Extractor
