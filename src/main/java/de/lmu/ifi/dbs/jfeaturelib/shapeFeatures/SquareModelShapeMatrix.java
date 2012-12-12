@@ -15,12 +15,8 @@ import org.apache.log4j.Logger;
  * A brief explanation can be found in
  * http://cdn.intechopen.com/pdfs/5781/InTech-A_survey_of_shape_feature_extraction_techniques.pdf
  *
- * The original author is most likely one of those publications J. Flusser, “Invariant shape description and measure of
- * object similarity,” in Proc. 4th, International Conference on Image Processing and its Applications, 1992, pp.
- * 139-142.
- *
- * G. Lu and A. Sajjanhar, “Region-based shape representation and similarity measure suitable for content based image
- * retrieval,” ACM Multimedia System Journal, vol. 7(2), pp. 165-174, 1999.
+ * The original paper is written by<br> J. Flusser, “Invariant shape description and measure of object similarity,” in
+ * Proc. 4th, International Conference on Image Processing and its Applications, 1992, pp. 139-142.
  *
  * @author Johannes Stadler
  * @since v1.1.0
