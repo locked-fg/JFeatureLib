@@ -62,7 +62,7 @@ public class SquareModelShapeMatrixTest {
         assertArrayEquals(new int[]{0, 1, 0}, result[2]);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetMatrixDimension() {
         SquareModelShapeMatrix instance = new SquareModelShapeMatrix();
         instance.setMatrixDimension(2);
