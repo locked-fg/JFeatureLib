@@ -26,7 +26,7 @@ public class SquareModelShapeMatrix extends AbstractFeatureDescriptor {
     private final static Logger log = Logger.getLogger(SquareModelShapeMatrix.class);
     private int[][] feature;
     private int backgroundColor = 0;
-    private int matrixDimension = 30;
+    int matrixDimension = 30;
 
     /**
      * Initializes the SquareModelShapeMatrix with default background color (0/black) and a default matrix size.
