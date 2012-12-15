@@ -14,17 +14,18 @@ public class FuzzyHistogram extends AbstractFeatureDescriptor {
 
     @Override
     public void run(ImageProcessor ip) {
-        de.lmu.ifi.dbs.jfeaturelib.features.lire.FuzzyColorHistogram fuzzy = new de.lmu.ifi.dbs.jfeaturelib.features.lire.FuzzyColorHistogram();
-
         firePropertyChange(Progress.START);
+        
+        net.semanticmetadata.lire.imageanalysis.FuzzyColorHistogram fuzzy = new net.semanticmetadata.lire.imageanalysis.FuzzyColorHistogram();
         fuzzy.extract(ip.getBufferedImage());
-        addData(fuzzy.getData());
+        addData(fuzzy.getDoubleHistogram());
+        
         firePropertyChange(Progress.END);
     }
 
     @Override
     public String getDescription() {
-        return new de.lmu.ifi.dbs.jfeaturelib.features.lire.FuzzyColorHistogram().getStringRepresentation();
+        return "Fuzzy Histogram";
     }
 
     @Override

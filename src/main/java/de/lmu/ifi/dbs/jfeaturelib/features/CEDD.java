@@ -1,7 +1,9 @@
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import ij.process.ImageProcessor;
+import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -19,11 +21,21 @@ public class CEDD extends AbstractFeatureDescriptor {
     private double T2 = 0.98;
     private double T3 = 0.98;
     private boolean compact = false;
+    private net.semanticmetadata.lire.imageanalysis.CEDD cedd;
 
     /**
      * Constructor with default parameters
      */
     public CEDD() {
+    }
+
+    @Override
+    public void setProperties(LibProperties properties) throws IOException {
+        T0 = properties.getDouble(LibProperties.CEDD_T0, 14);
+        T1 = properties.getDouble(LibProperties.CEDD_T1, 0.68);
+        T2 = properties.getDouble(LibProperties.CEDD_T2, 0.98);
+        T3 = properties.getDouble(LibProperties.CEDD_T3, 0.98);
+        compact = properties.getBoolean(LibProperties.CEDD_COMPACT, false);
     }
 
     /**
@@ -45,17 +57,29 @@ public class CEDD extends AbstractFeatureDescriptor {
 
     @Override
     public void run(ImageProcessor ip) {
-        de.lmu.ifi.dbs.jfeaturelib.features.lire.CEDD cedd = new de.lmu.ifi.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, compact);
-
         firePropertyChange(Progress.START);
+        cedd = new net.semanticmetadata.lire.imageanalysis.CEDD(T0, T1, T2, T3, compact);
         cedd.extract(ip.getBufferedImage());
-        addData(cedd.getData());
+        addData(cedd.getDoubleHistogram());
         firePropertyChange(Progress.END);
+    }
+
+    /**
+     * Returns the cedd instance from LIRE. The instance is available only after the run method has been called.
+     *
+     * @return
+     */
+    public net.semanticmetadata.lire.imageanalysis.CEDD getCedd() {
+        return cedd;
+    }
+
+    public void setCedd(net.semanticmetadata.lire.imageanalysis.CEDD cedd) {
+        this.cedd = cedd;
     }
 
     @Override
     public String getDescription() {
-        return new de.lmu.ifi.dbs.jfeaturelib.features.lire.CEDD(T0, T1, T2, T3, compact).getStringRepresentation();
+        return "CEDD";
     }
 
     @Override

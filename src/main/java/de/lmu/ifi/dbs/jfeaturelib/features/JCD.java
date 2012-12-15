@@ -1,7 +1,9 @@
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import ij.process.ImageProcessor;
+import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -9,15 +11,32 @@ import java.util.EnumSet;
  */
 public class JCD extends AbstractFeatureDescriptor {
 
+    private CEDD cedd = new CEDD();
+    private FCTH fcth = new FCTH();
+
+    public JCD() {
+    }
+
+    @Override
+    public void setProperties(LibProperties properties) throws IOException {
+        cedd.setProperties(properties);
+        fcth.setProperties(properties);
+    }
+
     @Override
     public void run(ImageProcessor ip) {
-        de.lmu.ifi.dbs.jfeaturelib.features.lire.JCD jcd = new de.lmu.ifi.dbs.jfeaturelib.features.lire.JCD();
-
         firePropertyChange(Progress.START);
 
-        jcd.extract(ip.getBufferedImage());
-        addData(jcd.getData());
+        fcth.run(ip);
+        firePropertyChange(new Progress(33));
 
+        cedd.run(ip);
+        firePropertyChange(new Progress(66));
+
+        net.semanticmetadata.lire.imageanalysis.JCD jcd = new net.semanticmetadata.lire.imageanalysis.JCD(cedd.getCedd(), fcth.getFcth());
+        jcd.extract(ip.getBufferedImage());
+
+        addData(jcd.getDoubleHistogram());
         firePropertyChange(Progress.END);
     }
 

@@ -14,16 +14,18 @@ public class Tamura extends AbstractFeatureDescriptor {
 
     @Override
     public void run(ImageProcessor ip) {
-        de.lmu.ifi.dbs.jfeaturelib.features.lire.Tamura tamura = new de.lmu.ifi.dbs.jfeaturelib.features.lire.Tamura();
         firePropertyChange(Progress.START);
+
+        net.semanticmetadata.lire.imageanalysis.Tamura tamura = new net.semanticmetadata.lire.imageanalysis.Tamura();
         tamura.extract(ip.getBufferedImage());
-        addData(tamura.getData());
+        addData(tamura.getDoubleHistogram());
+
         firePropertyChange(Progress.END);
     }
 
     @Override
     public String getDescription() {
-        return "Tamura filter";
+        return "Tamura";
     }
 
     @Override

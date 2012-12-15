@@ -13,19 +13,28 @@ import java.util.EnumSet;
  */
 public class FCTH extends AbstractFeatureDescriptor {
 
+    private net.semanticmetadata.lire.imageanalysis.FCTH fcth = new net.semanticmetadata.lire.imageanalysis.FCTH();
+
     @Override
     public void run(ImageProcessor ip) {
-        de.lmu.ifi.dbs.jfeaturelib.features.lire.FCTH fcth = new de.lmu.ifi.dbs.jfeaturelib.features.lire.FCTH();
-
         firePropertyChange(Progress.START);
+
         fcth.extract(ip.getBufferedImage());
-        addData(fcth.getData());
+        addData(fcth.getDoubleHistogram());
+
         firePropertyChange(Progress.END);
+    }
+
+    /**
+     * @return the fcth instance from lire
+     */
+    public net.semanticmetadata.lire.imageanalysis.FCTH getFcth() {
+        return fcth;
     }
 
     @Override
     public String getDescription() {
-        return new de.lmu.ifi.dbs.jfeaturelib.features.lire.FCTH().getStringRepresentation();
+        return "FCTH";
     }
 
     @Override

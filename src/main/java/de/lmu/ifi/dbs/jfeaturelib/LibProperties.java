@@ -43,6 +43,14 @@ public class LibProperties extends PropertyContainer {
     public static final String PHOG_RECURSIONS = "features.phog.recursions";
     // Haralick
     public static final String HARALICK_DISTANCE = "features.haralick.distance";
+    // CEDD
+    public static final String CEDD_T0 = "features.cedd.t0";
+    public static final String CEDD_T1 = "features.cedd.t1";
+    public static final String CEDD_T2 = "features.cedd.t2";
+    public static final String CEDD_T3 = "features.cedd.t3";
+    public static final String CEDD_COMPACT = "features.cedd.compact";
+    // Auto Color Correlogram
+    public static final String AUTOCOLORCORRELOGRAM_DISTANCE = "features.autoColorCorrelogram.distance";
     // ###########################################
     // Shapes
     public static final String POLYGON_EVOLUTION = "shapefeatures.polygonevolution.iterations";
@@ -56,6 +64,7 @@ public class LibProperties extends PropertyContainer {
     public static final String CANNY_KERNEL_RADIUS = "edge.canny.gaussianKernelRadius";
     public static final String CANNY_KERNEL_WIDTH = "edge.canny.gaussianKernelWidth";
     public static final String CANNY_NORMALIZE_CONTRAST = "edge.canny.contrastNormalized";
+    
 
     /**
      * Constructor that initializes the properties container with the given file.

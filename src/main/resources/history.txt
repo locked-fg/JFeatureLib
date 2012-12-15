@@ -1,3 +1,7 @@
+1.2.0: - added new feature descriptor AutoColorCorrelogram, thanx LIRE
+       - replaced the lire library with the most recent lire version 0.9.3
+       - removed the package de.lmu.ifi.dbs.jfeaturelib.features.lire and implemented the according delegates
+       - added properties support for lire features
 1.1.0: - added SquareModelShapeMatrix and according properties
        - changed de.lmu.ifi.dbs.jfeaturelib.shapeFeatures.Profiles to a new implemenation provided by Johannes Niedermayer
        - made Histogram.TYPE public static

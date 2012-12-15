@@ -11,23 +11,21 @@ import java.util.EnumSet;
  */
 public class Gabor extends AbstractFeatureDescriptor {
 
-    private final de.lmu.ifi.dbs.jfeaturelib.features.lire.Gabor gabor;
-
     public Gabor() {
-        gabor = new de.lmu.ifi.dbs.jfeaturelib.features.lire.Gabor();
     }
 
     @Override
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
+        net.semanticmetadata.lire.imageanalysis.Gabor gabor = new net.semanticmetadata.lire.imageanalysis.Gabor();
         gabor.extract(ip.getBufferedImage());
-        addData(gabor.getData());
+        addData(gabor.getDoubleHistogram());
         firePropertyChange(Progress.END);
     }
 
     @Override
     public String getDescription() {
-        return gabor.getStringRepresentation();
+        return "Gabor";
     }
 
     @Override
