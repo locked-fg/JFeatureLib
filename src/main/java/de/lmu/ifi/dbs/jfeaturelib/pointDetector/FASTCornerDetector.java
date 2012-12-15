@@ -1,5 +1,5 @@
 /*
- *Copyright (c) 2006, 2008, 2009, 2010 Edward Rosten
+ * Copyright (c) 2006, 2008, 2009, 2010 Edward Rosten
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package de.lmu.ifi.dbs.jfeaturelib.pointDetector;
 
 import de.lmu.ifi.dbs.jfeaturelib.ImagePoint;
@@ -47,6 +46,7 @@ import java.util.List;
 
 /**
  * FAST Corner Detector
+ * 
  * @author Edward Rosten
  * @author Robert Zelhofer
  * @see http://www.edwardrosten.com/work/fast.html

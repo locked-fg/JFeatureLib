@@ -4,6 +4,7 @@
        - added properties support for lire features
        - added properties support for thumbnail
        - removed deprecated method calls in SURF / removed surf classes that are not needed for extraction
+       - Changed ConfigurableDescriptor to AbstractDescriptor
 1.1.0: - added SquareModelShapeMatrix and according properties
        - changed de.lmu.ifi.dbs.jfeaturelib.shapeFeatures.Profiles to a new implemenation provided by Johannes Niedermayer
        - made Histogram.TYPE public static

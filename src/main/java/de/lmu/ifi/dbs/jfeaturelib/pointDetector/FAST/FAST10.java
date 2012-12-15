@@ -1,5 +1,5 @@
 /*
- *Copyright (c) 2006, 2008, 2009, 2010 Edward Rosten
+ * Copyright (c) 2006, 2008, 2009, 2010 Edward Rosten
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
