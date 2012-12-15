@@ -11,14 +11,16 @@ import ij.plugin.PlugIn;
 import ij.process.ImageProcessor;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.Map.Entry;
+import org.apache.log4j.Logger;
 
 // Designed according to the "PlugIn Design Guidelines" 
 // http://pacific.mpi-cbg.de/wiki/index.php/PlugIn_Design_Guidelines
 public class Compare_Images implements PlugIn {
 
-    String title = "SURF: Compare Images";
+    private static final Logger log = Logger.getLogger(Compare_Images.class);
+    private String title = "SURF: Compare Images";
 
     @Override
     public void run(String arg) {
@@ -97,13 +99,14 @@ public class Compare_Images implements PlugIn {
         end = System.currentTimeMillis();
         long timeMatcher = end - begin;
 
-        if (matchedPoints.size() == 0) {
+        if (matchedPoints.isEmpty()) {
             IJ.showMessage(title, "No matches found.");
             return;
         }
 
 
         // Draw matched interest points:
+        String out = "";
 
         // 1) prepare a copy of image1
         ImageProcessor image1ProcessorCopy = image1.getProcessor().duplicate().convertToRGB();
@@ -125,7 +128,6 @@ public class Compare_Images implements PlugIn {
         image1Copy.show();
         image2Copy.show();
 
-
         if (p1.isDisplayStatistics() || p2.isDisplayStatistics()) {
             IJFacade.initializeStatisticsWindow();
             if (p1.isDisplayStatistics()) {
@@ -134,19 +136,16 @@ public class Compare_Images implements PlugIn {
             if (p2.isDisplayStatistics()) {
                 IJFacade.displayStatistics(p2);
             }
-            IJ.write("");
-            IJ.write("Matcher:\t" + timeMatcher);
-
+            out += "Matcher:\t" + timeMatcher + "\n";
         }
 
         if (useHomography) {
             if (!IJ.isResultsWindow()) {
                 IJFacade.initializeStatisticsWindow();
             }
-            IJ.write("");
-            IJ.write("Check Matches With Homography");
-            IJ.write("IPoint-1 \t\t" + "IPoint-2 (Homography) \t\t" + "IPoint-2 (Matcher) \t\t" + "Deviation from Homography\t");
-            IJ.write("X \t Y \t" + "X \t Y \t" + "X \t Y \t" + "X \t Y");
+            out += "Check Matches With Homography";
+            out += "IPoint-1 \t\t" + "IPoint-2 (Homography) \t\t" + "IPoint-2 (Matcher) \t\t" + "Deviation from Homography\t\n";
+            out += "X \t Y \t" + "X \t Y \t" + "X \t Y \t" + "X \t Y\n";
 
             InterestPoint ip1, ip2;
             Point2Df ip2H;
@@ -155,22 +154,21 @@ public class Compare_Images implements PlugIn {
                 ip1 = pair.getKey();
                 ip2 = pair.getValue();
                 ip2H = Matcher.getTargetPointByHomography(new Point2Df(ip1.x, ip1.y), homography);
-                IJ.write(d2s(ip1.x) + "\t" + d2s(ip1.y) + "\t" + d2s(ip2H.x) + "\t" + d2s(ip2H.y) + "\t"
-                        + d2s(ip2.x) + "\t" + d2s(ip2.y) + "\t" + d2s(ip2.x - ip2H.x) + "\t" + d2s(ip2.y - ip2H.y));
+                out += d2s(ip1.x) + "\t" + d2s(ip1.y) + "\t" + d2s(ip2H.x) + "\t" + d2s(ip2H.y) + "\t"
+                        + d2s(ip2.x) + "\t" + d2s(ip2.y) + "\t" + d2s(ip2.x - ip2H.x) + "\t" + d2s(ip2.y - ip2H.y) + "\n";
                 i++;
             }
-
         }
 
+        log.info(out);
     }
 
     /**
-     * Return a new Map contaning only those entries from map1 that also contain
-     * (as reversed key/value paar) in map2.
+     * Return a new Map contaning only those entries from map1 that also contain (as reversed key/value paar) in map2.
      */
     Map<InterestPoint, InterestPoint> intersection(Map<InterestPoint, InterestPoint> map1, Map<InterestPoint, InterestPoint> map2) {
         // take only those points that matched in the reverse comparison too
-        Map<InterestPoint, InterestPoint> result = new HashMap<InterestPoint, InterestPoint>();
+        Map<InterestPoint, InterestPoint> result = new HashMap<>();
         for (InterestPoint ipt1 : map1.keySet()) {
             InterestPoint ipt2 = map1.get(ipt1);
             if (ipt1 == map2.get(ipt2)) {
@@ -181,7 +179,6 @@ public class Compare_Images implements PlugIn {
     }
 
     float[][] loadHomographyMatrixFromFile() {
-
         OpenDialog od = new OpenDialog("Choose a file containing 3x3 Homography Matrix" + " (" + title + ")", null);
         String dir = od.getDirectory();
         String fileName = od.getFileName();
@@ -191,14 +188,12 @@ public class Compare_Images implements PlugIn {
         String fullName = dir + fileName;
         float[][] res = new float[3][3];
 
-        try {
-            Scanner in = new Scanner(new File(fullName));
+        try (Scanner in = new Scanner(new File(fullName))) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     res[i][j] = in.nextFloat();
                 }
             }
-            in.close();
         } catch (FileNotFoundException e) {
             IJ.error("SURF: loadHomographyFromFile", e.getMessage());
             res = null;
