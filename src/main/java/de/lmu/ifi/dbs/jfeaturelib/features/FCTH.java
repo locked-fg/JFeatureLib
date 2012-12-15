@@ -10,6 +10,10 @@ import java.util.EnumSet;
  * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis, <i>FCTH: Fuzzy Color and
  * Texture Histogram - A Low Level Feature for Accurate Image Retrieval</i>, in Proceedings of the Ninth International
  * Workshop on Image Analysis for Multimedia Interactive Services, IEEE, Klagenfurt, May, 2008.
+ * 
+ * This is a wrapper class for the corresponding lire class
+ *
+ * @see net.semanticmetadata.lire.imageanalysis.FCTH
  */
 public class FCTH extends AbstractFeatureDescriptor {
 

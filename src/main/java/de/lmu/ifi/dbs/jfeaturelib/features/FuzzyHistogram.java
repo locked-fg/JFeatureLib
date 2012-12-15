@@ -6,6 +6,10 @@ import java.util.EnumSet;
 
 /**
  * Fuzzy Color Histogram.
+ *
+ * This is a wrapper class for the corresponding lire class
+ *
+ * @see net.semanticmetadata.lire.imageanalysis.FuzzyColorHistogram
  */
 public class FuzzyHistogram extends AbstractFeatureDescriptor {
 
@@ -15,11 +19,11 @@ public class FuzzyHistogram extends AbstractFeatureDescriptor {
     @Override
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
-        
+
         net.semanticmetadata.lire.imageanalysis.FuzzyColorHistogram fuzzy = new net.semanticmetadata.lire.imageanalysis.FuzzyColorHistogram();
         fuzzy.extract(ip.getBufferedImage());
         addData(fuzzy.getDoubleHistogram());
-        
+
         firePropertyChange(Progress.END);
     }
 

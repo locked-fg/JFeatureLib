@@ -13,6 +13,10 @@ import java.util.EnumSet;
  *
  * <i>CEDD: Color and Edge Directivity Descriptor. A Compact Descriptor for Image Indexing and Retrieval</i>, A.
  * Gasteratos, M. Vincze, and J.K. Tsotsos (Eds.): ICVS 2008, LNCS 5008, pp. 312-322, 2008.
+ *
+ * This is a wrapper class for the corresponding lire class
+ *
+ * @see net.semanticmetadata.lire.imageanalysis.CEDD
  */
 public class CEDD extends AbstractFeatureDescriptor {
 

@@ -7,8 +7,9 @@ import java.util.EnumSet;
 /**
  * Implementation of (three) Tamura features done by Marko Keuschnig & Christian Penz
  *
- * Changes by <br> <ul> <li> Ankit Jain (jankit87@gmail.com): histogram length in set string <li>
- * shen72@users.sourceforge.net: bugfixes in math (casting and brackets) </ul> Date: 28.05.2008 Time: 11:52:03
+ * This is a wrapper class for the corresponding lire class
+ *
+ * @see net.semanticmetadata.lire.imageanalysis.Tamura
  */
 public class Tamura extends AbstractFeatureDescriptor {
 

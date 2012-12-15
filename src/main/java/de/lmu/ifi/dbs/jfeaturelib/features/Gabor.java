@@ -7,7 +7,9 @@ import java.util.EnumSet;
 /**
  * Implementation of a Gabor texture features
  *
- * @author Marko Keuschnig & Christian Penz
+ * This is a wrapper class for the corresponding lire class
+ *
+ * @see net.semanticmetadata.lire.imageanalysis.Gabor
  */
 public class Gabor extends AbstractFeatureDescriptor {
 

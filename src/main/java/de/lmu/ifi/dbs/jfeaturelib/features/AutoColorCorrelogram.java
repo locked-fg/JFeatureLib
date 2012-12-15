@@ -11,8 +11,9 @@ import org.apache.log4j.Logger;
  * Zabih, R. (2007) "Image Indexing Using Color Correlograms", IEEE Computer Society see also DOI
  * 10.1109/CVPR.1997.609412
  *
- * This is a wrapper class
- * <code>for net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram</code>
+ * This is a wrapper class for the appropriate lire class
+ *
+ * @see net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram
  *
  * @author Franz
  * @since 1.2.0

@@ -8,6 +8,10 @@ import java.util.EnumSet;
 
 /**
  * A joint descriptor joining CEDD and FCTH in one histogram by Savvas A. Chatzichristofis.
+ * 
+ * This is a wrapper class for the corresponding lire class
+ *
+ * @see net.semanticmetadata.lire.imageanalysis.JCD
  */
 public class JCD extends AbstractFeatureDescriptor {
 
