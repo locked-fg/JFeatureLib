@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * @author Franz
  */
-public abstract class ConfigurableDescriptor implements Descriptor {
+public abstract class AbstractDescriptor implements Descriptor {
 
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 

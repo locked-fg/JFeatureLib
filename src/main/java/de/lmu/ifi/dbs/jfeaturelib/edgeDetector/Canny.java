@@ -21,7 +21,7 @@ import java.util.*;
  * @author Tom Gibara
  * @see http://www.tomgibara.com/computer-vision/canny-edge-detector
  */
-public class Canny extends ConfigurableDescriptor {
+public class Canny extends AbstractDescriptor {
 
     // statics
     private final static float GAUSSIAN_CUT_OFF = 0.005f;
