@@ -51,6 +51,10 @@ public class LibProperties extends PropertyContainer {
     public static final String CEDD_COMPACT = "features.cedd.compact";
     // Auto Color Correlogram
     public static final String AUTOCOLORCORRELOGRAM_DISTANCE = "features.autoColorCorrelogram.distance";
+    // Thumbnail 
+    public static final String THUMBNAIL_RESIZE = "features.thumbnail.resize";
+    public static final String THUMBNAIL_WIDTH = "features.thumbnail.width";
+    public static final String THUMBNAIL_HEIGHT = "features.thumbnail.height";
     // ###########################################
     // Shapes
     public static final String POLYGON_EVOLUTION = "shapefeatures.polygonevolution.iterations";

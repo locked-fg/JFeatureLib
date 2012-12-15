@@ -1,8 +1,10 @@
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ImageProcessor;
+import java.io.IOException;
 import java.util.EnumSet;
 import org.apache.log4j.Logger;
 
@@ -14,6 +16,8 @@ import org.apache.log4j.Logger;
 public class Thumbnail extends AbstractFeatureDescriptor {
 
     static final Logger log = Logger.getLogger(Thumbnail.class.getName());
+    boolean resize = false;
+    int width, height;
 
     @Override
     public String getDescription() {
@@ -31,8 +35,19 @@ public class Thumbnail extends AbstractFeatureDescriptor {
     }
 
     @Override
+    public void setProperties(LibProperties properties) throws IOException {
+        this.resize = properties.getBoolean(LibProperties.THUMBNAIL_RESIZE, false);
+        this.width = properties.getInteger(LibProperties.THUMBNAIL_WIDTH);
+        this.height = properties.getInteger(LibProperties.THUMBNAIL_HEIGHT);
+    }
+
+    @Override
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
+
+        if (resize) {
+            ip = ip.resize(width, height);
+        }
 
         Object pixels = ip.getPixels(); // byte short flot int
         Class type = pixels.getClass().getComponentType();
