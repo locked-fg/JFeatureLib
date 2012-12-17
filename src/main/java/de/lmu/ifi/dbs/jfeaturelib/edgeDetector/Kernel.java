@@ -50,7 +50,7 @@ public class Kernel implements Descriptor {
     /**
      * Standard 3x3 SOBEL mask (1 0 -1, 2, 0, -2, 1, 0, -1 )
      *
-     * @see http://en.wikipedia.org/wiki/Sobel_operator
+     * See http://en.wikipedia.org/wiki/Sobel_operator
      */
     public static final float[] SOBEL = new float[]{
         1, 0, -1,
@@ -60,7 +60,7 @@ public class Kernel implements Descriptor {
     /**
      * Standard 3x3 SCHARR mask (1 0 -1, 2, 0, -2, 1, 0, -1 )
      *
-     * @see http://en.wikipedia.org/wiki/Sobel_operator
+     * See http://en.wikipedia.org/wiki/Sobel_operator
      */
     public static final float[] SCHARR = new float[]{
         3, 0, -3,
@@ -70,7 +70,7 @@ public class Kernel implements Descriptor {
     /**
      * 3x3 PREWITT mask (-1, 0, 1, ...)
      *
-     * @see http://en.wikipedia.org/wiki/Prewitt_operator
+     * See http://en.wikipedia.org/wiki/Prewitt_operator
      */
     public static final float[] PREWITT = new float[]{
         -1, 0, 1,
@@ -84,7 +84,6 @@ public class Kernel implements Descriptor {
     private float[] kernel;
     private int kernelWidth;
     private int treshold;
-//    private int[] result;
 
     /**
      * Constructs a new detector with standart Sobel kernel
