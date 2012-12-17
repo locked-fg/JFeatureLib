@@ -35,7 +35,7 @@ import java.util.EnumSet;
 /**
  * Simple implementation of the Kirsch operator
  *
- * @see http://en.wikipedia.org/wiki/Kirsch-Operator
+ * See http://en.wikipedia.org/wiki/Kirsch-Operator for more information.
  */
 public class Kirsch implements Descriptor {
 
@@ -112,10 +112,9 @@ public class Kirsch implements Descriptor {
     }
 
     /**
-     * Duplicates the incoming ip, convolves it with the given kernel and
-     * compares the outcome with the data in the result processor. Afterwards
-     * the maximum-operation is performed so that the largest values of both
-     * processor will retain in the result.
+     * Duplicates the incoming ip, convolves it with the given kernel and compares the outcome with the data in the
+     * result processor. Afterwards the maximum-operation is performed so that the largest values of both processor will
+     * retain in the result.
      *
      * @param k
      * @param ip

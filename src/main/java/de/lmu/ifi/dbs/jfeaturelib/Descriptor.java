@@ -87,7 +87,7 @@ public interface Descriptor {
     /**
      * Determine the capabilities of this algorithm.
      *
-     * @return
+     * @return the set of supported capabilities.
      */
     public EnumSet<Supports> supports();
 

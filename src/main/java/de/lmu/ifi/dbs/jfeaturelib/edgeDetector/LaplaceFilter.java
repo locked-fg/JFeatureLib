@@ -31,10 +31,12 @@ import java.beans.PropertyChangeSupport;
 import java.util.EnumSet;
 
 /**
+ * LaplaceFilter class
+ *
+ * See http://svg.dmi.unict.it/iplab/imagej/Plugins/Forensics/Filters/PAGINE%20HTML/Laplaciano.html for more information
  *
  * @author Tommaso Testa, Salvatore Adriano Zappala', Salvo Scalia
  * @author recoded by Robert Zelhofer
- * @see http://svg.dmi.unict.it/iplab/imagej/Plugins/Forensics/Filters/PAGINE%20HTML/Laplaciano.html
  */
 public class LaplaceFilter implements Descriptor {
 
@@ -72,6 +74,7 @@ public class LaplaceFilter implements Descriptor {
 
     /**
      * Contructs Laplace Egde Filter
+     *
      * @param supportDiagonalEdges Choose the dimension of laplacian kernel: 1, 3, 5 or 7
      */
     public LaplaceFilter(int kernelDimensions) {
@@ -100,7 +103,7 @@ public class LaplaceFilter implements Descriptor {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
-    
+
     private float[] getKernel(int dimensions) {
         switch (dimensions) {
             case 1:

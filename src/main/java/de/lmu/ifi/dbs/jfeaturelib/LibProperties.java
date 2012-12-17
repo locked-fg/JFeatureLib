@@ -55,7 +55,7 @@ public class LibProperties extends PropertyContainer {
     /**
      * Path to the sift binary which can be obtained from the SIFT homepage.
      *
-     * {@link http://www.cs.ubc.ca/~lowe/keypoints/}
+     * See http://www.cs.ubc.ca/~lowe/keypoints/ for more information.
      */
     public static final String SIFT_BINARY = "features.sift.binary";
     public static final String HISTOGRAMS_TYPE = "features.histogram.type";

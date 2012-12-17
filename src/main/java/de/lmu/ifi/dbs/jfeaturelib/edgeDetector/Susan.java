@@ -34,11 +34,11 @@ import java.beans.PropertyChangeSupport;
 import java.util.EnumSet;
 
 /**
- * Implementation of the SUSAN (Smallest Univalue Segment Assimilating Nucleus)
- * edge detector.
+ * Implementation of the SUSAN (Smallest Univalue Segment Assimilating Nucleus) edge detector.
+ *
+ * <p>See also the Wikipedia page: {@link http://en.wikipedia.org/wiki/Corner_detection} for more information.</p>
  *
  * @author Benedikt
- * @see http://en.wikipedia.org/wiki/Corner_detection#The_SUSAN_corner_detector
  */
 public class Susan implements Descriptor {
 

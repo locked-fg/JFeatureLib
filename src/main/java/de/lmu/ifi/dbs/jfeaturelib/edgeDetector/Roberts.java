@@ -45,7 +45,7 @@ import java.util.EnumSet;
  * 0 -1 -1
  * </pre>
  *
- * @see http://en.wikipedia.org/wiki/Roberts_Cross
+ * See more information at: http://en.wikipedia.org/wiki/Roberts_Cross
  */
 public class Roberts implements Descriptor {
 

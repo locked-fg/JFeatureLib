@@ -42,7 +42,7 @@ import java.util.*;
  * the public domain.</b>
  *
  * @author Tom Gibara
- * @see http://www.tomgibara.com/computer-vision/canny-edge-detector
+ * @link http://www.tomgibara.com/computer-vision/canny-edge-detector
  */
 public class Canny extends AbstractDescriptor {
 

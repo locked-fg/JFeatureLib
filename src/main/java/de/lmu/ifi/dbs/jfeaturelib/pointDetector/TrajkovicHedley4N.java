@@ -33,20 +33,18 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * Trajkovic and Hedley Corner Detector
- * 
- * Returns a List of ImagePoints
- * 
- * This Implementation does not yet use a Besenham Circle for the Points. This is a
- * simpler Algorithm which only uses 4 neighbours, like the Algorithm from Donovan Parks 
- * and Jean-Philippe Gravel.
- * 
+ * Trajkovic and Hedley Corner Detector.
+ *
+ * This Implementation does not yet use a Besenham Circle for the Points. This is a simpler Algorithm which only uses 4
+ * neighbours, like the Algorithm from Donovan Parks and Jean-Philippe Gravel.
+ *
+ * See http://kiwi.cs.dal.ca/~dparks/CornerDetection/trajkovic.htm and
+ * http://en.wikipedia.org/wiki/Corner_detection#The_Trajkovic_and_Hedley_corner_detector for further information. *
+ *
  * @author Robert Zelhofer
- * @see http://kiwi.cs.dal.ca/~dparks/CornerDetection/trajkovic.htm 
- * @see http://en.wikipedia.org/wiki/Corner_detection#The_Trajkovic_and_Hedley_corner_detector
  */
-public class TrajkovicHedley4N implements PointDetector{
-    
+public class TrajkovicHedley4N implements PointDetector {
+
     //Returning List of Corners
     private List<ImagePoint> corners;
     //Threshold values
@@ -56,7 +54,6 @@ public class TrajkovicHedley4N implements PointDetector{
     private int lowResScale;
     //radius for the circle
     private int distance;
-    
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     @Override
@@ -74,18 +71,18 @@ public class TrajkovicHedley4N implements PointDetector{
     @Override
     public void run(ImageProcessor ip) {
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
-        
+
         int lowResWidth = ip.getWidth() / lowResScale;
         int lowResHeight = ip.getHeight() / lowResScale;
         //Create lower Resolution image with custom Scale
         ImageProcessor lowResIp = ip.resize(lowResWidth, lowResWidth);
         ImageProcessor lowResIpResult = lowResIp.duplicate();
-        
+
         //First cSimple For low Res Image
         for (int i = distance; i < lowResWidth - distance; i++) {
             for (int j = distance; j < lowResHeight - distance; j++) {
                 int cSimple = cSimple(lowResIp, i, j);
-                
+
                 if (cSimple >= threshold1) {
                     lowResIpResult.putPixel(i, j, 255);
                 } else {
@@ -100,17 +97,17 @@ public class TrajkovicHedley4N implements PointDetector{
                     int origX = i * lowResScale;
                     int origY = j * lowResScale;
                     int cSimpleOrig = cSimple(ip, origX, origY);
-                    
+
                     if (cSimpleOrig >= threshold2) {
                         if (cInterpixel(ip, origX, origY) >= threshold2) {
                             corners.add(new ImagePoint(origX, origY));
                         }
-                    }  
+                    }
                 }
             }
-            
+
         }
-        
+
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
     }
 
@@ -118,22 +115,21 @@ public class TrajkovicHedley4N implements PointDetector{
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
-    
+
     /**
-     * Creates Trajkovic and Hedley Corner Detector with defauult values:
-     * distance = 1
-     * threshold1 = 500
-     * threshold2 = 500
+     * Creates Trajkovic and Hedley Corner Detector with defauult values: distance = 1 threshold1 = 500 threshold2 = 500
      * scale = 2
      */
     public TrajkovicHedley4N() {
         this(1, 500, 500, 2);
     }
-    
+
     /**
      * Creates Trajkovic and Hedley Corner Detector
+     *
      * @param distance This value sets the distance from the nearby pixels.
-     * @param threshold1 This is the value for the first calcualtion of possible corners in the scaled lower resolution image.
+     * @param threshold1 This is the value for the first calcualtion of possible corners in the scaled lower resolution
+     * image.
      * @param threshold2 This is the value for the second calculation of possible corners in the original image.
      * @param scale Scale for the lower resolution image. The orignial images size is divided by this number;
      */
@@ -144,10 +140,10 @@ public class TrajkovicHedley4N implements PointDetector{
         this.threshold2 = threshold2;
         this.lowResScale = scale;
     }
-    
-    
+
     /**
      * Calculate the Simple Trajkovic and Hedley Cornerness Measure
+     *
      * @param ip ImageProcessor
      * @param x X value of the Pixel
      * @param y Y value of the Pixel
@@ -163,10 +159,10 @@ public class TrajkovicHedley4N implements PointDetector{
         int rB = (int) Math.pow((iB1 - iC), 2) + (int) Math.pow((iB2 - iC), 2);
         return Math.min(rA, rB);
     }
-    
+
     /**
-     * Calculate the Trajkovic and Hedley Cornerss Measure on the Original Image after the
-     * Simple Cornerness Measure
+     * Calculate the Trajkovic and Hedley Cornerss Measure on the Original Image after the Simple Cornerness Measure
+     *
      * @param ip Imageprocessor
      * @param x X value of the Pixel
      * @param y Y value of the Pixel
@@ -185,15 +181,14 @@ public class TrajkovicHedley4N implements PointDetector{
         int c = rA;
         int b = Math.min(b1, b2);
         int a = rB - rA - 2 * b;
-        
+
         int cInterpixel;
         if (b < 0 && (a + b) > 0) {
-            cInterpixel = c - ((b*b)/a);
+            cInterpixel = c - ((b * b) / a);
         } else {
             //else cSimple
             cInterpixel = Math.min(rA, rB);
         }
         return cInterpixel;
     }
-    
 }

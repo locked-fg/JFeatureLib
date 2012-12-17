@@ -58,7 +58,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
      * Constructs a new ThreadWrapper
      *
      * @param descriptorClass Class of the descriptor to be applied
-     * @param imp Image on which the descriptor should work
+     * @param file Image on which the descriptor should work
      */
     public ThreadWrapper(Class descriptorClass, File file) {
         this(descriptorClass, file, -1);
@@ -68,7 +68,7 @@ public class ThreadWrapper extends SwingWorker<List<double[]>, Object>
      * Constructs a new ThreadWrapper with explicit ID
      *
      * @param descriptorClass Class of the descriptor to be applied
-     * @param imp Image on which the descriptor should work
+     * @param file Image on which the descriptor should work
      * @param number Explicit ID for identifying parallel ThreadWrappers
      */
     public ThreadWrapper(Class descriptorClass, File file, int number) {

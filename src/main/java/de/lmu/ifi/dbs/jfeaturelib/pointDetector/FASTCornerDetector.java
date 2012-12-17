@@ -62,7 +62,6 @@ import java.util.List;
  * 
  * @author Edward Rosten
  * @author Robert Zelhofer
- * @see http://www.edwardrosten.com/work/fast.html
  */
 public class FASTCornerDetector implements PointDetector {
     //Return List of ImagePoints
