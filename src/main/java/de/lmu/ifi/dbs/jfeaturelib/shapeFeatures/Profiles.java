@@ -117,7 +117,7 @@ public class Profiles extends AbstractFeatureDescriptor {
      * trailing zeros).
      *
      * @param profile
-     * @return
+     * @return reduced int array without leading/traingin zeros
      */
     ProfileTuple shortenProfile(int[] profile) {
         int start = 0;

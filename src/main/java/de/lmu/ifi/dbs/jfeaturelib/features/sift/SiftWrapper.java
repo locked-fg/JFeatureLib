@@ -121,7 +121,7 @@ public class SiftWrapper {
      * sift binary.
      *
      * @param textInput
-     * @return
+     * @return list of feature vectors
      * @throws InterruptedException
      * @throws IOException
      */

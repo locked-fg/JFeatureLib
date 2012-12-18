@@ -484,7 +484,7 @@ public class Extractor {
      *
      * @param imageList
      * @param maskList
-     * @return
+     * @return list of image to mask tuples
      */
     HashMap<File, File> findTuples(Collection<File> imageList, Collection<File> maskList) {
         assert imageDirectory != null : "image Directory must not be null";

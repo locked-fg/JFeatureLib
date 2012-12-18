@@ -97,9 +97,6 @@ public class Harris implements PointDetector {
 
     /**
      * Defines the capability of the algorithm.
-     *
-     * @see PlugInFilter
-     * @see #supports()
      */
     @Override
     public EnumSet<Supports> supports() {

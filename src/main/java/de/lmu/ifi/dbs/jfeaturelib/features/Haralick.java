@@ -39,7 +39,6 @@ import java.util.EnumSet;
  *
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
- *
  * @article{haralick1973textural, title={Textural features for image
  * classification}, author={Haralick, R.M. and Shanmugam, K. and Dinstein, I.},
  * journal={Systems, Man and Cybernetics, IEEE Transactions on}, volume={3},

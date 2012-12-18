@@ -33,9 +33,10 @@ public class RGBtoGray {
     /**
      * Converts NTSC RGB to gray
      *
+     * See also http://en.wikipedia.org/wiki/Luma_%28video%29
+     * 
      * @param p rgb color pixel
      * @return gray value
-     * @see http://en.wikipedia.org/wiki/Luma_%28video%29
      */
     public static int ARGB_NTSC(int p) {
         int r = (p & 0xff0000) >> 16;
@@ -60,11 +61,12 @@ public class RGBtoGray {
     /**
      * Converts NTSC RGB to gray
      *
+     * See also http://en.wikipedia.org/wiki/Luma_%28video%29
+     * 
      * @param r red value
      * @param g green value
      * @param b blue value
      * @return gray value
-     * @see http://en.wikipedia.org/wiki/Luma_%28video%29
      */
     public static int NTSCRGBtoGray(int r, int g, int b) {
         return (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);

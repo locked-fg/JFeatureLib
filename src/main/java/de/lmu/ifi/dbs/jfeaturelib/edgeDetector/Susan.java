@@ -36,7 +36,7 @@ import java.util.EnumSet;
 /**
  * Implementation of the SUSAN (Smallest Univalue Segment Assimilating Nucleus) edge detector.
  *
- * <p>See also the Wikipedia page: {@link http://en.wikipedia.org/wiki/Corner_detection} for more information.</p>
+ * <p>See also the Wikipedia page: http://en.wikipedia.org/wiki/Corner_detection for more information.</p>
  *
  * @author Benedikt
  */

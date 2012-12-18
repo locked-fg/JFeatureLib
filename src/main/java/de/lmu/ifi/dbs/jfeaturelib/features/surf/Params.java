@@ -203,9 +203,10 @@ public class Params {
     }
 
     /**
-     * Adds SURF parameter to the ImageJ
-     * <code>GenericDialog</code>. <p>The order and types of fields do affect
-     * the method {@link Params#getSurfParamsFromDialog(GenericDialog)}. Bounds
+     * Adds SURF parameter to the ImageJ GenericDialog
+     * 
+     * The order and types of fields do affect
+     * the method Params#getSurfParamsFromDialog(GenericDialog). Bounds
      * description depends on bounds check in constructor {@link Params#Params(int, int, float, int, boolean, boolean, int)}.
      */
     public static void addSurfParamsToDialog(GenericDialog gd) {

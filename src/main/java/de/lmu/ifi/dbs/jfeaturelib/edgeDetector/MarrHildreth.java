@@ -148,9 +148,7 @@ public class MarrHildreth implements Descriptor {
 
     //<editor-fold defaultstate="collapsed" desc="accessors">
     /**
-     * Return deviation
-     *
-     * @return
+     * @return deviation value
      */
     public double getDeviation() {
         return deviation;
@@ -166,9 +164,7 @@ public class MarrHildreth implements Descriptor {
     }
 
     /**
-     * Returns size of kernel
-     *
-     * @return
+     * @return kernel size
      */
     public int getKernelSize() {
         return kernelSize;
@@ -184,9 +180,7 @@ public class MarrHildreth implements Descriptor {
     }
 
     /**
-     * Returns number of iterations
-     *
-     * @return
+     * @return amount of iterations
      */
     public int getIterations() {
         return times;
@@ -201,30 +195,4 @@ public class MarrHildreth implements Descriptor {
         this.times = times;
     }
     //</editor-fold>
-
-//    /**
-//    * Returns the image edges as INT_ARGB array.
-//    * This can be used to create a buffered image, if the dimensions are known.
-//    */
-//    @Override
-//    public List<double[]> getFeatures() {
-//        if(image != null){
-//            int[] data = (int[])image.getBufferedImage().getData().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
-//            ArrayList<double[]> list = new ArrayList<>(1);
-//            list.add(Arrays2.convertToDouble(data));
-//            return list;
-//        }
-//        else{
-//            return Collections.EMPTY_LIST;
-//        }
-//    } 
-
-//    /**
-//     * Returns information about the getFeauture returns in a String array.
-//     */
-//    @Override
-//    public String getDescription() {
-//        String info = "Each pixel value";
-//        return info;
-//    }
 }

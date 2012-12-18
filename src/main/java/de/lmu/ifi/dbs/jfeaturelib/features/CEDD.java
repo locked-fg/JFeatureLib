@@ -94,7 +94,7 @@ public class CEDD extends AbstractFeatureDescriptor {
     /**
      * Returns the cedd instance from LIRE. The instance is available only after the run method has been called.
      *
-     * @return
+     * @return the LIRE CEDD instance
      */
     public net.semanticmetadata.lire.imageanalysis.CEDD getCedd() {
         return cedd;

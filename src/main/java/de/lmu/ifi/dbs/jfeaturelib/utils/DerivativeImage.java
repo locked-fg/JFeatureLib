@@ -96,7 +96,7 @@ public class DerivativeImage {
      * Sets a new kernel for the derivation in y direction.
      * Keep in mind that just setting the kernel does NOT recompute the result.
      * 
-     * @param kernelY 
+     * @return kernelY 
      */
     public float[] getKernelY() {
         return kernelY;

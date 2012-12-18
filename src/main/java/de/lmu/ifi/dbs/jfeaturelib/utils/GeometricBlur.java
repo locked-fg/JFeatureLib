@@ -83,7 +83,7 @@ public class GeometricBlur {
 
     /**
      * @param out write blurred image into this image processor
-     * @param p point in the source image being the center of the query
+     * @param center point in the source image being the center of the query
      */
     public void paintInto(final ImageProcessor out, final ImagePoint center) {
         if (out == null) {

@@ -75,7 +75,7 @@ public class LaplaceFilter implements Descriptor {
     /**
      * Contructs Laplace Egde Filter
      *
-     * @param supportDiagonalEdges Choose the dimension of laplacian kernel: 1, 3, 5 or 7
+     * @param kernelDimensions Choose the dimension of laplacian kernel: 1, 3, 5 or 7
      */
     public LaplaceFilter(int kernelDimensions) {
         laplaceKernelDimensions = kernelDimensions;

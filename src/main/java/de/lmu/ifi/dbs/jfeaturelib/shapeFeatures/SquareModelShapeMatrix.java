@@ -86,7 +86,7 @@ public class SquareModelShapeMatrix extends AbstractFeatureDescriptor {
      * @param y1
      * @param x2
      * @param y2
-     * @return
+     * @return euclidean distance
      */
     private double distance(int x1, int y1, int x2, int y2) {
         double dx = (double) x1 - (double) x2;

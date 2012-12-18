@@ -143,7 +143,7 @@ public class Interpolated1DHistogram {
     /**
      * Returns a reference(!) to the data array.
      *
-     * @return
+     * @return the data array
      */
     public double[] getData() {
         return bins;
@@ -186,7 +186,7 @@ public class Interpolated1DHistogram {
      *
      * The string is a comma separated concatenation of the values
      *
-     * @return
+     * @return string representation of the ata array
      */
     @Override
     public String toString() {
