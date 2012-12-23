@@ -7,6 +7,7 @@
        - Changed ConfigurableDescriptor to AbstractDescriptor
        - added code licencing blocks
        - corrected JavaDocs to get rid of all the warnings
+       - changed dependency to common-extension-lib 2.1.0
 1.1.0: - added SquareModelShapeMatrix and according properties
        - changed de.lmu.ifi.dbs.jfeaturelib.shapeFeatures.Profiles to a new implemenation provided by Johannes Niedermayer
        - made Histogram.TYPE public static
