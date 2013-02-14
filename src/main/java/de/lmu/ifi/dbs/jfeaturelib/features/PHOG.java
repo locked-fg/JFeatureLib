@@ -29,9 +29,9 @@ import de.lmu.ifi.dbs.jfeaturelib.edgeDetector.Canny;
 import de.lmu.ifi.dbs.jfeaturelib.utils.GradientImage;
 import de.lmu.ifi.dbs.jfeaturelib.utils.GradientSource;
 import de.lmu.ifi.dbs.jfeaturelib.utils.Interpolated1DHistogram;
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import de.lmu.ifi.dbs.utilities.Math2;
 import de.lmu.ifi.dbs.utilities.Vectors;
-import de.lmu.ifi.dbs.utilities.primitiveArrays.DoubleArray;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.awt.Rectangle;
@@ -75,7 +75,7 @@ public class PHOG extends AbstractFeatureDescriptor {
     /**
      * dynamic array holding the feature
      */
-    private DoubleArray feature;
+    private double[] feature;
     /**
      * the wrapper class to extract the gradient information from
      */
@@ -112,9 +112,9 @@ public class PHOG extends AbstractFeatureDescriptor {
 
         // release memory
         gradientSource = null;
-        Vectors.normalize(feature.getData());
+        Vectors.normalize(feature);
 
-        addData(feature.getData());
+        addData(feature);
         firePropertyChange(Progress.END);
     }
 
@@ -130,6 +130,13 @@ public class PHOG extends AbstractFeatureDescriptor {
         return ip;
     }
 
+    double[] add(double[] arr2){
+        double[] fea = new double[feature.length + arr2.length];
+        System.arraycopy(feature, 0, fea, 0, feature.length);
+        System.arraycopy(arr2, 0, fea, feature.length, arr2.length);
+        return fea;
+    }
+    
     private void buildHistogramRecursively(Rectangle r, int recursion) {
         histogram.clear();
 
@@ -143,8 +150,8 @@ public class PHOG extends AbstractFeatureDescriptor {
                 }
             }
         }
-        feature.addAll(histogram.getData());
-
+        feature = Arrays2.append(feature, histogram.getData());
+        
         // descend into next recursion
         if (recursion++ < recursions) {
             final int w2 = r.width / 2;
@@ -169,7 +176,7 @@ public class PHOG extends AbstractFeatureDescriptor {
         for (int i = 0; i <= recursions; i++) {
             length += bins * Math2.pow(4, i);
         }
-        feature = new DoubleArray(length);
+        feature = new double[length];
     }
 
     @Override
