@@ -27,6 +27,7 @@ import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import ij.process.ImageProcessor;
 import java.io.IOException;
+import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram.Mode;
 import org.apache.log4j.Logger;
 
 /**
@@ -47,7 +48,7 @@ public class AutoColorCorrelogram extends AbstractFeatureDescriptor {
     /**
      * distance d > 0
      */
-    private int distance = 3;
+    int distance = 3;
 
     @Override
     public void setProperties(LibProperties properties) throws IOException {
@@ -58,7 +59,8 @@ public class AutoColorCorrelogram extends AbstractFeatureDescriptor {
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
 
-        net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram acc = new net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram(distance);
+        net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram acc = 
+                new net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram(distance, Mode.SuperFast);
         acc.extract(ip.getBufferedImage());
         addData(acc.getDoubleHistogram());
 

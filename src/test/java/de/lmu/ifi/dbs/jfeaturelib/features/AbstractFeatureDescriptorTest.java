@@ -1,6 +1,5 @@
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
-import de.lmu.ifi.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
 import ij.gui.Roi;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
