@@ -1,4 +1,5 @@
 1.x.x: - changed PHOG code according to new common-extension-lib
+       - fixed Issue 24: NPE in AutoColorCorrelogram
 1.2.0: - added new feature descriptor AutoColorCorrelogram, thanx LIRE
        - replaced the lire library with the most recent lire version 0.9.3
        - removed the package de.lmu.ifi.dbs.jfeaturelib.features.lire and implemented the according delegates
