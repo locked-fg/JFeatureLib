@@ -91,7 +91,14 @@ public class LibProperties extends PropertyContainer {
     public static final String CANNY_KERNEL_RADIUS = "edge.canny.gaussianKernelRadius";
     public static final String CANNY_KERNEL_WIDTH = "edge.canny.gaussianKernelWidth";
     public static final String CANNY_NORMALIZE_CONTRAST = "edge.canny.contrastNormalized";
-    
+
+    /**
+     * Initializes an empty properties set. You should know what you are doing as the needed Properties will not be
+     * present. So all required properties have to be set before it is passed to an extractor/descriptor.
+     */
+    public LibProperties() {
+        super();
+    }
 
     /**
      * Constructor that initializes the properties container with the given file.
@@ -99,7 +106,7 @@ public class LibProperties extends PropertyContainer {
      * @param file
      * @throws IOException
      */
-    LibProperties(File file) throws IOException {
+    public LibProperties(File file) throws IOException {
         super(file);
     }
 
@@ -109,7 +116,7 @@ public class LibProperties extends PropertyContainer {
      * @param file
      * @throws IOException
      */
-    LibProperties(InputStream is) throws IOException {
+    public LibProperties(InputStream is) throws IOException {
         super(is);
     }
 
