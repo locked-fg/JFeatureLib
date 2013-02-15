@@ -221,7 +221,7 @@ public class Extractor {
     }
 
     /**
-     * Prints the supports capabilities of the feature descriptors and prints the string to system.out.
+     * Prints the supports capabilities of the feature descriptors and prints the string to System.out.
      */
     private void listFeatureDescriptorCapabilities() throws InstantiationException, IllegalAccessException,
             IOException, URISyntaxException {
