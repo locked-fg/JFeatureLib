@@ -60,6 +60,13 @@ public class LibProperties extends PropertyContainer {
     public static final String SIFT_BINARY = "features.sift.binary";
     public static final String HISTOGRAMS_TYPE = "features.histogram.type";
     public static final String HISTOGRAMS_BINS = "features.histogram.bins";
+    // reference color similarity
+    public static final String REFERENCE_COLOR_SIMILARITY_INIT = "features.referenceColorSimilarity.init";
+    public static final String REFERENCE_COLOR_SIMILARITY_H = "features.referenceColorSimilarity.h";
+    public static final String REFERENCE_COLOR_SIMILARITY_S = "features.referenceColorSimilarity.s";
+    public static final String REFERENCE_COLOR_SIMILARITY_B = "features.referenceColorSimilarity.b";
+    public static final String REFERENCE_COLOR_SIMILARITY_G = "features.referenceColorSimilarity.g";
+    public static final String REFERENCE_COLOR_SIMILARITY_COLORS = "features.referenceColorSimilarity.colors";
     // color histograms
     public static final String COLOR_HISTOGRAMS_TYPE = "features.colorhistograms.type";
     public static final String COLOR_HISTOGRAMS_BINS_X = "features.colorhistograms.bins.x";
