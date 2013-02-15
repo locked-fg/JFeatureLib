@@ -60,6 +60,11 @@ public class LibProperties extends PropertyContainer {
     public static final String SIFT_BINARY = "features.sift.binary";
     public static final String HISTOGRAMS_TYPE = "features.histogram.type";
     public static final String HISTOGRAMS_BINS = "features.histogram.bins";
+    // color histograms
+    public static final String COLOR_HISTOGRAMS_TYPE = "features.colorhistograms.type";
+    public static final String COLOR_HISTOGRAMS_BINS_X = "features.colorhistograms.bins.x";
+    public static final String COLOR_HISTOGRAMS_BINS_Y = "features.colorhistograms.bins.y";
+    public static final String COLOR_HISTOGRAMS_BINS_Z = "features.colorhistograms.bins.z";
     // Phog
     public static final String PHOG_CANNY = "features.phog.canny";
     public static final String PHOG_BINS = "features.phog.bins";
@@ -127,7 +132,6 @@ public class LibProperties extends PropertyContainer {
      * @throws IOException
      */
     public static LibProperties get() throws IOException {
-
         if (singleton == null) {
             if (BASE_FILE.exists()) { // read from file
                 log.debug("reading properties from file: " + BASE_FILE.getAbsolutePath());
