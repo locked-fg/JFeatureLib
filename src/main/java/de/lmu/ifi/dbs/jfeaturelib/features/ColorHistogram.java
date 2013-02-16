@@ -23,6 +23,9 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -104,6 +107,12 @@ public class ColorHistogram extends AbstractFeatureDescriptor {
         binX = properties.getInteger(LibProperties.COLOR_HISTOGRAMS_BINS_X);
         binY = properties.getInteger(LibProperties.COLOR_HISTOGRAMS_BINS_Y);
         binZ = properties.getInteger(LibProperties.COLOR_HISTOGRAMS_BINS_Z);
+        
+        
+        checkNotNull(type, "type must not be null");
+        checkArgument(binX>0, "bin x must be >0 but was "+binX);
+        checkArgument(binY>0, "bin y must be >0 but was "+binY);
+        checkArgument(binZ>0, "bin z must be >0 but was "+binZ);
     }
 
     @Override
