@@ -23,6 +23,8 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -31,6 +33,7 @@ import java.awt.Color;
 import java.util.EnumSet;
 
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
+import de.lmu.ifi.dbs.utilities.Arrays2;
 
 /**
  * Color similarity features. This is not a histogram, because the reference colors are processed independently; any
@@ -165,21 +168,35 @@ public class ReferenceColorSimilarity extends AbstractFeatureDescriptor {
                 int sbins = properties.getInteger(LibProperties.REFERENCE_COLOR_SIMILARITY_S, 1);
                 int bbins = properties.getInteger(LibProperties.REFERENCE_COLOR_SIMILARITY_B, 1);
                 int gbins = properties.getInteger(LibProperties.REFERENCE_COLOR_SIMILARITY_G, 1);
+                checkArgument(hbins > 0, "hbins must be > 0 but was " + hbins);
+                checkArgument(sbins > 0, "sbins must be > 0 but was " + sbins);
+                checkArgument(bbins > 0, "bbins must be > 0 but was " + bbins);
+                checkArgument(gbins > 0, "gbins must be > 0 but was " + gbins);
                 initByBins(hbins, sbins, bbins, gbins);
                 break;
 
             case "color":
                 String colString = properties.getString(LibProperties.REFERENCE_COLOR_SIMILARITY_COLORS, "");
+                checkNotNull(colString, "colors must not be null");
+
+                colString.trim();
+                checkArgument(!colString.isEmpty(), "colors must not be empty");
+
                 String[] colStrings = colString.split(",");
-                int[] cols = new int[colString.length()];
+                checkArgument(colStrings.length > 0, "colors array must not be empty");
+
+                int[] cols = new int[colStrings.length];
                 for (int i = 0; i < cols.length; i++) {
-                    cols[i] = Integer.parseInt(colStrings[i].trim());
+                    String s = colStrings[i].trim();
+                    cols[i] = Integer.parseInt(s);
+                    checkArgument(cols[i] >= 0, "colors array components must be >=0");
                 }
+                checkArgument(Arrays2.sum(cols) > 0, "colors array must not be zero");
                 initByColors(cols);
                 break;
 
             default:
-                throw new IllegalArgumentException("invalid init mode given: " + init+". Allowed: bins/color");
+                throw new IllegalArgumentException("invalid init mode given: " + init + ". Allowed: bins/color");
         }
     }
 
