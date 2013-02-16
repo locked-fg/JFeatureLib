@@ -1,4 +1,4 @@
-1.x.x: - changed PHOG code according to new common-extension-lib
+1.3.0: - changed PHOG code according to new common-extension-lib
        - fixed Issue 24: NPE in AutoColorCorrelogram
        - fixed Issue 26: LibProperties
        - fixed Issue 23: added new feature ColorHistogram, ReferenceColorSimilarity
