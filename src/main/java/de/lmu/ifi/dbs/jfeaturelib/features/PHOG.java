@@ -42,21 +42,18 @@ import org.apache.log4j.Logger;
 /**
  * Generates Pyramid Histograms of Oriented Gradients (PHoG).
  *
- * Phogs were first introduced in "Representing shape with a spatial pyramid
- * kernel" (2007). By Anna Bosch, Andrew Zisserman, Xavier Munoz
+ * Phogs were first introduced in "Representing shape with a spatial pyramid kernel" (2007). By Anna Bosch, Andrew
+ * Zisserman, Xavier Munoz
  *
- * See also http://www.robots.ox.ac.uk/~vgg/publications/2007/Bosch07/ and
- * http://dl.acm.org/citation.cfm?id=1282340 for further information.
+ * See also http://www.robots.ox.ac.uk/~vgg/publications/2007/Bosch07/ and http://dl.acm.org/citation.cfm?id=1282340 for
+ * further information.
  *
- * In the original paper, canny edge extraction is applied prior to extracting
- * the gradients. As edge detection can be performed in several ways, it is not
- * hard wired. It can be enabled in the properties by setting
- * features.phog.canny to true. The parameters for the canny operator are also
- * taken from the properties file.
+ * In the original paper, canny edge extraction is applied prior to extracting the gradients. As edge detection can be
+ * performed in several ways, it is not hard wired. It can be enabled in the properties by setting features.phog.canny
+ * to true. The parameters for the canny operator are also taken from the properties file.
  *
- * If another edge detection operator should be used, simple set the canny
- * parameter to false and call {@link #run(ij.process.ImageProcessor)} with an
- * pre processed image.
+ * If another edge detection operator should be used, simple set the canny parameter to false and call
+ * {@link #run(ij.process.ImageProcessor)} with an pre processed image.
  *
  * @author graf
  * @since 11/4/2011
@@ -75,7 +72,7 @@ public class PHOG extends AbstractFeatureDescriptor {
     /**
      * dynamic array holding the feature
      */
-    private double[] feature;
+    private double[] feature = new double[0];
     /**
      * the wrapper class to extract the gradient information from
      */
@@ -105,7 +102,6 @@ public class PHOG extends AbstractFeatureDescriptor {
         }
 
         gradientSource.setIp(ip);
-        initFeature();
 
         histogram = new Interpolated1DHistogram(0, Math.PI, bins);
         buildHistogramRecursively(ip.getRoi(), 0);
@@ -130,13 +126,13 @@ public class PHOG extends AbstractFeatureDescriptor {
         return ip;
     }
 
-    double[] add(double[] arr2){
+    double[] add(double[] arr2) {
         double[] fea = new double[feature.length + arr2.length];
         System.arraycopy(feature, 0, fea, 0, feature.length);
         System.arraycopy(arr2, 0, fea, feature.length, arr2.length);
         return fea;
     }
-    
+
     private void buildHistogramRecursively(Rectangle r, int recursion) {
         histogram.clear();
 
@@ -144,14 +140,14 @@ public class PHOG extends AbstractFeatureDescriptor {
         final int borderBottom = r.y + r.height;
         for (int x = r.x; x < borderRight; x++) {
             for (int y = r.y; y < borderBottom; y++) {
-                if (inMask(x, y) && gradientSource.getLength(x, y) != 0) {
-                    histogram.add(gradientSource.getTheta(x, y),
-                            gradientSource.getLength(x, y));
+                double length = gradientSource.getLength(x, y);
+                if (inMask(x, y) && length != 0) {
+                    histogram.add(gradientSource.getTheta(x, y), length);
                 }
             }
         }
         feature = Arrays2.append(feature, histogram.getData());
-        
+
         // descend into next recursion
         if (recursion++ < recursions) {
             final int w2 = r.width / 2;
@@ -169,14 +165,6 @@ public class PHOG extends AbstractFeatureDescriptor {
             Rectangle br = new Rectangle(w2, h2, w2, h2);
             buildHistogramRecursively(br, recursion);
         }
-    }
-
-    void initFeature() {
-        int length = 0;
-        for (int i = 0; i <= recursions; i++) {
-            length += bins * Math2.pow(4, i);
-        }
-        feature = new double[length];
     }
 
     @Override
