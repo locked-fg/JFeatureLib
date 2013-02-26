@@ -126,13 +126,6 @@ public class PHOG extends AbstractFeatureDescriptor {
         return ip;
     }
 
-    double[] add(double[] arr2) {
-        double[] fea = new double[feature.length + arr2.length];
-        System.arraycopy(feature, 0, fea, 0, feature.length);
-        System.arraycopy(arr2, 0, fea, feature.length, arr2.length);
-        return fea;
-    }
-
     private void buildHistogramRecursively(Rectangle r, int recursion) {
         histogram.clear();
 
