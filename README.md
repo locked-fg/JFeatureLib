@@ -15,6 +15,7 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 History
 =======
+* 1.3.3: - fixed Lire dependency bug
 * 1.3.2: - fixed Dependency to Google Guava
 * 1.3.1: 
        - fixed Issue 29 & 20
