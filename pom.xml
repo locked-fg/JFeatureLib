@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.lmu.ifi.dbs.jfeaturelib</groupId>
     <artifactId>JFeatureLib</artifactId>
-    <version>1.3.3-RC1</version>
+    <version>1.4.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>JFeaturelib</name>
     <description>A free library that provides implementations
@@ -343,7 +343,7 @@
         <dependency>
             <groupId>net.semanticmetadata</groupId>
             <artifactId>lire</artifactId>
-            <version>0.9.3</version>
+            <version>0.9.4-beta-1</version>
             <type>jar</type>
         </dependency>
     </dependencies>

@@ -23,10 +23,6 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
-import de.lmu.ifi.dbs.jfeaturelib.Progress;
-import ij.process.ImageProcessor;
-import java.util.EnumSet;
-
 /**
  * The FCTH feature was created, implemented and provided by Savvas A. Chatzichristofis
  *
@@ -38,39 +34,20 @@ import java.util.EnumSet;
  *
  * @see net.semanticmetadata.lire.imageanalysis.FCTH
  */
-public class FCTH extends AbstractFeatureDescriptor {
+public class FCTH extends LireWrapper {
 
-    private net.semanticmetadata.lire.imageanalysis.FCTH fcth = new net.semanticmetadata.lire.imageanalysis.FCTH();
 
-    @Override
-    public void run(ImageProcessor ip) {
-        firePropertyChange(Progress.START);
-
-        fcth.extract(ip.getBufferedImage());
-        addData(fcth.getDoubleHistogram());
-
-        firePropertyChange(Progress.END);
+    public FCTH() {
+        super(new net.semanticmetadata.lire.imageanalysis.FCTH());
     }
 
     /**
-     * @return the fcth instance from lire
+     * @return the FCTH Lire feature object
+     * @deprecated since 1.4.0
+     * @see #getLireFeature() 
      */
+    @Deprecated
     public net.semanticmetadata.lire.imageanalysis.FCTH getFcth() {
-        return fcth;
-    }
-
-    @Override
-    public String getDescription() {
-        return "FCTH";
-    }
-
-    @Override
-    public EnumSet<Supports> supports() {
-        EnumSet set = EnumSet.of(
-                Supports.NoChanges,
-                Supports.DOES_8C,
-                Supports.DOES_8G,
-                Supports.DOES_RGB);
-        return set;
+        return (net.semanticmetadata.lire.imageanalysis.FCTH) getLireFeature();
     }
 }
