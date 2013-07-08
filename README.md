@@ -17,6 +17,7 @@ History
 =======
 * HEAD:  - packaged LIRE directly into the JARs
          - updated to LIRE 0.9.4-beta (08.July.2013)
+         - added OpponentHistogram (from LIRE)
 * 1.3.2: - fixed Dependency to Google Guava
 * 1.3.1: 
        - fixed Issue 29 & 20
