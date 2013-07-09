@@ -16,8 +16,12 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 History
 =======
 * HEAD:  - packaged LIRE directly into the JARs
-         - updated to LIRE 0.9.4-beta (08.July.2013)
+         - updated to LIRE 0.9.4-beta (08.July.2013 including custom patch)
+         - added LuminanceLayout (from LIRE)
          - added OpponentHistogram (from LIRE)
+         - added FuzzyOpponentHistogram (from LIRE)
+         - added MPEG7ColorLayout (from LIRE)
+         - added MPEG7EdgeHistogram (from LIRE)
 * 1.3.2: - fixed Dependency to Google Guava
 * 1.3.1: 
        - fixed Issue 29 & 20

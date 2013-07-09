@@ -23,37 +23,28 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import java.util.EnumSet;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
 /**
- * Wrapper for the according LIRE class.
- * 
- *  64 bin Opponent Histogram, based on the Opponent color space as described in van de Sande, Gevers & Snoek (2010)
- * "Evaluating Color Descriptors for Object and Scene Recognition", IEEE PAMI:
+ * The LuminanceLayout Descriptor is intended for grayscale or B/W images. It
+ * scales an image down to a very small size and uses this smaller version as a
+ * descriptor. Interesting aspect is that white stripes are added to make the
+ * small image quadratic.
  *
- * <pre>
- * @ARTICLE{Sande2010,
- *   author={van de Sande, K.E.A. and Gevers, T. and Snoek, C.G.M.},
- *   journal={Pattern Analysis and Machine Intelligence, IEEE Transactions on},
- *   title={Evaluating Color Descriptors for Object and Scene Recognition},
- *   year={2010},
- *   month={sept. },
- *   volume={32},
- *   number={9},
- *   pages={1582 -1596},
- *   doi={10.1109/TPAMI.2009.154},
- *   ISSN={0162-8828},
- *}
- * </pre>
- * 
+ * This class is a wrapper for the according LIRE class.
+ *
  * @author Franz
- * @see http://staff.science.uva.nl/~ksande/pub/vandesande-cvpr2008.pdf
  * @since 1.4.0
  */
-public class OpponentHistogram extends LireWrapper{
+public class LumnanceLayout extends LireWrapper {
 
-    public OpponentHistogram() {
-        super(new net.semanticmetadata.lire.imageanalysis.OpponentHistogram());
+    public LumnanceLayout() {
+        super(new net.semanticmetadata.lire.imageanalysis.FuzzyOpponentHistogram());
     }
-    
+
+    @Override
+    public EnumSet<Supports> supports() {
+        return EnumSet.of(Supports.DOES_8G);
+    }
 }
