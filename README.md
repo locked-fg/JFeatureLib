@@ -13,7 +13,7 @@ Current releases can also be found at maven:
 https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
 
 
-History
+Changelog
 =======
 * HEAD:  - packaged LIRE directly into the JARs
          - updated to LIRE 0.9.4-beta (08.July.2013 including custom patch)
