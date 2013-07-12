@@ -311,7 +311,7 @@
         <dependency>
             <groupId>gov.nih.imagej</groupId>
             <artifactId>imagej</artifactId>
-            <version>1.45</version>
+            <version>1.46</version>
             <type>jar</type>
         </dependency>
         <dependency>

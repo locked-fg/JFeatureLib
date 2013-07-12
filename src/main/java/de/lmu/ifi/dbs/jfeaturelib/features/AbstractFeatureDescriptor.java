@@ -35,9 +35,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * This abstract class provides some convenient base functionalities for feature
- * descriptors like the getter for the data (including null check) and the
- * propery change support.
+ * This abstract class provides some convenient base functionalities for feature descriptors like the getter for the
+ * data (including null check) and the propery change support.
  *
  * @author Franz
  */
@@ -49,20 +48,18 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
      */
     private Progress previous = null;
     /**
-     * Property change support that can be used by the implementing class to
-     * inform listeners about updates.
+     * Property change support that can be used by the implementing class to inform listeners about updates.
      */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     /**
      * The data arrays which hold the calculated features.
      *
-     * Most of the descriptors will only return a single array. Yet there are
-     * some descriptors like Sift which return a bag of features.
+     * Most of the descriptors will only return a single array. Yet there are some descriptors like Sift which return a
+     * bag of features.
      */
     private List<double[]> data = new ArrayList<>(1);
     /**
-     * Stores the mask of the passed image processor or NULL if the image
-     * processor did not have a mask applied.
+     * Stores the mask of the passed image processor or NULL if the image processor did not have a mask applied.
      *
      * Pixels outside the mask have a value of zero.
      */
@@ -71,9 +68,8 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     /**
      * Returns a reference to the data calculated by the according descriptor.
      *
-     * The list will most likely just containa single double array holding the
-     * computed values. In cases where a descriptor computes mutliple features
-     * (for example SIFT, where a vector is calculated for each point of
+     * The list will most likely just containa single double array holding the computed values. In cases where a
+     * descriptor computes mutliple features (for example SIFT, where a vector is calculated for each point of
      * interest), the list will contain several double arrays.
      *
      * @return list of feature vectors.
@@ -86,8 +82,7 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     /**
      * Adds a Property change listener for this feature vector.
      *
-     * During the computation of the descriptor, at least 2 progress events
-     * should be fired (Start/End).
+     * During the computation of the descriptor, at least 2 progress events should be fired (Start/End).
      *
      * @see Progress#START
      * @see Progress#END
@@ -100,8 +95,7 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     }
 
     /**
-     * Adds the double array to the list. Keep in mind that the array is NOT
-     * copied but directly put into the list.
+     * Adds the double array to the list. Keep in mind that the array is NOT copied but directly put into the list.
      *
      * @see #data
      */
@@ -119,8 +113,8 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     }
 
     /**
-     * Adds the double array list to the list of data arrays. Keep in mind that
-     * the array is NOT copied but directly put into the list.
+     * Adds the double array list to the list of data arrays. Keep in mind that the array is NOT copied but directly put
+     * into the list.
      *
      * @see #data
      */
@@ -131,8 +125,8 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     /**
      * Propagates the given progress event using property change support.
      *
-     * The old value of the firePropertyChange is the most recent progress event
-     * that was propagated by this method (null in case of the first event).
+     * The old value of the firePropertyChange is the most recent progress event that was propagated by this method
+     * (null in case of the first event).
      *
      * @param event
      */
@@ -171,8 +165,7 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     }
 
     /**
-     * Check wether a pixel is inside a set mask. If no mask is applied, then
-     * the method always returns true.
+     * Check wether a pixel is inside a set mask. If no mask is applied, then the method always returns true.
      *
      * If a pixel is in the mask, this means that it should be processed.
      *
@@ -182,5 +175,13 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
      */
     protected boolean inMask(int x, int y) {
         return mask == null || mask.get(x, y) != 0;
+    }
+
+    /**
+     * returns the current mask
+     * @return 
+     */
+    public ImageProcessor getMask() {
+        return mask;
     }
 }

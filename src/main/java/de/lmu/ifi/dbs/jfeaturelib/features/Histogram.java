@@ -29,6 +29,7 @@ import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
+import java.awt.Rectangle;
 import java.awt.image.ColorModel;
 import java.util.EnumSet;
 
@@ -69,7 +70,6 @@ public class Histogram extends AbstractFeatureDescriptor {
         InnerHistogram histogram = null;
         if (type == TYPE.Gray) {
             histogram = new Gray();
-
         } else if (type == TYPE.RGB) {
             histogram = new RGB();
         } else if (type == TYPE.Red) {
@@ -78,11 +78,12 @@ public class Histogram extends AbstractFeatureDescriptor {
             histogram = new RgbMix(0, 1, 0);
         } else if (type == TYPE.Blue) {
             histogram = new RgbMix(0, 0, 1);
-
         } else if (type == TYPE.HSB) {
             histogram = new HSB();
         } else if (type == TYPE.Hue || type == TYPE.Saturation || type == TYPE.Brightness) {
             histogram = new HsbMix(type);
+        } else {
+            throw new IllegalStateException("no valid histogram type selected: " + type);
         }
 
         int[] hist = histogram.run(ip);
@@ -107,9 +108,8 @@ public class Histogram extends AbstractFeatureDescriptor {
     /**
      * Reduces the dimensions of src to a length of newLength.
      *
-     * For example if the input array is 265 and newLength is 64, then the 256d
-     * are shifted/compressed down to the new 64. In example, dimension 1-4 will
-     * be added up in bin 1 of the target array
+     * For example if the input array is 265 and newLength is 64, then the 256d are shifted/compressed down to the new
+     * 64. In example, dimension 1-4 will be added up in bin 1 of the target array
      *
      * @param src
      * @param newLength
@@ -153,20 +153,101 @@ public class Histogram extends AbstractFeatureDescriptor {
         @Override
         public int[] run(ImageProcessor image) {
             int[] features = new int[256 * 3];
-
             ColorProcessor.setWeightingFactors(1, 0, 0);
-            System.arraycopy(image.getHistogram(), 0, features, 0, 256);
+            System.arraycopy(getHistogram(image, 1, 0, 0), 0, features, 0, 256);
             firePropertyChange(new Progress(33));
 
             ColorProcessor.setWeightingFactors(0, 1, 0);
-            System.arraycopy(image.getHistogram(), 0, features, 256, 256);
+            System.arraycopy(getHistogram(image, 0, 1, 0), 0, features, 256, 256);
             firePropertyChange(new Progress(66));
 
             ColorProcessor.setWeightingFactors(0, 0, 1);
-            System.arraycopy(image.getHistogram(), 0, features, 512, 256);
+            System.arraycopy(getHistogram(image, 0, 0, 1), 0, features, 512, 256);
             firePropertyChange(new Progress(99));
 
             return features;
+        }
+
+        /**
+         * Copied from imageJ as ImageJ unfortunately uses static fields for the weights which causes race conditions in
+         * multi threaded environments.
+         *
+         * @see ColorProcessor#getHistogram(ij.process.ImageProcessor)
+         * @param ip
+         * @param rWeight
+         * @param gWeight
+         * @param bWeight
+         * @return
+         */
+        private int[] getHistogram(ImageProcessor ip, double rWeight, double gWeight, double bWeight) {
+            ImageProcessor mask = getMask();
+            if (mask != null) {
+                return getHistogram(ip, mask, rWeight, gWeight, bWeight);
+            }
+            Rectangle roi = ip.getRoi();
+            int roiX = roi.x;
+            int roiY = roi.y;
+            int roiWidth = roi.width;
+            int roiHeight = roi.height;
+            int width = ip.getWidth();
+
+            int c, r, g, b, v;
+            int[] histogram = new int[256];
+            for (int y = roiY; y < (roiY + roiHeight); y++) {
+                int i = y * width + roiX;
+                for (int x = roiX; x < (roiX + roiWidth); x++) {
+                    c = ip.get(i++);
+                    // c = pixels[i++];
+                    r = (c & 0xff0000) >> 16;
+                    g = (c & 0xff00) >> 8;
+                    b = c & 0xff;
+                    v = (int) (r * rWeight + g * gWeight + b * bWeight + 0.5);
+                    histogram[v]++;
+                }
+            }
+            return histogram;
+        }
+
+        /**
+         * Copied from imageJ as ImageJ unfortunately uses static fields for the weights which causes race conditions in
+         * multi threaded environments.
+         *
+         * @see ColorProcessor#getHistogram(ij.process.ImageProcessor)
+         * @param ip
+         * @param mask
+         * @return
+         */
+        private int[] getHistogram(ImageProcessor ip, ImageProcessor mask,
+                double rWeight, double gWeight, double bWeight) {
+            Rectangle roi = ip.getRoi();
+            int roiX = roi.x;
+            int roiY = roi.y;
+            int roiWidth = roi.width;
+            int roiHeight = roi.height;
+            if (mask.getWidth() != roiWidth || mask.getHeight() != roiHeight) {
+                throw new IllegalArgumentException("Mask size != ROI size");
+            }
+            int width = ip.getWidth();
+            byte[] mpixels = (byte[]) mask.getPixels();
+            int c, r, g, b, v;
+            int[] histogram = new int[256];
+            for (int y = roiY, my = 0; y < (roiY + roiHeight); y++, my++) {
+                int i = y * width + roiX;
+                int mi = my * roiWidth;
+                for (int x = roiX; x < (roiX + roiWidth); x++) {
+                    if (mpixels[mi++] != 0) {
+                        c = ip.get(i);
+                        // c = pixels[i];
+                        r = (c & 0xff0000) >> 16;
+                        g = (c & 0xff00) >> 8;
+                        b = c & 0xff;
+                        v = (int) (r * rWeight + g * gWeight + b * bWeight + 0.5);
+                        histogram[v]++;
+                    }
+                    i++;
+                }
+            }
+            return histogram;
         }
     }
 
