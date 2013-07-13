@@ -23,6 +23,7 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import com.google.common.base.Preconditions;
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
@@ -86,6 +87,7 @@ public class Histogram extends AbstractFeatureDescriptor {
             throw new IllegalStateException("no valid histogram type selected: " + type);
         }
 
+        setMask(ip);
         int[] hist = histogram.run(ip);
         double[] features = Arrays2.convertToDouble(hist);
         features = scale(features, bins);
@@ -132,6 +134,88 @@ public class Histogram extends AbstractFeatureDescriptor {
         return src;
     }
 
+    /**
+     * Copied from imageJ as ImageJ unfortunately uses static fields for the weights which causes race conditions in
+     * multi threaded environments.
+     *
+     * @see ColorProcessor#getHistogram(ij.process.ImageProcessor)
+     * @param ip
+     * @param rWeight
+     * @param gWeight
+     * @param bWeight
+     * @return 3*256 bin histogram
+     */
+    private int[] getHistogram(ImageProcessor ip, double rWeight, double gWeight, double bWeight) {
+        ImageProcessor mask = getMask();
+        if (mask != null) {
+            return getHistogram(ip, mask, rWeight, gWeight, bWeight);
+        }
+        Rectangle roi = ip.getRoi();
+        int roiX = roi.x;
+        int roiY = roi.y;
+        int roiWidth = roi.width;
+        int roiHeight = roi.height;
+        int width = ip.getWidth();
+
+        int c, r, g, b, v;
+        int[] histogram = new int[256];
+        for (int y = roiY; y < (roiY + roiHeight); y++) {
+            int i = y * width + roiX;
+            for (int x = roiX; x < (roiX + roiWidth); x++) {
+                c = ip.get(i++);
+                // c = pixels[i++];
+                r = (c & 0xff0000) >> 16;
+                g = (c & 0xff00) >> 8;
+                b = c & 0xff;
+                v = (int) (r * rWeight + g * gWeight + b * bWeight + 0.5);
+                histogram[v]++;
+            }
+        }
+        return histogram;
+    }
+
+    /**
+     * Copied from imageJ as ImageJ unfortunately uses static fields for the weights which causes race conditions in
+     * multi threaded environments.
+     *
+     * @see ColorProcessor#getHistogram(ij.process.ImageProcessor)
+     * @param ip
+     * @param mask
+     * @return 3*256 bin histogram
+     */
+    private int[] getHistogram(ImageProcessor ip, ImageProcessor mask,
+            double rWeight, double gWeight, double bWeight) {
+        Rectangle roi = ip.getRoi();
+        int roiX = roi.x;
+        int roiY = roi.y;
+        int roiWidth = roi.width;
+        int roiHeight = roi.height;
+        if (mask.getWidth() != roiWidth || mask.getHeight() != roiHeight) {
+            throw new IllegalArgumentException("Mask size != ROI size");
+        }
+        int width = ip.getWidth();
+        byte[] mpixels = (byte[]) mask.getPixels();
+        int c, r, g, b, v;
+        int[] histogram = new int[256];
+        for (int y = roiY, my = 0; y < (roiY + roiHeight); y++, my++) {
+            int i = y * width + roiX;
+            int mi = my * roiWidth;
+            for (int x = roiX; x < (roiX + roiWidth); x++) {
+                if (mpixels[mi++] != 0) {
+                    c = ip.get(i);
+                    // c = pixels[i];
+                    r = (c & 0xff0000) >> 16;
+                    g = (c & 0xff00) >> 8;
+                    b = c & 0xff;
+                    v = (int) (r * rWeight + g * gWeight + b * bWeight + 0.5);
+                    histogram[v]++;
+                }
+                i++;
+            }
+        }
+        return histogram;
+    }
+
     private interface InnerHistogram {
 
         public int[] run(ImageProcessor ip);
@@ -153,101 +237,15 @@ public class Histogram extends AbstractFeatureDescriptor {
         @Override
         public int[] run(ImageProcessor image) {
             int[] features = new int[256 * 3];
-            ColorProcessor.setWeightingFactors(1, 0, 0);
             System.arraycopy(getHistogram(image, 1, 0, 0), 0, features, 0, 256);
             firePropertyChange(new Progress(33));
 
-            ColorProcessor.setWeightingFactors(0, 1, 0);
             System.arraycopy(getHistogram(image, 0, 1, 0), 0, features, 256, 256);
             firePropertyChange(new Progress(66));
 
-            ColorProcessor.setWeightingFactors(0, 0, 1);
             System.arraycopy(getHistogram(image, 0, 0, 1), 0, features, 512, 256);
             firePropertyChange(new Progress(99));
-
             return features;
-        }
-
-        /**
-         * Copied from imageJ as ImageJ unfortunately uses static fields for the weights which causes race conditions in
-         * multi threaded environments.
-         *
-         * @see ColorProcessor#getHistogram(ij.process.ImageProcessor)
-         * @param ip
-         * @param rWeight
-         * @param gWeight
-         * @param bWeight
-         * @return
-         */
-        private int[] getHistogram(ImageProcessor ip, double rWeight, double gWeight, double bWeight) {
-            ImageProcessor mask = getMask();
-            if (mask != null) {
-                return getHistogram(ip, mask, rWeight, gWeight, bWeight);
-            }
-            Rectangle roi = ip.getRoi();
-            int roiX = roi.x;
-            int roiY = roi.y;
-            int roiWidth = roi.width;
-            int roiHeight = roi.height;
-            int width = ip.getWidth();
-
-            int c, r, g, b, v;
-            int[] histogram = new int[256];
-            for (int y = roiY; y < (roiY + roiHeight); y++) {
-                int i = y * width + roiX;
-                for (int x = roiX; x < (roiX + roiWidth); x++) {
-                    c = ip.get(i++);
-                    // c = pixels[i++];
-                    r = (c & 0xff0000) >> 16;
-                    g = (c & 0xff00) >> 8;
-                    b = c & 0xff;
-                    v = (int) (r * rWeight + g * gWeight + b * bWeight + 0.5);
-                    histogram[v]++;
-                }
-            }
-            return histogram;
-        }
-
-        /**
-         * Copied from imageJ as ImageJ unfortunately uses static fields for the weights which causes race conditions in
-         * multi threaded environments.
-         *
-         * @see ColorProcessor#getHistogram(ij.process.ImageProcessor)
-         * @param ip
-         * @param mask
-         * @return
-         */
-        private int[] getHistogram(ImageProcessor ip, ImageProcessor mask,
-                double rWeight, double gWeight, double bWeight) {
-            Rectangle roi = ip.getRoi();
-            int roiX = roi.x;
-            int roiY = roi.y;
-            int roiWidth = roi.width;
-            int roiHeight = roi.height;
-            if (mask.getWidth() != roiWidth || mask.getHeight() != roiHeight) {
-                throw new IllegalArgumentException("Mask size != ROI size");
-            }
-            int width = ip.getWidth();
-            byte[] mpixels = (byte[]) mask.getPixels();
-            int c, r, g, b, v;
-            int[] histogram = new int[256];
-            for (int y = roiY, my = 0; y < (roiY + roiHeight); y++, my++) {
-                int i = y * width + roiX;
-                int mi = my * roiWidth;
-                for (int x = roiX; x < (roiX + roiWidth); x++) {
-                    if (mpixels[mi++] != 0) {
-                        c = ip.get(i);
-                        // c = pixels[i];
-                        r = (c & 0xff0000) >> 16;
-                        g = (c & 0xff00) >> 8;
-                        b = c & 0xff;
-                        v = (int) (r * rWeight + g * gWeight + b * bWeight + 0.5);
-                        histogram[v]++;
-                    }
-                    i++;
-                }
-            }
-            return histogram;
         }
     }
 
@@ -265,8 +263,7 @@ public class Histogram extends AbstractFeatureDescriptor {
 
         @Override
         public int[] run(ImageProcessor image) {
-            ColorProcessor.setWeightingFactors(r, g, b);
-            return image.getHistogram();
+            return getHistogram(image, r, g, b);
         }
     }
 

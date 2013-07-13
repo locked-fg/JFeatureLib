@@ -22,8 +22,8 @@ Changelog
          - added FuzzyOpponentHistogram (from LIRE)
          - added MPEG7ColorLayout (from LIRE)
          - added MPEG7EdgeHistogram (from LIRE)
+         - fixed Threading issue in Histograms
          - updated dependency to imageJ v1.46
-         - fixed Threading issue in RGB Histograms
 * 1.3.2: - fixed Dependency to Google Guava
 * 1.3.1: 
        - fixed Issue 29 & 20

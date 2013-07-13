@@ -60,10 +60,10 @@ public class HistogramTest {
                 @Override
                 public void run() {
                     try {
-                        for (int j = 0; j < 100; j++) {
-                            ColorProcessor processor =
-                                    new ColorProcessor(ImageIO.read(
-                                    new File(MyRGBThreadTest.class.getResource("/test.jpg").toURI())));
+                        ColorProcessor processor =
+                                new ColorProcessor(ImageIO.read(
+                                new File(MyRGBThreadTest.class.getResource("/test.jpg").toURI())));
+                        for (int j = 0; j < 200; j++) {
                             Histogram histogram = new Histogram();
                             histogram.type = Histogram.TYPE.RGB;
                             histogram.bins = 128;
@@ -133,27 +133,34 @@ public class HistogramTest {
     @Test
     public void testWithMasking() {
         ColorProcessor blackRed = new ColorProcessor(10, 10);
-        blackRed.setColor(Color.black);
-        blackRed.fill();
         blackRed.setColor(Color.red);
-        blackRed.fill(new Roi(0, 6, 10, 5));
+        blackRed.fill(new Roi(0, 0, 10, 1));
 
         ByteProcessor mask = new ByteProcessor(10, 10);
-        mask.setColor(Color.black);
-        mask.fill();
         mask.setColor(Color.white);
-        mask.fill(new Roi(0, 9, 10, 1));
+        mask.fill(new Roi(0, 0, 1, 10));
 
         blackRed.setMask(mask);
 
-        Histogram histogram1 = new Histogram();
-        histogram1.type = Histogram.TYPE.Red;
-        histogram1.bins = 2;
-        histogram1.run(blackRed);
-        List<double[]> features = histogram1.getFeatures();
-        assertEquals(features.get(0).length, 2);
-        assertEquals(0, features.get(0)[0], 0.001);
-        assertEquals(10, features.get(0)[1], 0.001);
+        Histogram histogram = new Histogram();
+        histogram.type = Histogram.TYPE.Red;
+        histogram.bins = 2;
+        histogram.run(blackRed);
+        double[] features = histogram.getFeatures().get(0);
+        assertEquals(features.length, 2);
+        assertEquals(9, features[0], 0.001);
+        assertEquals(1, features[1], 0.001);
+
+        // Controll without mask
+        blackRed.setMask(null);
+        histogram = new Histogram();
+        histogram.type = Histogram.TYPE.Red;
+        histogram.bins = 2;
+        histogram.run(blackRed);
+        features = histogram.getFeatures().get(0);
+        assertEquals(features.length, 2);
+        assertEquals(90, features[0], 0.001);
+        assertEquals(10, features[1], 0.001);
     }
 
     /**
