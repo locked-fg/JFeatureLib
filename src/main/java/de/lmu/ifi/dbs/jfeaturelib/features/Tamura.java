@@ -34,7 +34,7 @@ import net.semanticmetadata.lire.imageanalysis.LireFeature;
  */
 public class Tamura extends LireWrapper {
 
-    public Tamura(LireFeature feature) {
+    public Tamura() {
         super(new net.semanticmetadata.lire.imageanalysis.Tamura());
     }
 

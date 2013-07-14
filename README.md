@@ -15,6 +15,7 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 Changelog
 =======
+* 1.4.1: - fixed Tamura instanciation bug
 * 1.4.0: - packaged LIRE directly into the JARs
          - updated to LIRE 0.9.4-beta (08.July.2013 including custom patch)
          - added LuminanceLayout (from LIRE)
