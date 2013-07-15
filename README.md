@@ -16,17 +16,17 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 Changelog
 =======
 * 1.4.1: 
-         - fixed Tamura instanciation bug
+       - fixed Tamura instanciation bug
 * 1.4.0: 
-         - packaged LIRE directly into the JARs
-         - updated to LIRE 0.9.4-beta (08.July.2013 including custom patch)
-         - added LuminanceLayout (from LIRE)
-         - added OpponentHistogram (from LIRE)
-         - added FuzzyOpponentHistogram (from LIRE)
-         - added MPEG7ColorLayout (from LIRE)
-         - added MPEG7EdgeHistogram (from LIRE)
-         - fixed Threading issue in Histograms
-         - updated dependency to imageJ v1.46
+       - packaged LIRE directly into the JARs
+       - updated to LIRE 0.9.4-beta (08.July.2013 including custom patch)
+       - added LuminanceLayout (from LIRE)
+       - added OpponentHistogram (from LIRE)
+       - added FuzzyOpponentHistogram (from LIRE)
+       - added MPEG7ColorLayout (from LIRE)
+       - added MPEG7EdgeHistogram (from LIRE)
+       - fixed Threading issue in Histograms
+       - updated dependency to imageJ v1.46
 * 1.3.2: 
        - fixed Dependency to Google Guava
 * 1.3.1: 
