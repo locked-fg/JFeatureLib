@@ -18,17 +18,17 @@ Changelog
 * 1.4.1: 
        - fixed Tamura instanciation bug
 * 1.4.0: 
-       - packaged LIRE directly into the JARs
+       - packaged LIRE directly into the JARs, thanks David Maiserer
        - updated to LIRE 0.9.4-beta (08.July.2013 including custom patch)
        - added LuminanceLayout (from LIRE)
        - added OpponentHistogram (from LIRE)
        - added FuzzyOpponentHistogram (from LIRE)
        - added MPEG7ColorLayout (from LIRE)
        - added MPEG7EdgeHistogram (from LIRE)
-       - fixed Threading issue in Histograms
+       - fixed Threading issue in Histograms, thanks Christian Surer
        - updated dependency to imageJ v1.46
 * 1.3.2: 
-       - fixed Dependency to Google Guava
+       - fixed Dependency to Google Guava, thanks Nepomuk Seiler
 * 1.3.1: 
        - fixed Issue 29 & 20
        - changed dependency of common-extension-lib (fixes NaNs)
@@ -63,7 +63,7 @@ Changelog
        - Fixed Issue 19 (possibility to list feature descriptor capabilities in CLI)
        - published to maven https://oss.sonatype.org/content/groups/public/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
 * 0.4.0: 
-       - changed build system to maven
+       - changed build system to maven, thanks Nepomuk Seiler
        - checked the support values of all feature extractors
        - Fixed Issue 18 (masking support in PHOG)
        - Fixed Issue 17 (masking support in CLI)
