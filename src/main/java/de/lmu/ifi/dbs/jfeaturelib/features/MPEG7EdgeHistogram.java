@@ -23,8 +23,6 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
-import net.semanticmetadata.lire.imageanalysis.LireFeature;
-
 /**
  * This class implements the EdgeHistogram descriptor from the MPEG-7 standard.
  *
