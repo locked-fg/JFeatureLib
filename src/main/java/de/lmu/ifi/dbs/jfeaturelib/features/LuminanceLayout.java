@@ -24,7 +24,6 @@
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
 import java.util.EnumSet;
-import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
 /**
  * The LuminanceLayout Descriptor is intended for grayscale or B/W images. It
@@ -35,12 +34,12 @@ import net.semanticmetadata.lire.imageanalysis.LireFeature;
  * This class is a wrapper for the according LIRE class.
  *
  * @author Franz
- * @since 1.4.0
+ * @since 1.5.0
  */
-public class LumnanceLayout extends LireWrapper {
+public class LuminanceLayout extends LireWrapper {
 
-    public LumnanceLayout() {
-        super(new net.semanticmetadata.lire.imageanalysis.FuzzyOpponentHistogram());
+    public LuminanceLayout() {
+        super(new net.semanticmetadata.lire.imageanalysis.LuminanceLayout());
     }
 
     @Override
