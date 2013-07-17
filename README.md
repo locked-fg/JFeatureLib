@@ -17,7 +17,8 @@ Changelog
 =======
 * 1.5.0:
        - added JpegCoefficientsHistogram (from Lire)
-       - fixed LuminanceLayout (Typo and wrong implementation)
+       - fixed LuminanceLayout (typo and wrong implementation)
+       - added basic tests for features
 * 1.4.1: 
        - fixed Tamura instanciation bug
 * 1.4.0: 
