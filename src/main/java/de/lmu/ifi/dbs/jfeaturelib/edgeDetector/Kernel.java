@@ -27,7 +27,6 @@ import de.lmu.ifi.dbs.jfeaturelib.Descriptor;
 import de.lmu.ifi.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
-import de.lmu.ifi.dbs.utilities.Math2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
@@ -46,7 +45,7 @@ import java.util.EnumSet;
  * @author Benedikt
  * @author Franz
  */
-public class Kernel implements Descriptor {
+public class Kernel extends AbstractDescriptor {
 
     /**
      * Standard 3x3 SOBEL mask (1 0 -1, 2, 0, -2, 1, 0, -1 )
@@ -80,11 +79,8 @@ public class Kernel implements Descriptor {
     };
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private ByteProcessor image;
-    private int width;
-    private int height;
-    private float[] kernel;
-    private int kernelWidth;
-    private int treshold;
+    private int treshold = 0;
+    float[] kernel;
 
     /**
      * Constructs a new detector with standart Sobel kernel
@@ -94,17 +90,14 @@ public class Kernel implements Descriptor {
     }
 
     /**
-     * Constructs a new detector with given double[] kernel. 
-     * 
-     * The double array is
-     * converted immediately to a float array.
+     * Constructs a new detector with given double[] kernel.
+     *
+     * The double array is converted immediately to a float array.
      *
      * @param kernel double[] with kernel
      */
     public Kernel(double[] kernel) {
-        this.kernelWidth = Math.round((float) Math.sqrt(kernel.length + 1.0f));
-        this.kernel = Arrays2.convertToFloat(kernel);
-        this.treshold = 0;
+        this(Arrays2.convertToFloat(kernel));
     }
 
     /**
@@ -113,9 +106,7 @@ public class Kernel implements Descriptor {
      * @param kernel float[] with kernel
      */
     public Kernel(float[] kernel) {
-        this.kernelWidth = Math.round((float) Math.sqrt(kernel.length + 1.0f));
-        this.kernel = kernel;
-        this.treshold = 0;
+        setKernel(kernel);
     }
 
     /**
@@ -125,7 +116,6 @@ public class Kernel implements Descriptor {
      * @param width width of kernel
      */
     public Kernel(float[] kernel, int width) {
-        this.kernelWidth = width;
         this.kernel = kernel;
     }
 
@@ -140,11 +130,15 @@ public class Kernel implements Descriptor {
     }
 
     /**
-     * Sets the convolution kernel
+     * Sets the convolution kernel (must be odd sized).
      *
      * @param kernel float[] with kernel
+     * @throws IllegalArgumentException if the size is even
      */
     public void setKernel(float[] kernel) {
+        if (kernel.length % 2 == 0) {
+            throw new IllegalArgumentException("kernel size must be odd but was " + kernel.length);
+        }
         this.kernel = kernel;
     }
 
@@ -154,16 +148,18 @@ public class Kernel implements Descriptor {
      * @return int with width of kernel
      */
     public int getKernelWidth() {
-        return kernelWidth;
+        return Math.round((float) Math.sqrt(kernel.length + 1.0f));
     }
 
     /**
      * Setter for width of the kernel
      *
      * @param kernelWidth int with width
+     * @deprecated since 1.5.0
      */
+    @Deprecated
     public void setKernelWidth(int kernelWidth) {
-        this.kernelWidth = kernelWidth;
+        throw new UnsupportedOperationException("width cannot be set");
     }
 
     /**
@@ -178,7 +174,7 @@ public class Kernel implements Descriptor {
     /**
      * Setter for treshold, default zero
      *
-     * @param treshold int
+     * @param treshold 
      */
     public void setTreshold(int treshold) {
         if (treshold < 255) {
@@ -192,14 +188,15 @@ public class Kernel implements Descriptor {
      * Proceses the image applying the kernel in x- and y-direction
      */
     public void process() {
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(0, "initialized"));
+        startProgress();
 
-        width = image.getWidth();
-        height = image.getHeight();
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        final int kernelWidth = Math.round((float) Math.sqrt(kernel.length + 1.0f));
 
         ByteProcessor imgX = new ByteProcessor(image.createImage());
         ByteProcessor imgY = new ByteProcessor(image.createImage());
-        
+
         float[] kernelX = kernel;
         float[] kernelY = new float[kernelWidth * kernelWidth];
         float[][] kernelX2D = new float[kernelWidth][kernelWidth];
@@ -238,7 +235,7 @@ public class Kernel implements Descriptor {
 
         image.setIntArray(imgA);
 
-        pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
+        endProgress();
     }
 
     private float[][] rotateFloatCW(float[][] mat) {
@@ -282,10 +279,5 @@ public class Kernel implements Descriptor {
         pcs.firePropertyChange(Progress.getName(), null, Progress.START);
         process();
         pcs.firePropertyChange(Progress.getName(), null, Progress.END);
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
     }
 }
