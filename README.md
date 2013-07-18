@@ -15,9 +15,6 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 Changelog
 =======
-* 1.5.0:
-       - added JpegCoefficientHistogram (from LIRE)
-
 * 1.4.1: 
        - fixed Tamura instanciation bug
 * 1.4.0: 
