@@ -36,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
 import java.nio.channels.Channels;
@@ -50,6 +51,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.FalseFileFilter;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -86,8 +92,8 @@ public class Extractor {
     private boolean recursive = false;
     //
     @SuppressWarnings("FieldMayBeFinal")
-    @Option(name = "-o", aliases = {"--output-dir"}, usage = "output to this file (default: features.csv)")
-    private File outFile = new File("features.csv");
+    @Option(name = "-o", aliases = {"--output-dir", "--output"}, usage = "output to this file (default: features.csv, - for stdout)")
+    private String outFile = "features.csv";
     //
     @Option(name = "-m", aliases = {"--masks-dir"}, usage = "directory containing masks")
     File maskDirectory = null;
@@ -100,8 +106,8 @@ public class Extractor {
     //
     @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "-D", aliases = {"--descriptor"}, usage = "Use this feature descriptor (e.G: Sift). The string "
-    + "specified here must be one of the classes in de.lmu.ifi.dbs.jfeaturelib.features. If in doupt, "
-    + "--list-capabilities can be used to get an overview.")
+            + "specified here must be one of the classes in de.lmu.ifi.dbs.jfeaturelib.features. If in doupt, "
+            + "--list-capabilities can be used to get an overview.")
     private String descriptor = null;
     //
     @SuppressWarnings("FieldMayBeFinal")
@@ -285,8 +291,8 @@ public class Extractor {
      */
     private String[] initImageFormats(LibProperties libProperties) {
         String[] formats = libProperties.getString(LibProperties.IMAGE_FORMATS).split(" *, *");
-        for (int i = 0; i < formats.length; i++) {
-            formats[i] = formats[i].trim();
+        for (String format : formats) {
+            format = format.trim();
         }
         return formats;
     }
@@ -351,23 +357,30 @@ public class Extractor {
         }
 
         // can the output file be written?
-        if (outFile == null || (outFile.exists() && !outFile.canWrite())) {
-            throw new IllegalArgumentException("the output file is not valid or not writable");
+        if (outFile == null) {
+            throw new IllegalArgumentException("the output file is not valid");
         }
-
-        try { // create the output file or fail
-            outFile.createNewFile();
-        } catch (IOException ex) {
-            log.warn(ex.getMessage(), ex);
-            throw new IllegalArgumentException("the output file could not be created");
+        // further check the file if it is not stdout
+        if (!outFile.equals("-")) {
+            File f = new File(outFile);
+            if (f.exists() && !f.canWrite()) {
+                throw new IllegalArgumentException("the output file is not valid or not writable");
+            }
+            try { // create the output file or fail
+                if (!outFile.equals("-")) {
+                    new File(outFile).createNewFile();
+                    fileExists = (f.exists() && f.length() > 0);
+                }
+            } catch (IOException ex) {
+                log.warn(ex.getMessage(), ex);
+                throw new IllegalArgumentException("the output file could not be created");
+            }
         }
 
         // check if an image class is set and valid
         if (imageClass != null && !imageClass.matches("^\\w$")) {
             throw new IllegalArgumentException("the image class must only contain word characters");
         }
-
-        fileExists = (outFile.exists() && outFile.length() > 0);
     }
 
     /**
@@ -381,7 +394,9 @@ public class Extractor {
             log.debug("directory is null, returning empty list");
             return Collections.EMPTY_LIST;
         } else {
-            return FileUtils.listFiles(dir, imageFormats, recursive);
+            SuffixFileFilter sff = new SuffixFileFilter(imageFormats, IOCase.INSENSITIVE);
+            IOFileFilter recursiveFilter = recursive ? TrueFileFilter.INSTANCE : FalseFileFilter.INSTANCE;
+            return FileUtils.listFiles(dir, sff, recursiveFilter);
         }
     }
 
@@ -390,7 +405,11 @@ public class Extractor {
      */
     private void openWriter() {
         try {
-            writer = new BufferedWriter(new FileWriter(outFile, append), WRITE_BUFFER);
+            if (outFile.equals("-")) {
+                writer = new BufferedWriter(new OutputStreamWriter(System.out), WRITE_BUFFER);
+            } else {
+                writer = new BufferedWriter(new FileWriter(outFile, append), WRITE_BUFFER);
+            }
         } catch (IOException ex) {
             log.warn(ex.getMessage(), ex);
             throw new IllegalStateException("could not open output file for writing");
