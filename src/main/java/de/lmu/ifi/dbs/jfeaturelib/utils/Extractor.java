@@ -74,15 +74,18 @@ public class Extractor {
      */
     private static final int TERMINATION_TIMEOUT = 100; // days
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "--threads", usage = "amount of threads (defaults to amount of available processors))")
     private int threads = Runtime.getRuntime().availableProcessors();
     // 
     @Option(name = "-d", aliases = {"--src-dir"}, usage = "directory containing images (default: execution directory)")
     File imageDirectory;
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "-r", usage = "recursively descend into directories (default: no)")
     private boolean recursive = false;
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "-o", aliases = {"--output-dir"}, usage = "output to this file (default: features.csv)")
     private File outFile = new File("features.csv");
     //
@@ -95,23 +98,29 @@ public class Extractor {
     @Option(name = "-nh", usage = "omit headerline")
     private boolean omitHeader = false;
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "-D", aliases = {"--descriptor"}, usage = "Use this feature descriptor (e.G: Sift). The string "
     + "specified here must be one of the classes in de.lmu.ifi.dbs.jfeaturelib.features. If in doupt, "
     + "--list-capabilities can be used to get an overview.")
     private String descriptor = null;
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "-c", usage = "image class that should be written to the output file")
     private String imageClass = null;
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "--list-capabilities", usage = "list the registered FeatureDescriptors and the output of their supports() method")
     private boolean listCapabilities = false;
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "--help", usage = "show this screen")
     private boolean showHelp = false;
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "-v", usage = "show JFeatureLib debug messages")
     private boolean debugJFeatureLib = false;
     //
+    @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "--unpack-properties", usage = "extracts the default properties and loggiing properties into the current directory")
     private boolean unpackProperties = false;
     // other command line parameters than options
@@ -122,7 +131,7 @@ public class Extractor {
     //
     private final LibProperties properties;
     private final String[] imageFormats;
-    private String separator = ", ";
+    private final String separator = ", ";
     private int lineCounter = 0;
     // file exists and has a length > 0
     private boolean fileExists;
@@ -346,7 +355,7 @@ public class Extractor {
             throw new IllegalArgumentException("the output file is not valid or not writable");
         }
 
-        try { // cretae the output file or fail
+        try { // create the output file or fail
             outFile.createNewFile();
         } catch (IOException ex) {
             log.warn(ex.getMessage(), ex);
