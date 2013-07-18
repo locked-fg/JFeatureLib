@@ -27,6 +27,7 @@ import de.lmu.ifi.dbs.jfeaturelib.Descriptor;
 import de.lmu.ifi.dbs.jfeaturelib.Descriptor.Supports;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.utilities.Arrays2;
+import de.lmu.ifi.dbs.utilities.Math2;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
@@ -93,7 +94,9 @@ public class Kernel implements Descriptor {
     }
 
     /**
-     * Constructs a new detector with given double[] kernel. The double array is
+     * Constructs a new detector with given double[] kernel. 
+     * 
+     * The double array is
      * converted immediately to a float array.
      *
      * @param kernel double[] with kernel
@@ -234,7 +237,6 @@ public class Kernel implements Descriptor {
         }
 
         image.setIntArray(imgA);
-//        result = (int[]) image.convertToRGB().getBufferedImage().getData().getDataElements(0, 0, width, height, null);
 
         pcs.firePropertyChange(Progress.getName(), null, new Progress(100, "all done"));
     }
@@ -251,30 +253,6 @@ public class Kernel implements Descriptor {
         return ret;
     }
 
-//    /**
-//     * Returns the image edges as INT_ARGB array. This can be used to create a
-//     * buffered image, if the dimensions are known.
-//     */
-//    @Override
-//    public List<double[]> getFeatures() {
-//        if (result != null) {
-//            ArrayList<double[]> thisResult = new ArrayList<>(1);
-//            thisResult.add(Arrays2.convertToDouble(result));
-//            return thisResult;
-//        } else {
-//            return Collections.EMPTY_LIST;
-//        }
-//    }
-
-//    /**
-//     * Returns information about the getFeauture returns in a String array.
-//     */
-//    @Override
-//    public String getDescription() {
-//        String info = "Each pixel value";
-//        return info;
-//    }
-
     /**
      * Defines the capability of the algorithm.
      *
@@ -289,13 +267,10 @@ public class Kernel implements Descriptor {
                 Supports.DOES_8G,
                 Supports.DOES_RGB,
                 Supports.DOES_16);
-        //set.addAll(DOES_ALL);
         return set;
     }
 
     /**
-     * Starts the canny edge detection.
-     *
      * @param ip ImageProcessor of the source image
      */
     @Override
