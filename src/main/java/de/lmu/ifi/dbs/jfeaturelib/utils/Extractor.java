@@ -58,6 +58,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.kohsuke.args4j.CmdLineException;
@@ -74,7 +75,7 @@ import org.kohsuke.args4j.Option;
  */
 public class Extractor {
 
-    private static final Logger log = Logger.getLogger(Extractor.class.getName());
+    private static final Logger log = Logger.getLogger(Extractor.class);
     /**
      * Timeout used for the thread pool. Just set it to a large enough value so that all threads will terminate.
      */
@@ -165,7 +166,8 @@ public class Extractor {
 
             // maybe adjust log level according to CL value
             if (extractor.debugJFeatureLib) {
-                Logger.getLogger("de.lmu.ifi.dbs.jfeaturelib").setLevel(Level.DEBUG);
+                LogManager.getRootLogger().setLevel(Level.DEBUG);
+                Logger.getLogger("de.lmu").setLevel(Level.DEBUG);
             }
 
             // process commands that should not start execution
@@ -303,6 +305,7 @@ public class Extractor {
     private void process() {
         validateInput();
 
+        log.debug("creating mask & file list");
         Collection<File> maskList = createFileList(maskDirectory);
         Collection<File> imageList = createFileList(imageDirectory);
         HashMap<File, File> tuples = findTuples(imageList, maskList);
@@ -323,6 +326,7 @@ public class Extractor {
      * @throws IllegalArgumentException
      */
     private void validateInput() throws IllegalArgumentException {
+        log.debug("validating");
         if (descriptor == null) {
             throw new NullPointerException("descriptor must not be null");
         }
@@ -404,6 +408,7 @@ public class Extractor {
      * opens the BufferedWriter which is used to write the output
      */
     private void openWriter() {
+        log.debug("open writer");
         try {
             if (outFile.equals("-")) {
                 writer = new BufferedWriter(new OutputStreamWriter(System.out), WRITE_BUFFER);
@@ -420,6 +425,7 @@ public class Extractor {
      * closes the output writer
      */
     private void closeWriter() {
+        log.debug("close writer");
         try {
             writer.close();
         } catch (IOException ex) {
@@ -434,6 +440,7 @@ public class Extractor {
      * @param tuples
      */
     private void processImages(HashMap<File, File> tuples) {
+        log.debug("process images");
         for (Map.Entry<File, File> entry : tuples.entrySet()) {
             pool.submit(new ExtractionTask(entry.getKey(), entry.getValue()));
         }
@@ -443,6 +450,7 @@ public class Extractor {
      * creates a new thread pool for the image extraction tasks
      */
     private void openPool() {
+        log.debug("open pool");
         pool = Executors.newFixedThreadPool(threads);
     }
 
@@ -450,6 +458,7 @@ public class Extractor {
      * closes the thread pool and awaits termination
      */
     private void closePool() {
+        log.debug("close pool");
         try {
             pool.shutdown();
             pool.awaitTermination(TERMINATION_TIMEOUT, TimeUnit.DAYS);
