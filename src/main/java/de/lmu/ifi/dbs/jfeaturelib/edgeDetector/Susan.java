@@ -24,7 +24,6 @@
 package de.lmu.ifi.dbs.jfeaturelib.edgeDetector;
 
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
-import de.lmu.ifi.dbs.jfeaturelib.utils.RGBtoGray;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
@@ -41,8 +40,8 @@ import java.util.EnumSet;
  */
 public class Susan extends AbstractDescriptor {
 
-    private int IS_EDGE = -1;
-    private int NO_EDGE = -16777216;
+    private final int IS_EDGE = -1;
+    private final int NO_EDGE = -16777216;
 
     private int radius;
     private int threshold;
@@ -160,9 +159,24 @@ public class Susan extends AbstractDescriptor {
         // to Gray
         for (int i = 0; i < picture.length; i++) {
             for (int j = 0; j < picture[0].length; j++) {
-                picture[i][j] = RGBtoGray.ARGB_NTSC(picture[i][j]);
+                picture[i][j] = ARGB_NTSC(picture[i][j]);
             }
         }
+    }
+
+    /**
+     * Converts NTSC RGB to gray
+     *
+     * See also http://en.wikipedia.org/wiki/Luma_%28video%29
+     *
+     * @param p rgb color pixel
+     * @return gray value
+     */
+    private int ARGB_NTSC(int p) {
+        int r = (p & 0xff0000) >> 16;
+        int g = (p & 0xff00) >> 8;
+        int b = p & 0xff;
+        return (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
     }
 
     //<editor-fold defaultstate="collapsed" desc="accessors">

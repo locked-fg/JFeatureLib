@@ -24,6 +24,7 @@ Changelog
        - fixed LuminanceLayout (typo and wrong implementation)
        - fixed Extractor debugging
        - added capabilities to SUSAN extractor
+       - removed obsolete RGBtoGray
 * 1.4.1: 
        - fixed Tamura instanciation bug
 * 1.4.0: 
