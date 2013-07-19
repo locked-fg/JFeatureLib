@@ -23,6 +23,7 @@ Changelog
        - fixed an invalid API in Kernel
        - fixed LuminanceLayout (typo and wrong implementation)
        - fixed Extractor debugging
+       - added capabilities to SUSAN extractor
 * 1.4.1: 
        - fixed Tamura instanciation bug
 * 1.4.0: 

@@ -23,29 +23,31 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.edgeDetector;
 
-import de.lmu.ifi.dbs.jfeaturelib.Descriptor;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.jfeaturelib.utils.RGBtoGray;
 import ij.plugin.filter.PlugInFilter;
+import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.EnumSet;
 
 /**
  * Implementation of the SUSAN (Smallest Univalue Segment Assimilating Nucleus) edge detector.
  *
- * <p>See also the Wikipedia page: http://en.wikipedia.org/wiki/Corner_detection for more information.</p>
+ * <p>
+ * See also the Wikipedia page: http://en.wikipedia.org/wiki/Corner_detection for more information.</p>
  *
  * @author Benedikt
  */
-public class Susan implements Descriptor {
+public class Susan extends AbstractDescriptor {
 
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private int IS_EDGE = -1;
+    private int NO_EDGE = -16777216;
+
     private int radius;
     private int threshold;
-    private ColorProcessor image;
+    private ByteProcessor edgemask;
+    private int[][] picture;
 
     /**
      * Standart constructor with radius 2 and threshold 15
@@ -68,25 +70,34 @@ public class Susan implements Descriptor {
     /**
      * Defines the capability of the algorithm.
      *
+     * @return
      * @see PlugInFilter
      * @see #supports()
      */
     @Override
     public EnumSet<Supports> supports() {
-        EnumSet set = EnumSet.of(Supports.DOES_RGB);
+        EnumSet set = EnumSet.of(Supports.DOES_RGB, Supports.DOES_8G, Supports.DOES_8C);
         return set;
     }
 
     @Override
     public void run(ImageProcessor ip) {
-        if (!ip.getClass().isAssignableFrom(ColorProcessor.class)) {
-            throw new IllegalArgumentException("incompatible processor");
-        }
-        pcs.firePropertyChange(Progress.getName(), null, Progress.START);
+        startProgress();
 
-        this.image = (ColorProcessor) ip;
+        this.picture = ip.getIntArray();
+        if (ip.getClass().isAssignableFrom(ColorProcessor.class)) {
+            colorToGray();
+        }
+        this.edgemask = new ByteProcessor(ip.getWidth(), ip.getHeight());
+
         process();
-        pcs.firePropertyChange(Progress.getName(), null, Progress.END);
+
+        // write the result back into the image processor
+        for (int i = 0; i < edgemask.getPixelCount(); i++) {
+            ip.set(i, edgemask.get(i) != 0 ? IS_EDGE : NO_EDGE);
+        }
+
+        endProgress();
     }
 
     /*
@@ -100,72 +111,58 @@ public class Susan implements Descriptor {
      * sub-pixel estimation, if required.
      */
     private void process() {
-        int WIDTH = image.getWidth();
-        int HEIGHT = image.getHeight();
-        int[][] picture = image.getIntArray();
+        int WIDTH = edgemask.getWidth();
+        int HEIGHT = edgemask.getHeight();
 
-        ColorProcessor result = new ColorProcessor(WIDTH, HEIGHT);
         int[][] mask = new int[radius * 2 + 1][radius * 2 + 1];
-        int i = 0;
-        for (int x = 0; x < WIDTH; x++) {
-            for (int y = 0; y < HEIGHT; y++) {
-                //ignore borders
-                if (x >= radius && x < WIDTH - radius && y >= radius && y < HEIGHT - radius) {
-                    for (int maskX = 0; maskX <= radius * 2; maskX++) {
-                        for (int maskY = 0; maskY <= radius * 2; maskY++) {
-                            mask[maskX][maskY] = RGBtoGray.ARGB_NTSC(picture[x - radius + maskX][y - radius + maskY]);
-                        }
+        //ignore borders
+        for (int x = radius; x < WIDTH - radius; x++) {
+            for (int y = radius; y < HEIGHT - radius; y++) {
+                for (int maskX = 0; maskX <= radius * 2; maskX++) {
+                    for (int maskY = 0; maskY <= radius * 2; maskY++) {
+                        mask[maskX][maskY] = picture[x - radius + maskX][y - radius + maskY];
                     }
-                    //horizontal edge
+                }
+                {//horizontal edge
                     boolean edge = true;
                     for (int maskX = 0; maskX <= radius * 2; maskX++) {
-                        for (int maskY = 0; maskY <= radius; maskY++) {
-                            if (edge && Math.abs(mask[maskX][maskY] - mask[radius][radius]) < threshold) {
-                                edge = true;
-                            } else {
-                                edge = false;
-                            }
-
+                        for (int maskY = 0; edge && maskY <= radius; maskY++) {
+                            edge &= Math.abs(mask[maskX][maskY] - mask[radius][radius]) < threshold;
                         }
-                        if (edge) {
-                            result.set(x, y, -1);
-                        } else {
-                            result.set(x, y, -16777216);
-                        }
+                        edgemask.set(x, y, edge ? 255 : 0);
                     }
-                    //vertical edge
-                    edge = true;
-                    for (int maskX = 0; maskX <= radius; maskX++) {
-                        for (int maskY = 0; maskY <= radius * 2; maskY++) {
-                            if (edge && Math.abs(mask[maskX][maskY] - mask[radius][radius]) < threshold) {
-                                edge = true;
-                            } else {
-                                edge = false;
-                            }
-
-                        }
-                        if (edge) {
-                            result.set(x, y, -1);
-                        } else if (result.get(x, y) != -1) {
-                            result.set(x, y, -16777216);
-                        }
-                    }
-                } //border
-                else {
                 }
-                i++;
+                {//vertical edge
+                    boolean edge = true;
+                    for (int maskX = 0; maskX <= radius; maskX++) {
+                        for (int maskY = 0; edge && maskY <= radius * 2; maskY++) {
+                            edge &= Math.abs(mask[maskX][maskY] - mask[radius][radius]) < threshold;
+                        }
+                        edgemask.set(x, y, edge ? 255 : 0);
+                    }
+                }
             }
-            int progress = (int) Math.round(i * (100.0 / (double) (WIDTH * HEIGHT)));
-            pcs.firePropertyChange(Progress.getName(), null, new Progress(progress, "Step " + i + " of " + WIDTH * HEIGHT));
+            int progress = (int) 100d * x / WIDTH;
+
+            pcs.firePropertyChange(Progress.getName(), null, new Progress(progress));
         }
 
-        // write the result back into the image processor
-        image.insert(result, 0, 0);
     }
 
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
+    /**
+     * @return the edge mask with edges being marked with 255
+     */
+    public ByteProcessor getEdgemask() {
+        return edgemask;
+    }
+
+    private void colorToGray() {
+        // to Gray
+        for (int i = 0; i < picture.length; i++) {
+            for (int j = 0; j < picture[0].length; j++) {
+                picture[i][j] = RGBtoGray.ARGB_NTSC(picture[i][j]);
+            }
+        }
     }
 
     //<editor-fold defaultstate="collapsed" desc="accessors">
@@ -199,5 +196,6 @@ public class Susan implements Descriptor {
     public void setThreshold(int threshold) {
         this.threshold = threshold;
     }
+
     //</editor-fold>
 }
