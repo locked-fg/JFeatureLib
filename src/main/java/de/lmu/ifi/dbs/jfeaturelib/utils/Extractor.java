@@ -52,6 +52,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -80,6 +81,7 @@ public class Extractor {
      * Timeout used for the thread pool. Just set it to a large enough value so that all threads will terminate.
      */
     private static final int TERMINATION_TIMEOUT = 100; // days
+
     //
     @SuppressWarnings("FieldMayBeFinal")
     @Option(name = "--threads", usage = "amount of threads (defaults to amount of available processors))")
@@ -149,18 +151,19 @@ public class Extractor {
 
     public static void main(String[] args) throws Exception {
         try {
-            initLoggingProperties();
-
             Extractor extractor = new Extractor();
             CmdLineParser parser = new CmdLineParser(extractor);
             parser.setUsageWidth(100);
 
             try {
+                // if nothing is parameterized, just assume to display the help screen
+                if (args.length == 0) {
+                    args = new String[]{"--help"};
+                }
                 parser.parseArgument(args);
-            } catch (CmdLineException e) {
-                log.warn(e);
-                System.err.println("java -cp JFeatureLib.jar " + Extractor.class.getCanonicalName() + " [arguments]");
-                parser.printUsage(System.err);
+            } catch (CmdLineException t) {
+                log.warn(t);
+                printError(parser, t);
                 System.exit(1);
             }
 
@@ -172,7 +175,7 @@ public class Extractor {
 
             // process commands that should not start execution
             if (extractor.showHelp) {
-                parser.printUsage(System.out);
+                printHelp(parser);
                 System.exit(0);
 
             } else if (extractor.listCapabilities) {
@@ -188,9 +191,8 @@ public class Extractor {
                 try {
                     extractor.validateInput();
                 } catch (Throwable t) {
-                    log.debug("input validation failed.", t);
-                    parser.printUsage(System.err);
-                    System.err.println(t.getMessage());
+                    log.warn("input validation failed.", t);
+                    printError(parser, t);
                     System.exit(1);
                 }
 
@@ -204,16 +206,34 @@ public class Extractor {
     }
 
     /**
-     * Initialize the logging properties.
+     * Print a brief error message plus the help screen
      *
-     * If a ./logging.properties is found that this file will be used. Otherwise, the configuration from
-     * /logging.properties will be read.
+     * @param parser
+     * @param throwable
      */
-    private static void initLoggingProperties() {
-        if (new File("./log4j.properties").exists()) {
-            log.debug("read logging configuration from file");
-            PropertyConfigurator.configure("./log4j.properties");
-        }
+    private static void printError(CmdLineParser parser, Throwable throwable) throws IOException {
+        printHelp(parser);
+        System.err.println("Message: " + throwable.getMessage());
+        System.err.println("----------------------------------------------------------");
+    }
+
+    /**
+     * Prints the help screen
+     *
+     * @param parser
+     * @throws IOException
+     */
+    private static void printHelp(CmdLineParser parser) throws IOException {
+        System.out.println("----------------------------------------------------------");
+        System.out.println("");
+        System.out.println("The extractor utility can be started with");
+        System.out.println("  java -jar JFeatureLib-x.y.z-SNAPSHOT-jar-with-dependencies.jar --help");
+        System.out.println("----------------------------------------------------------");
+        String cite = IOUtils.toString(Extractor.class.getResource("/cite.txt"));
+        System.out.println(cite);
+        System.out.println("----------------------------------------------------------");
+        parser.printUsage(System.out);
+        System.out.println("----------------------------------------------------------");
     }
 
     /**
@@ -232,8 +252,7 @@ public class Extractor {
                 log.info("wrote log4j.properties");
             }
         } catch (IOException ex) {
-            log.debug("the properties could not be extracted.", ex);
-            log.warn("The properties could not be extracted. Please see the log for more information.");
+            log.warn("The properties could not be extracted. Please see the log for more information.", ex);
         }
     }
 
