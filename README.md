@@ -20,12 +20,12 @@ Changelog
        - Extractor now also supports case insensitive file suffixes
        - added JpegCoefficientsHistogram (from Lire)
        - added basic tests for features
-       - fixed an invalid API in Kernel
-       - fixed LuminanceLayout (typo and wrong implementation)
-       - fixed Extractor debugging
        - added capabilities to SUSAN extractor
        - removed obsolete RGBtoGray
        - extended the Extractor help functionality
+       - fixed an invalid API in Kernel
+       - fixed LuminanceLayout (typo and wrong implementation)
+       - fixed Extractor debugging
 * 1.4.1: 
        - fixed Tamura instanciation bug
 * 1.4.0: 
