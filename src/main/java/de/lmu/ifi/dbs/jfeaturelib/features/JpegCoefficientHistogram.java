@@ -23,28 +23,17 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
-import java.util.EnumSet;
-import net.semanticmetadata.lire.imageanalysis.LireFeature;
-
 /**
- * The LuminanceLayout Descriptor is intended for grayscale or B/W images. It
- * scales an image down to a very small size and uses this smaller version as a
- * descriptor. Interesting aspect is that white stripes are added to make the
- * small image quadratic.
+ * This class implements the EdgeHistogram descriptor from the MPEG-7 standard.
  *
- * This class is a wrapper for the according LIRE class.
+ * This is a wrapper class for the corresponding lire class.
  *
  * @author Franz
- * @since 1.4.0
+ * @since 1.5.0
  */
-public class LumnanceLayout extends LireWrapper {
+public class JpegCoefficientHistogram extends LireWrapper {
 
-    public LumnanceLayout() {
-        super(new net.semanticmetadata.lire.imageanalysis.FuzzyOpponentHistogram());
-    }
-
-    @Override
-    public EnumSet<Supports> supports() {
-        return EnumSet.of(Supports.DOES_8G);
+    public JpegCoefficientHistogram() {
+        super(new net.semanticmetadata.lire.imageanalysis.JpegCoefficientHistogram());
     }
 }

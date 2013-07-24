@@ -1,0 +1,7 @@
+@ONLINE{Gra2012,
+  author = {Graf, Franz},
+  title = {JFeatureLib},
+  year = {2012},
+  url = {https://JFeatureLib.googlecode.com},
+  note = "[Online; Version <versionNumber>]"
+}

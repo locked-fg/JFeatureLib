@@ -43,11 +43,11 @@ import java.util.EnumSet;
  */
 public class CEDD extends AbstractFeatureDescriptor {
 
-    private double T0 = 14;
-    private double T1 = 0.68;
-    private double T2 = 0.98;
-    private double T3 = 0.98;
-    private boolean compact = false;
+    double T0 = 14;
+    double T1 = 0.68;
+    double T2 = 0.98;
+    double T3 = 0.98;
+    boolean compact = false;
     private net.semanticmetadata.lire.imageanalysis.CEDD cedd;
 
     /**

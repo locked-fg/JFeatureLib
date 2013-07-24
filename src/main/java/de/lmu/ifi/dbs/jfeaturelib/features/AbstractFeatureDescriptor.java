@@ -116,6 +116,7 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
      * Adds the double array list to the list of data arrays. Keep in mind that the array is NOT copied but directly put
      * into the list.
      *
+     * @param data
      * @see #data
      */
     protected void addData(List<double[]> data) {
