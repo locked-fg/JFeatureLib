@@ -401,8 +401,9 @@ public class Extractor {
         }
 
         // check if an image class is set and valid
-        if (imageClass != null && !imageClass.matches("^\\w$")) {
-            throw new IllegalArgumentException("the image class must only contain word characters");
+        if (imageClass != null && !imageClass.matches("^\\w+$")) {
+            throw new IllegalArgumentException(
+                    "the image class must only contain word characters and not whitespace");
         }
     }
 
