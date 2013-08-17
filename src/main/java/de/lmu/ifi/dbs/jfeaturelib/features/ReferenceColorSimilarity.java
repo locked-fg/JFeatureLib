@@ -179,7 +179,7 @@ public class ReferenceColorSimilarity extends AbstractFeatureDescriptor {
                 String colString = properties.getString(LibProperties.REFERENCE_COLOR_SIMILARITY_COLORS, "");
                 checkNotNull(colString, "colors must not be null");
 
-                colString.trim();
+                colString = colString.trim();
                 checkArgument(!colString.isEmpty(), "colors must not be empty");
 
                 String[] colStrings = colString.split(",");

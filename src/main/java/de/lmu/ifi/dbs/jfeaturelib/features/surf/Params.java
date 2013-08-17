@@ -126,7 +126,7 @@ public class Params {
         return maxFilterSizes[octave];
     }
     // Set this flag "true" to double the image size
-    boolean doubleImageSize = false;
+//    boolean doubleImageSize = false;
     // TODO: rename to "upscale image first"? + implementation (siehe ImageJ_SIFT e.g. as parameter to intImg constr.) + update constructor/getter/setter
     /**
      * The responses are thresholded such that all values below the

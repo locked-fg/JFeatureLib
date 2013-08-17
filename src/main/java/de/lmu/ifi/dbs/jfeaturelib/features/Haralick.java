@@ -39,9 +39,9 @@ import java.util.EnumSet;
  *
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
  * <pre>
- * @article{haralick1973textural, title={Textural features for image
- * classification}, author={Haralick, R.M. and Shanmugam, K. and Dinstein, I.},
- * journal={Systems, Man and Cybernetics, IEEE Transactions on}, volume={3},
+ *
+ * @article{haralick1973textural, title={Textural features for image classification}, author={Haralick, R.M. and
+ * Shanmugam, K. and Dinstein, I.}, journal={Systems, Man and Cybernetics, IEEE Transactions on}, volume={3},
  * number={6}, pages={610--621}, year={1973}, publisher={IEEE} }
  * </pre>
  *
@@ -193,6 +193,7 @@ public class Haralick extends AbstractFeatureDescriptor {
 
         firePropertyChange(new Progress(1, "creating coocurrence matrix"));
         Coocurrence coocurrence = new Coocurrence(image, NUM_GRAY_VALUES, this.haralickDist);
+        coocurrence.calculate();
         double[][] cooccurrenceMatrix = coocurrence.getCooccurrenceMatrix();
         double meanGrayValue = coocurrence.getMeanGrayValue();
 
@@ -233,7 +234,6 @@ public class Haralick extends AbstractFeatureDescriptor {
             features[9] += (i - sum_j_p_x_minus_y) * (i - sum_j_p_x_minus_y) * p_x_minus_y[i];
             features[10] += p_x_minus_y[i] * log(p_x_minus_y[i]);
         }
-
 
         // feature 13: Max Correlation Coefficient
         double[] realEigenvaluesOfQ = new Matrix(Q).eig().getRealEigenvalues();
@@ -354,8 +354,8 @@ public class Haralick extends AbstractFeatureDescriptor {
      * @param sum
      */
     private void normalize(double[][] A, double sum) {
-        for (int i = 0; i < A.length; i++) {
-            Arrays2.div(A[i], sum);
+        for (double[] A1 : A) {
+            Arrays2.div(A1, sum);
         }
     }
 
@@ -381,136 +381,144 @@ public class Haralick extends AbstractFeatureDescriptor {
         this.haralickDist = haralickDist;
     }
     //</editor-fold>
-}
 
 //<editor-fold defaultstate="collapsed" desc="Coocurrence Matrix">
-/**
- * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
- */
-class Coocurrence {
-
     /**
-     * The number of gray values for the textures
+     * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
      */
-    private final int NUM_GRAY_VALUES;
-    /**
-     * The number of gray levels in an image
-     */
-    private final int GRAY_RANGES = 256;
-    /**
-     * The scale for the gray values for conversion rgb to gray values.
-     */
-    private final double GRAY_SCALE;
-    /**
-     * gray histogram of the image.
-     */
-    private final double[] grayHistogram;
-    /**
-     * quantized gray values of each pixel of the image.
-     */
-    private final byte[] grayValue;
-    /**
-     * mean gray value
-     */
-    private double meanGrayValue = 0;
-    /**
-     * The cooccurrence matrix
-     */
-    private final double[][] cooccurrenceMatrices;
-    /**
-     * The value for one increment in the gray/color histograms.
-     */
-    private final int HARALICK_DIST;
-    private final ByteProcessor image;
+    static class Coocurrence {
 
-    public Coocurrence(ByteProcessor b, int numGrayValues, int haralickDist) {
-        this.NUM_GRAY_VALUES = numGrayValues;
-        this.image = b;
-        this.GRAY_SCALE = (double) GRAY_RANGES / (double) NUM_GRAY_VALUES;
-        this.cooccurrenceMatrices = new double[NUM_GRAY_VALUES][NUM_GRAY_VALUES];
-        this.grayValue = new byte[image.getPixelCount()];
-        this.grayHistogram = new double[GRAY_RANGES];
-        this.HARALICK_DIST = haralickDist;
-        calculate();
-    }
+        /**
+         * The number of gray values for the textures
+         */
+        private final int NUM_GRAY_VALUES;
+        /**
+         * The number of gray levels in an image
+         */
+        int GRAY_RANGES = 256;
+        /**
+         * The scale for the gray values for conversion rgb to gray values.
+         */
+        double GRAY_SCALE;
+        /**
+         * gray histogram of the image.
+         */
+        double[] grayHistogram;
+        /**
+         * Quantized gray values of each pixel of the image.
+         *
+         * Use int instead of byte as there is no unsigned byte in Java. Otherwise you'll have a hard time using white =
+         * 255. Alternative: replace with ImageJ ByteProcessor.
+         */
+        private final int[] grayValue;
+        /**
+         * mean gray value
+         */
+        private double meanGrayValue = 0;
+        /**
+         * The cooccurrence matrix
+         */
+        private final double[][] cooccurrenceMatrices;
+        /**
+         * The value for one increment in the gray/color histograms.
+         */
+        private final int HARALICK_DIST;
+        private final ByteProcessor image;
 
-    public double getMeanGrayValue() {
-        return this.meanGrayValue;
-    }
+        public Coocurrence(ByteProcessor b, int numGrayValues, int haralickDist) {
+            this.NUM_GRAY_VALUES = numGrayValues;
+            this.HARALICK_DIST = haralickDist;
+            this.cooccurrenceMatrices = new double[NUM_GRAY_VALUES][NUM_GRAY_VALUES];
+            this.image = b;
+            this.grayValue = new int[image.getPixelCount()];
+        }
 
-    public double[][] getCooccurrenceMatrix() {
-        return this.cooccurrenceMatrices;
-    }
+        void calculate() {
+            this.GRAY_SCALE = (double) GRAY_RANGES / (double) NUM_GRAY_VALUES;
+            this.grayHistogram = new double[GRAY_RANGES];
 
-    public double getCooccurenceSums() {
-        return image.getPixelCount() * 8;
-    }
+            calculateGreyValues();
 
-    private void calculate() {
-        calculateGreyValues();
+            final int imageWidth = image.getWidth();
+            final int imageHeight = image.getHeight();
+            final int d = HARALICK_DIST;
+            final int yOffset = d * imageWidth;
+            int i, j, pos;
 
-        final int imageWidth = image.getWidth();
-        final int imageHeight = image.getHeight();
-        final int d = HARALICK_DIST;
-        int i, j, pos;
+            // image is not empty per default
+            for (int y = 0; y < imageHeight; y++) {
+                for (int x = 0; x < imageWidth; x++) {
+                    pos = imageWidth * y + x;
 
-        // image is not empty per default
-        for (int y = 0; y < imageHeight; y++) {
-            for (int x = 0; x < imageWidth; x++) {
-                pos = imageWidth * y + x;
+                    // horizontal neighbor: 0 degrees
+                    i = x - d;
+                    if (i >= 0) {
+                        increment(grayValue[pos], grayValue[pos - d]);
+                    }
 
-                // horizontal neighbor: 0 degrees
-                i = x - d;
-//                j = y;
-                if (!(i < 0)) {
-                    increment(grayValue[pos], grayValue[pos - d]);
-                }
+                    // vertical neighbor: 90 degree
+                    j = y - d;
+                    if (j >= 0) {
+                        increment(grayValue[pos], grayValue[pos - yOffset]);
+                    }
 
-                // vertical neighbor: 90 degree
-//                i = x;
-                j = y - d;
-                if (!(j < 0)) {
-                    increment(grayValue[pos], grayValue[pos - d * imageWidth]);
-                }
+                    // 45 degree diagonal neigbor
+                    i = x + d;
+                    j = y - d;
+                    if (i < imageWidth && j >= 0) {
+                        increment(grayValue[pos], grayValue[pos + d - yOffset]);
+                    }
 
-                // 45 degree diagonal neigbor
-                i = x + d;
-                j = y - d;
-                if (i < imageWidth && !(j < 0)) {
-                    increment(grayValue[pos], grayValue[pos + d - d * imageWidth]);
-                }
-
-                // 135 vertical neighbor
-                i = x - d;
-                j = y - d;
-                if (!(i < 0) && !(j < 0)) {
-                    increment(grayValue[pos], grayValue[pos - d - d * imageWidth]);
+                    // 135 vertical neighbor
+                    i = x - d;
+                    j = y - d;
+                    if (i >= 0 && j >= 0) {
+                        increment(grayValue[pos], grayValue[pos - d - yOffset]);
+                    }
                 }
             }
         }
-        meanGrayValue = Arrays2.sum(grayValue);
-    }
 
-    private void calculateGreyValues() {
-        int size = image.getPixelCount();
-        int gray;
-        for (int pos = 0; pos < size; pos++) {
-            gray = image.get(pos);
-            grayValue[pos] = (byte) (gray / GRAY_SCALE);  // quantized for texture analysis
-            grayHistogram[gray]++;
+        private void calculateGreyValues() {
+            final int size = grayValue.length;
+            double graySum = 0;
+            for (int pos = 0; pos < size; pos++) {
+                int gray = image.get(pos);
+                int quantized = (int) (gray / GRAY_SCALE);
+                graySum += gray;
+                grayValue[pos] = quantized;  // quantized for texture analysis
+                assert grayValue[pos] >= 0 : grayValue[pos] + " > 0 violated";
+                grayHistogram[gray]++;
+            }
+            Arrays2.div(grayHistogram, size);
+            meanGrayValue = graySum / size;
         }
-        Arrays2.div(grayHistogram, size);
-    }
 
-    /**
-     * Incremets the coocurrence matrix at the specified positions (g1,g2) and (g2,g1).
-     *
-     * @param g1 the gray value of the first pixel
-     * @param g2 the gray value of the second pixel
-     */
-    private void increment(int g1, int g2) {
-        cooccurrenceMatrices[g1][g2]++;
-        cooccurrenceMatrices[g2][g1]++;
+        /**
+         * Incremets the coocurrence matrix at the specified positions (g1,g2) and (g2,g1) if g1 and g2 are in range.
+         *
+         * @param g1 the gray value of the first pixel
+         * @param g2 the gray value of the second pixel
+         */
+        private void increment(int g1, int g2) {
+            cooccurrenceMatrices[g1][g2]++;
+            cooccurrenceMatrices[g2][g1]++;
+        }
+
+        public double getMeanGrayValue() {
+            return this.meanGrayValue;
+        }
+
+        public double[][] getCooccurrenceMatrix() {
+            return this.cooccurrenceMatrices;
+        }
+
+        public double getCooccurenceSums() {
+            // divide by R=8 neighbours
+            // see p.613, §2 of Haralick paper
+            return image.getPixelCount() * 8;
+        }
     }
-}
 //</editor-fold>
+
+}

@@ -39,8 +39,7 @@ public class Statistics {
     public long timeIntegralImage;
     public long timeSURFDetector;
     public long timeSURFDescriptor;
-    public long timeMatcher;
-    public List<DetectorStat> detectorStatList = new ArrayList<DetectorStat>();
+    public List<DetectorStat> detectorStatList = new ArrayList<>();
 
     public static class DetectorStat {
 

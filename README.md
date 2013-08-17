@@ -15,6 +15,10 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 Changelog
 =======
+* 1.5.1:
+       - Fixed an Haralick-Bug (Issue #16). Thanks Sebastian Pölsterl.
+       - Provide multi character image classes (Issue #15). Thanks Sebastian Pölsterl.
+       - Fixed quite some issues that FindBugs marked.
 * 1.5.0:
        - Extractor now also supports output to stdout (Thanks Erich Schubert)
        - Extractor now also supports case insensitive file suffixes

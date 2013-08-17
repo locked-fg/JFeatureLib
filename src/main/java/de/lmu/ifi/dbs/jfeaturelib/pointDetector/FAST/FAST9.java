@@ -55,12 +55,11 @@ public class FAST9 {
         List<ImagePoint> corners;
         int num_corners = 0;
         int[] scores;
-        List<ImagePoint> nonmax = new ArrayList<>();
 
         corners = fast9_detect(im, xsize, ysize, stride, b, num_corners);
         scores = fast9_score(im, stride, corners, corners.size(), b);
         FASTNonMaxSuppression nonmaxSuppressor = new FASTNonMaxSuppression();
-        nonmax = nonmaxSuppressor.nonmax_suppression(corners, scores, corners.size());
+        List<ImagePoint> nonmax = nonmaxSuppressor.nonmax_suppression(corners, scores, corners.size());
         
         return nonmax;
     }

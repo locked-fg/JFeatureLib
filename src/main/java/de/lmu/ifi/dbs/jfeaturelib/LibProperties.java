@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
 public class LibProperties extends PropertyContainer {
 
     private static final Logger log = Logger.getLogger(LibProperties.class);
-    private static LibProperties singleton;
+    private static volatile LibProperties singleton;
     /**
      * The file name of the properties file.
      */
@@ -125,7 +125,7 @@ public class LibProperties extends PropertyContainer {
     /**
      * Constructor that initializes the properties container with the given input stream.
      *
-     * @param file
+     * @param is
      * @throws IOException
      */
     public LibProperties(InputStream is) throws IOException {
@@ -138,7 +138,7 @@ public class LibProperties extends PropertyContainer {
      * @return an instance of the container
      * @throws IOException
      */
-    public static LibProperties get() throws IOException {
+    public static synchronized LibProperties get() throws IOException {
         if (singleton == null) {
             if (BASE_FILE.exists()) { // read from file
                 log.debug("reading properties from file: " + BASE_FILE.getAbsolutePath());

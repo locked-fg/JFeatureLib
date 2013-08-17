@@ -41,11 +41,10 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.log4j.Logger;
 
 /**
- * The PackageScanner class is used to find classes deriving a certain class
- * within a package.
+ * The PackageScanner class is used to find classes deriving a certain class within a package.
  *
- * THis can be useful for example if you need all Classes extending the
- * FeatureDescriptor interface within a certain package.
+ * THis can be useful for example if you need all Classes extending the FeatureDescriptor interface within a certain
+ * package.
  *
  * @author Franz
  */
@@ -82,15 +81,16 @@ public class PackageScanner<T> {
             }
 
         } else {
-            ZipFile jar = new ZipFile(dirOrJar);
-            for (Enumeration entries = jar.entries(); entries.hasMoreElements();) {
-                String binaryName = ((ZipEntry) entries.nextElement()).getName();
-                if (!binaryName.endsWith(".class")) { // we only need classes
-                    continue;
-                }
-                if (binaryName.startsWith(packagePath)) {
-                    binaryName = pathToBinary(binaryName);
-                    binaryNames.add(binaryName);
+            try (ZipFile jar = new ZipFile(dirOrJar)) {
+                for (Enumeration entries = jar.entries(); entries.hasMoreElements();) {
+                    String binaryName = ((ZipEntry) entries.nextElement()).getName();
+                    if (!binaryName.endsWith(".class")) { // we only need classes
+                        continue;
+                    }
+                    if (binaryName.startsWith(packagePath)) {
+                        binaryName = pathToBinary(binaryName);
+                        binaryNames.add(binaryName);
+                    }
                 }
             }
         }
@@ -99,8 +99,7 @@ public class PackageScanner<T> {
     }
 
     /**
-     * Convert a path to a binary name by replacing (back) slashes to periods
-     * and removing '.class'
+     * Convert a path to a binary name by replacing (back) slashes to periods and removing '.class'
      *
      * @param path
      * @return binary name

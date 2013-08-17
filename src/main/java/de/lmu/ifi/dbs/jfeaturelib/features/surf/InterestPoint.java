@@ -67,14 +67,14 @@ public class InterestPoint {
      * Vector of descriptor components.
      */
     public float[] descriptor;
-    /**
-     * Point motion (can be used for frame to frame motion analysis).
-     */
-    float dx;
-    /**
-     * Point motion (can be used for frame to frame motion analysis).
-     */
-    float dy;
+//    /**
+//     * Point motion (can be used for frame to frame motion analysis).
+//     */
+//    float dx;
+//    /**
+//     * Point motion (can be used for frame to frame motion analysis).
+//     */
+//    float dy;
 
     public InterestPoint() {
     }

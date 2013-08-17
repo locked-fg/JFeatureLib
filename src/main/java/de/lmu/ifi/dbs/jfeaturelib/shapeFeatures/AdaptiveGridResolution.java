@@ -219,10 +219,7 @@ public class AdaptiveGridResolution extends AbstractFeatureDescriptor {
         addData(array);
     }
 
-    private class QuadTreeNode {
-
-//        private boolean root = false;
-//        private QuadTreeNode parent;
+    private static class QuadTreeNode {
         private QuadTreeNode[] children = null;
         private int value;
         private int x;

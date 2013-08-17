@@ -275,21 +275,16 @@ public class Extractor {
         }
 
         // sort the classes by class name
-        Collections.sort(classes, new Comparator<Class>() {
-            @Override
-            public int compare(Class o1, Class o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        Collections.sort(classes, new ClassNameComparator());
 
         // now we know the longest descriptor name - build the output string
-        String outString = "";
+        StringBuilder outString = new StringBuilder();
         for (Class<FeatureDescriptor> fd : classes) {
             String name = fd.getName().substring(offset);
-            outString += StringUtils.rightPad(name, maxNameLength);
-            outString += " : ";
-            outString += fd.newInstance().supports().toString();
-            outString += "\n";
+            outString.append(StringUtils.rightPad(name, maxNameLength));
+            outString.append(" : ");
+            outString.append(fd.newInstance().supports().toString());
+            outString.append("\n");
         }
         System.out.println(outString);
     }
@@ -312,8 +307,8 @@ public class Extractor {
      */
     private String[] initImageFormats(LibProperties libProperties) {
         String[] formats = libProperties.getString(LibProperties.IMAGE_FORMATS).split(" *, *");
-        for (String format : formats) {
-            format = format.trim();
+        for (int i = 0; i < formats.length; i++) {
+            formats[i] = formats[i].trim();
         }
         return formats;
     }
@@ -660,6 +655,17 @@ public class Extractor {
                 ip = iplus.getProcessor();
             }
             return ip;
+        }
+    }
+
+    /**
+     * compares classes according to their class name (case sensitive)
+     */
+    private static class ClassNameComparator implements Comparator<Class> {
+
+        @Override
+        public int compare(Class o1, Class o2) {
+            return o1.getName().compareTo(o2.getName());
         }
     }
 }

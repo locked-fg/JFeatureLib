@@ -52,11 +52,11 @@ public class GradientImage implements GradientSource {
     /**
      * The processor describing the length of the gradients.
      */
-    private FloatProcessor length;
+    private FloatProcessor length = null;
     /**
      * The processor describing the orientation of the gradients in [0, Pi[.
      */
-    private FloatProcessor theta;
+    private FloatProcessor theta = null;
 
     @Override
     public void setIp(ImageProcessor ip) {

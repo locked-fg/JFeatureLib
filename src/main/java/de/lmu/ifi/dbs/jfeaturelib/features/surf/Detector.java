@@ -222,7 +222,6 @@ public class Detector {
 
         float[][] A = {{dxx, dxy, dxs}, {dyx, dyy, dys}, {dsx, dsy, dss}};
 
-
         // Try to solve the linear system A*x = b
         float[] X = new float[3];
         if (solve(A, b, X)) {
