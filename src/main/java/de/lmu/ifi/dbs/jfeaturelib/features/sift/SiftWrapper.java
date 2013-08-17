@@ -40,8 +40,8 @@ import org.apache.log4j.Logger;
  * List<double[]> features = t.getFeatures(new File("c:\\temp\\ant-sample.pgm"));
  * </code>
  *
- * An image passed to this class is first saved as a .pgm in the systems temp
- * directory. This file is passed to the sift binary and deleted afterwards.
+ * An image passed to this class is first saved as a .pgm in the systems temp directory. This file is passed to the sift
+ * binary and deleted afterwards.
  *
  * @author Franz Graf
  */
@@ -74,7 +74,7 @@ public class SiftWrapper {
     public List<double[]> getFeatures(ImageProcessor ip) throws IOException,
             InterruptedException {
         File tmpFile = File.createTempFile(PREFIX, SUFFIX);
-        List<double[]> features = Collections.EMPTY_LIST;
+        List<double[]> features;
         try {
             tmpFile.deleteOnExit();
             ImagePlus iPlus = new ImagePlus(tmpFile.getAbsolutePath());
@@ -88,8 +88,7 @@ public class SiftWrapper {
     }
 
     /**
-     * Creates and returnes Sift-Features from the given file. The file MUST be
-     * a PGM image.
+     * Creates and returnes Sift-Features from the given file. The file MUST be a PGM image.
      *
      * @param f PGM image
      * @return features
@@ -102,7 +101,10 @@ public class SiftWrapper {
         if (!f.getName().toLowerCase().endsWith(SUFFIX)) {
             log.warn("File does not have a .pgm extension. Sure it is a PGM file? " + f.getAbsolutePath());
         }
-        return convertToArray(getFeatures(new FileInputStream(f)));
+
+        try (FileInputStream fis = new FileInputStream(f)) {
+            return convertToArray(getFeatures(fis));
+        }
     }
 
     /**
@@ -117,8 +119,7 @@ public class SiftWrapper {
     }
 
     /**
-     * Extracts the features from the text input stream which is created by the
-     * sift binary.
+     * Extracts the features from the text input stream which is created by the sift binary.
      *
      * @param textInput
      * @return list of feature vectors
@@ -143,8 +144,7 @@ public class SiftWrapper {
     }
 
     /**
-     * Extract features from the streamreader. Siftfeatures all have their
-     * primary key = 0 and class = -1
+     * Extract features from the streamreader. Siftfeatures all have their primary key = 0 and class = -1
      *
      * @param isr streamreader from which the input is read
      * @return array of {@link SiftFeatureVector}s (may be empty)
