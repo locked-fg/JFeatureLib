@@ -639,6 +639,8 @@ public class Extractor {
                 writeOutput(image, features);
             } catch (IOException | InstantiationException | IllegalAccessException ex) {
                 log.warn(ex.getMessage(), ex);
+            } catch (Throwable ex) {
+                log.error(ex.getMessage(), ex);
             }
         }
 
