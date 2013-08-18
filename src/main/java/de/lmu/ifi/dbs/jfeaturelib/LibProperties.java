@@ -103,6 +103,11 @@ public class LibProperties extends PropertyContainer {
     public static final String CANNY_KERNEL_RADIUS = "edge.canny.gaussianKernelRadius";
     public static final String CANNY_KERNEL_WIDTH = "edge.canny.gaussianKernelWidth";
     public static final String CANNY_NORMALIZE_CONTRAST = "edge.canny.contrastNormalized";
+    // MeanPatchIntensitiesDescriptor
+    public static final String MEAN_PATCH_INTENSITIES_PATCH_SIZE = "features.meanPatchIntensities.patchSize";
+    public static final String MEAN_PATCH_INTENSITIES_BINS = "features.meanPatchIntensities.bins";
+    public static final String MEAN_PATCH_INTENSITIES_HIST_MIN = "features.meanPatchIntensities.histMin";
+    public static final String MEAN_PATCH_INTENSITIES_HIST_MAX = "features.meanPatchIntensities.histMax";
 
     /**
      * Initializes an empty properties set. You should know what you are doing as the needed Properties will not be
