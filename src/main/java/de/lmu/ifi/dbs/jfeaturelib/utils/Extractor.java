@@ -605,6 +605,7 @@ public class Extractor {
         }
 
         @Override
+        @SuppressWarnings({"BroadCatchBlock", "TooBroadCatch"})
         public void run() {
             try {
                 long time = System.currentTimeMillis();

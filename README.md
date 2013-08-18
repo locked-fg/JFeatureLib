@@ -15,6 +15,8 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 Changelog
 =======
+* HEAD:
+       - Caught all Throwables in Extractor (Pull Request #17). Thanks Sebastian Pölsterl.
 * 1.5.1:
        - Fixed an Haralick-Bug (Issue #16). Thanks Sebastian Pölsterl.
        - Provide multi character image classes (Issue #15). Thanks Sebastian Pölsterl.
