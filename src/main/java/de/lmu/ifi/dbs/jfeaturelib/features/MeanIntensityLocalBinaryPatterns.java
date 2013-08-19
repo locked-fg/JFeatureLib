@@ -96,8 +96,11 @@ public class MeanIntensityLocalBinaryPatterns extends AbstractFeatureDescriptor 
     @Override
     public EnumSet<Supports> supports() {
         return EnumSet.of(
+                Supports.Masking,
                 Supports.NoChanges,
-                Supports.DOES_8G);
+                Supports.DOES_8G,
+                Supports.DOES_8C,
+                Supports.DOES_RGB);
     }
 
     @Override
@@ -110,19 +113,31 @@ public class MeanIntensityLocalBinaryPatterns extends AbstractFeatureDescriptor 
         final int width = xEnd - 2;
         final int height = yEnd - 2;
 
+        final byte[] mask = ip.getMaskArray();
         byte[] data = new byte[width * height];
+        byte[] histMask = new byte[width * height];
         // do not process pixels at border, which don't have a complete 8-neighborhood
         int k = 0;
         for (int y=2; y < yEnd; y++) {
             for (int x=2; x < xEnd; x++) {
-                data[k++] = getBinaryPattern(x, y);
+                if (mask == null || mask[k] != 0) {
+                    data[k] = getBinaryPattern(x, y);
+                    histMask[k] = -1; // -1 = 0xFF
+                }
+                k++;
             }
         }
 
         ByteProcessor lbpImage = new ByteProcessor(width, height, data);
         lbpImage.setHistogramSize(256);
         lbpImage.setHistogramRange(0, 256);
-        int[] hist = lbpImage.getHistogram();
+        int[] hist;
+        if (mask == null) {
+            hist = lbpImage.getHistogram();
+        } else {
+            ByteProcessor maskIp = new ByteProcessor(width, height, histMask);
+            hist = lbpImage.getHistogram(maskIp);
+        }
         addData(hist);
 
         m_meanDescriptor = null;
@@ -130,6 +145,12 @@ public class MeanIntensityLocalBinaryPatterns extends AbstractFeatureDescriptor 
     }
 
     protected void createPatchDescriptor(ImageProcessor ip) {
+        if (!ByteProcessor.class.isAssignableFrom(ip.getClass())) {
+            ImageProcessor mask = ip.getMask();
+            ip = ip.convertToByte(true);
+            ip.setMask(mask);
+        }
+
         m_meanDescriptor = new MeanPatchIntensityHistogram();
         m_meanDescriptor.setSize(1);
         m_meanDescriptor.createIntegralImage((ByteProcessor) ip);
