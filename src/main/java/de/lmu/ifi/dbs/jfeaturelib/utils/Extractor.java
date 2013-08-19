@@ -521,7 +521,10 @@ public class Extractor {
             }
 
             // write file name
-            writer.append(file.getName()).append(separator);
+            writer.append('"')
+                .append(file.getName())
+                .append('"')
+                .append(separator);
 
             // serialize the feature values
             writer.append(Arrays2.join(feature, separator));
