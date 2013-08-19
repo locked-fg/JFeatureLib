@@ -176,7 +176,7 @@ public class MeanIntensityLocalBinaryPatterns extends AbstractFeatureDescriptor 
         return result;
     }
 
-    public int getBins() {
+    public int getNumberOfBins() {
         return m_bins;
     }
 
@@ -185,7 +185,7 @@ public class MeanIntensityLocalBinaryPatterns extends AbstractFeatureDescriptor 
      *
      * @throws IllegalArgumentException if <code>bins <= 0</code>
      */
-    public void setBins(int bins) {
+    public void setNumberOfBins(int bins) {
         if (bins <= 0)
             throw new IllegalArgumentException("number of bins must be greater zero, but got " + bins);
         m_bins = bins;

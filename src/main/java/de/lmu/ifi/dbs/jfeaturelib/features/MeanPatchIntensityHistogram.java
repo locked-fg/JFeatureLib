@@ -70,7 +70,7 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
     @Override
     public void setProperties(LibProperties properties) throws IOException {
         setSize(properties.getInteger(LibProperties.MEAN_PATCH_INTENSITIES_PATCH_SIZE));
-        setBins(properties.getInteger(LibProperties.MEAN_PATCH_INTENSITIES_BINS));
+        setNumberOfBins(properties.getInteger(LibProperties.MEAN_PATCH_INTENSITIES_BINS));
         setHistogramRange(
                 properties.getDouble(LibProperties.MEAN_PATCH_INTENSITIES_HIST_MIN),
                 properties.getDouble(LibProperties.MEAN_PATCH_INTENSITIES_HIST_MAX));
@@ -146,7 +146,7 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
         m_patchArea = m_patchSize * m_patchSize;
     }
 
-    public int getBins() {
+    public int getNumberOfBins() {
         return m_bins;
     }
 
@@ -155,7 +155,7 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
      *
      * @throws IllegalArgumentException if <code>bins <= 0</code>
      */
-    public void setBins(int bins) {
+    public void setNumberOfBins(int bins) {
         if (bins <= 0)
             throw new IllegalArgumentException("number of bins must be greater zero, but got " + bins);
         m_bins = bins;

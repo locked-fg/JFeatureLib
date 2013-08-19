@@ -71,7 +71,7 @@ public class MeanPatchIntensityHistogramTest {
     @Before
     public void setUp() {
         m_descriptor = new MeanPatchIntensityHistogram();
-        m_descriptor.setBins(256);
+        m_descriptor.setNumberOfBins(256);
         m_descriptor.setHistogramRange(0, 256);
     }
 

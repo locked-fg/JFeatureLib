@@ -109,6 +109,12 @@ public class LibProperties extends PropertyContainer {
     public static final String MEAN_PATCH_INTENSITIES_HIST_MIN = "features.meanPatchIntensities.histMin";
     public static final String MEAN_PATCH_INTENSITIES_HIST_MAX = "features.meanPatchIntensities.histMax";
 
+    public static final String LBP_RADIUS = "features.lbp.radius";
+    public static final String LBP_NUM_POINTS = "features.lbp.numPoints";
+    public static final String LBP_NEIGHBORHOOD_SIZE = "features.lbp.neighborhoodSize";
+    public static final String LBP_CONSTANT = "features.lbp.constant";
+    public static final String LBP_HISTOGRAM_SIZE = "features.lbp.histogramSize";
+
     /**
      * Initializes an empty properties set. You should know what you are doing as the needed Properties will not be
      * present. So all required properties have to be set before it is passed to an extractor/descriptor.
