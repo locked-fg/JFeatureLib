@@ -15,7 +15,7 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 Changelog
 =======
-* HEAD:
+* 1.5.2:
        - Caught all Throwables in Extractor (Pull Request #17). Thanks Sebastian Pölsterl.
        - added quoting of Extractor Output (Pull Request #18). Thanks Sebastian Pölsterl.
 * 1.5.1:

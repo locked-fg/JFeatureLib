@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.lmu.ifi.dbs.jfeaturelib</groupId>
     <artifactId>JFeatureLib</artifactId>
-    <version>1.5.1-SNAPSHOT</version>
+    <version>1.5.2</version>
     <packaging>jar</packaging>
     <name>JFeaturelib</name>
     <description>A free library that provides implementations
