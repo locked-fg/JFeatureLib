@@ -21,7 +21,7 @@
  * Hints how to cite the projects can be found at
  * https://code.google.com/p/jfeaturelib/wiki/Citation
  */
-package de.lmu.ifi.dbs.jfeaturelib.features;
+package de.lmu.ifi.dbs.jfeaturelib.features.lbp;
 
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ByteProcessor;
