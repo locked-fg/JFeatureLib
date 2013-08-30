@@ -28,7 +28,6 @@ import ij.io.FileSaver;
 import ij.process.ImageProcessor;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.apache.log4j.Logger;
 
@@ -76,10 +75,9 @@ public class SiftWrapper {
         File tmpFile = File.createTempFile(PREFIX, SUFFIX);
         List<double[]> features;
         try {
-            tmpFile.deleteOnExit();
             ImagePlus iPlus = new ImagePlus(tmpFile.getAbsolutePath());
             iPlus.setProcessor("", ip);
-            new FileSaver(iPlus).saveAsPgm();
+            new FileSaver(iPlus).saveAsPgm(tmpFile.getAbsolutePath());
             features = getFeatures(tmpFile);
         } finally {
             tmpFile.delete();

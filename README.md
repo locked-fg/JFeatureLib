@@ -15,6 +15,8 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 Changelog
 =======
+* 1.5.3:
+       - Omit "save file" dialog when using SIFT. Fixes #19. Thanks Johannes Niedermayer
 * 1.5.2:
        - Caught all Throwables in Extractor (Pull Request #17). Thanks Sebastian Pölsterl.
        - added quoting of Extractor Output (Pull Request #18). Thanks Sebastian Pölsterl.
