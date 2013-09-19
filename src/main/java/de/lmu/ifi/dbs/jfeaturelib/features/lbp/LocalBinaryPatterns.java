@@ -267,7 +267,7 @@ public class LocalBinaryPatterns extends AbstractFeatureDescriptor {
         return m_radius;
     }
 
-    public int getMumPoints() {
+    public int getNumPoints() {
         return m_numPoints;
     }
 
