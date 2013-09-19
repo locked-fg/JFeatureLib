@@ -229,11 +229,11 @@ public class LocalBinaryPatterns extends AbstractFeatureDescriptor {
     /**
      * Set the size of the neighborhood that is considered to construct a histogram
      * of binary patterns for each pixel.
-     *
+     * <p>
      * For instance, a neighborhood size of 1 considers the 8-neighborhood of each
      * pixel, and a neighborhood size of 2 the 25-neighborhood. The neighborhood
      * is always quadractic.
-     *
+     * </p>
      * @param neighborhoodSize positive number
      */
     public void setNeighborhoodSize(int neighborhoodSize) {
