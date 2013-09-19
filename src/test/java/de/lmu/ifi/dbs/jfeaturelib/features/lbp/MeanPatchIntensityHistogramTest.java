@@ -66,6 +66,17 @@ public class MeanPatchIntensityHistogramTest {
        110, -19, 117,   1,  67, -99, -33  // -19=237, -99=157, -33=223
     };
 
+    static final int WIDTH_4 = 7;
+    static final int HEIGHT_4 = 6;
+    static final byte[] IMAGE_4 = new byte[]{
+        16,  12,  40,  13, 124,  88, 121,
+        14,  111,  15, -57,  77,  13, 124, // -57=199
+        33,  15, -26,  -7,  10, 100,  83, // -26=230, -7=249
+        17,  56,  19, 113,-125,-100,  24, // -125=131, -100=156
+        15, -23, 111, -35,  99,  77,  99, // -23=233, -35=221
+       110, -19, 117,   11,  67, -99, -33  // -19=237, -99=157, -33=223
+    };
+
     private MeanPatchIntensityHistogram m_descriptor;
 
     @Before
@@ -212,5 +223,13 @@ public class MeanPatchIntensityHistogramTest {
         assertEquals(256, hist.length);
         assertEquals(1.0, hist[100], 0);
         assertEquals(1.0, Arrays2.sum(hist), 0);
+    }
+
+    @Test
+    public void testRetrieveMinAndMaxFromData() {
+        m_descriptor.setHistogramRange(0, 0);
+        m_descriptor.retrieveMinAndMaxFromImage(new ByteProcessor(WIDTH_4, HEIGHT_4, IMAGE_4));
+        assertEquals(10, m_descriptor.m_histMin, 0);
+        assertEquals(249, m_descriptor.m_histMax, 0);
     }
 }

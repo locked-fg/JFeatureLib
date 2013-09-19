@@ -23,15 +23,15 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features.lbp;
 
+import de.lmu.ifi.dbs.jfeaturelib.utils.Histogram;
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
 import de.lmu.ifi.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
 import de.lmu.ifi.dbs.jfeaturelib.utils.IntegralImage;
 import ij.measure.Measurements;
 import ij.process.ByteProcessor;
-import ij.process.FloatProcessor;
-import ij.process.FloatStatistics;
 import ij.process.ImageProcessor;
+import ij.process.ImageStatistics;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.EnumSet;
@@ -39,6 +39,13 @@ import java.util.EnumSet;
 /**
  * This descriptor calculates a histogram of mean intensities of specified
  * neighborhood size.
+ * <p>
+ * For each pixel in the image, a patch of size <code>1 + 2 * size</code> is
+ * extracted, where <code>size</code> is determined by {@link #setSize(int)}.
+ * Mean intensities of all patches are summarized in a histogram.
+ * </p><p>
+ * Mean intensities are computed efficiently by using {@link IntegralImage}.
+ * </p>
  *
  * @author sebp
  */
@@ -89,29 +96,21 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
         yEnd = ip.getHeight() - m_size;
         xEnd = ip.getWidth() - m_size;
 
-        FloatProcessor meanImage = new FloatProcessor(
-                Math.max((xEnd - xStart), 0),
-                Math.max((yEnd - yStart), 0));
+        if (m_histMin == 0 && m_histMax == 0) {
+            retrieveMinAndMaxFromImage(ip);
+        }
 
-        int k = 0;
+        Histogram hist = new Histogram(m_bins, m_histMin, m_histMax);
+
         for (int y=yStart; y<yEnd; y++) {
             for (int x=xStart; x<xEnd; x++) {
-                meanImage.setf(k++, getMeanIntensity(x, y));
+                hist.add(getMeanIntensity(x, y));
             }
             int p = (int)(y / (double) yEnd * 100);
             firePropertyChange(new Progress(p));
         }
 
-        meanImage.setHistogramSize(m_bins);
-        meanImage.setHistogramRange(m_histMin, m_histMax);
-        FloatStatistics stats = new FloatStatistics(meanImage, Measurements.MIN_MAX, null);
-        long[] floatHist = stats.getHistogram();
-
-        double[] hist = new double[m_bins];
-        for (int i=0; i<m_bins; i++) {
-            hist[i] = floatHist[i];
-        }
-        addData(hist);
+        addData(hist.getHistogramm());
 
         m_integralImage = null;
         firePropertyChange(Progress.END);
@@ -120,6 +119,12 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
     protected void createIntegralImage(ByteProcessor ip) {
         m_integralImage = new IntegralImage();
         m_integralImage.compute(ip);
+    }
+
+    protected void retrieveMinAndMaxFromImage(ImageProcessor ip) {
+        ImageStatistics stats = ImageStatistics.getStatistics(ip, Measurements.MIN_MAX, null);
+        m_histMin = stats.min;
+        m_histMax = stats.max;
     }
 
     protected float getMeanIntensity(final int x, final int y) {
@@ -133,10 +138,10 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
 
     /**
      * Set size of neighborhood which determines the patch size.
-     *
+     * <p>
      * The outer most <tt>size</tt> pixels will not be considered because
      * they have incomplete neighborhoods.
-     *
+     * </p>
      * @throws IllegalArgumentException if <code>size <= 0</code>
      */
     public void setSize(int size) {
@@ -172,9 +177,9 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
 
     /**
      * Set the minimum and maximum value that the histogram should consider.
-     *
+     * <p>
      * If both min and max are set to zero (default), limits are retrieved from data.
-     *
+     * </p>
      * @throws IllegalArgumentException if <code>min > max</code>
      */
     public void setHistogramRange(double min, double max) {
@@ -183,4 +188,5 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
         m_histMin = min;
         m_histMax = max;
     }
+
 }
