@@ -27,8 +27,7 @@ import ij.process.ByteProcessor;
 import java.awt.Rectangle;
 
 /**
- * Integral images are an efficient way to retrieve the sum of pixel intensities
- * in any rectangular region of the image.
+ * Integral images are an efficient way to retrieve the sum of pixel intensities in any rectangular region of the image.
  *
  * @author sebp
  */
@@ -76,8 +75,8 @@ public class IntegralImage {
      * Get value of integral image at specified position.
      *
      * In mathematical terms, this method returns
-     * <tt>\sum_{p &lt; x; q &lt; y} I(p, q)</tt>. Calling {@link #compute} is
-     * required before calling this method. No sanity-check of indices
+     * <tt>\sum_{p &lt; x; q &lt; y} I(p, q)</tt>. Calling {@link #compute} is required before calling this method. No
+     * sanity-check of indices
      * <tt>x</tt> and <tt>y</tt> is performed!
      *
      * @param x x-coordinate
@@ -95,8 +94,7 @@ public class IntegralImage {
     /**
      * Returns the sum of intensities in the specified rectangle.
      *
-     * Parts that lie outside of the image are treated as having
-     * zero intensity.
+     * Parts that lie outside of the image are treated as having zero intensity.
      *
      * @param region region of interest
      * @return sum of intensities in specified region
@@ -110,6 +108,8 @@ public class IntegralImage {
 
     /**
      * Get the image's height.
+     *
+     * @return height of the image
      */
     public int getHeight() {
         return m_height;
@@ -117,6 +117,8 @@ public class IntegralImage {
 
     /**
      * Get the image's width.
+     *
+     * @return width of the image
      */
     public int getWidth() {
         return m_width;

@@ -61,6 +61,7 @@ public class Histogram {
      * set to zero
      *
      * @param bins amount of bins (>0)
+     * @param minValue minimum value
      * @param maxValue max value (>minValue)
      * @throws IllegalArgumentException if bins &lt;= 0 or max &lt;=min
      */

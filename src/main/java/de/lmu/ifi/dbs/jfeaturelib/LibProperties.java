@@ -108,7 +108,7 @@ public class LibProperties extends PropertyContainer {
     public static final String MEAN_PATCH_INTENSITIES_BINS = "features.meanPatchIntensities.bins";
     public static final String MEAN_PATCH_INTENSITIES_HIST_MIN = "features.meanPatchIntensities.histMin";
     public static final String MEAN_PATCH_INTENSITIES_HIST_MAX = "features.meanPatchIntensities.histMax";
-
+    // LocalBinaryPatterns
     public static final String LBP_RADIUS = "features.lbp.radius";
     public static final String LBP_NUM_POINTS = "features.lbp.numPoints";
     public static final String LBP_NEIGHBORHOOD_SIZE = "features.lbp.neighborhoodSize";
