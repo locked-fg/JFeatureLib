@@ -23,10 +23,22 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.features.MeanPatchIntensityHistogram;
 import de.lmu.ifi.dbs.utilities.Arrays2;
+import ij.ImagePlus;
+import ij.io.Opener;
 import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
+import ij.process.ImageProcessor;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -40,42 +52,42 @@ public class MeanPatchIntensityHistogramTest {
     static final int WIDTH = 5;
     static final int HEIGHT = 4;
     static final byte[] IMAGE = new byte[]{
-        16, 12, -4, 13, 124,  // -4=252
-        14, -1, 0, -57, 77,   // -1=255, -57=199
-        33, 15, -26, -7, 10,  // -26=230, -7=249
+        16, 12, -4, 13, 124, // -4=252
+        14, -1, 0, -57, 77, // -1=255, -57=199
+        33, 15, -26, -7, 10, // -26=230, -7=249
         17, 56, 19, 113, -125 // -125=131
     };
 
     static final int WIDTH_2 = 5;
     static final int HEIGHT_2 = 5;
     static final byte[] IMAGE_2 = new byte[]{
-        16, 12, -4, 13, 124,  // -4=252
-        14, -1, 0, -57, 77,   // -1=255, -57=199
-        33, 15, -26, -7, 10,  // -26=230, -7=249
+        16, 12, -4, 13, 124, // -4=252
+        14, -1, 0, -57, 77, // -1=255, -57=199
+        33, 15, -26, -7, 10, // -26=230, -7=249
         17, 56, 19, 113, -125, // -125=131
-        15, -23, 111, -35, 99  // -23=233, -35=221
+        15, -23, 111, -35, 99 // -23=233, -35=221
     };
 
     static final int WIDTH_3 = 7;
     static final int HEIGHT_3 = 6;
     static final byte[] IMAGE_3 = new byte[]{
-        16,  12,  -4,  13, 124,  88, 121, // -4=252,
-        14,  -1,   0, -57,  77,  13, 124, // -1=255, -57=199
-        33,  15, -26,  -7,  10, 100,  83, // -26=230, -7=249
-        17,  56,  19, 113,-125,-100,  24, // -125=131, -100=156
-        15, -23, 111, -35,  99,  77,  99, // -23=233, -35=221
-       110, -19, 117,   1,  67, -99, -33  // -19=237, -99=157, -33=223
+        16, 12, -4, 13, 124, 88, 121, // -4=252,
+        14, -1, 0, -57, 77, 13, 124, // -1=255, -57=199
+        33, 15, -26, -7, 10, 100, 83, // -26=230, -7=249
+        17, 56, 19, 113, -125, -100, 24, // -125=131, -100=156
+        15, -23, 111, -35, 99, 77, 99, // -23=233, -35=221
+        110, -19, 117, 1, 67, -99, -33 // -19=237, -99=157, -33=223
     };
 
     static final int WIDTH_4 = 7;
     static final int HEIGHT_4 = 6;
     static final byte[] IMAGE_4 = new byte[]{
-        16,  12,  40,  13, 124,  88, 121,
-        14,  111,  15, -57,  77,  13, 124, // -57=199
-        33,  15, -26,  -7,  10, 100,  83, // -26=230, -7=249
-        17,  56,  19, 113,-125,-100,  24, // -125=131, -100=156
-        15, -23, 111, -35,  99,  77,  99, // -23=233, -35=221
-       110, -19, 117,   11,  67, -99, -33  // -19=237, -99=157, -33=223
+        16, 12, 40, 13, 124, 88, 121,
+        14, 111, 15, -57, 77, 13, 124, // -57=199
+        33, 15, -26, -7, 10, 100, 83, // -26=230, -7=249
+        17, 56, 19, 113, -125, -100, 24, // -125=131, -100=156
+        15, -23, 111, -35, 99, 77, 99, // -23=233, -35=221
+        110, -19, 117, 11, 67, -99, -33 // -19=237, -99=157, -33=223
     };
 
     private MeanPatchIntensityHistogram m_descriptor;
@@ -100,7 +112,7 @@ public class MeanPatchIntensityHistogramTest {
         };
 
         int ei = 0;
-        for (int y=0; y < HEIGHT; y++) {
+        for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 assertEquals(expected[ei++], m_descriptor.getMeanIntensity(x, y), 0.3);
             }
@@ -120,7 +132,7 @@ public class MeanPatchIntensityHistogramTest {
         };
 
         int ei = 0;
-        for (int y=0; y < HEIGHT; y++) {
+        for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 assertEquals(expected[ei++], m_descriptor.getMeanIntensity(x, y), 0.3);
             }
@@ -138,7 +150,7 @@ public class MeanPatchIntensityHistogramTest {
         };
 
         int ei = 0;
-        for (int y=1; y < HEIGHT_2 - 1; y++) {
+        for (int y = 1; y < HEIGHT_2 - 1; y++) {
             for (int x = 1; x < WIDTH_2 - 1; x++) {
                 assertEquals(expected[ei++], m_descriptor.getMeanIntensity(x, y), 0.3);
             }
@@ -157,7 +169,7 @@ public class MeanPatchIntensityHistogramTest {
         };
 
         int ei = 0;
-        for (int y=1; y < HEIGHT_3 - 1; y++) {
+        for (int y = 1; y < HEIGHT_3 - 1; y++) {
             for (int x = 1; x < WIDTH_3 - 1; x++) {
                 assertEquals(expected[ei++], m_descriptor.getMeanIntensity(x, y), 0.3);
             }
@@ -224,6 +236,19 @@ public class MeanPatchIntensityHistogramTest {
         assertEquals(256, hist.length);
         assertEquals(1.0, hist[100], 0);
         assertEquals(1.0, Arrays2.sum(hist), 0);
+    }
+
+    @Test
+    public void testFeatures4() {
+        // default values
+        m_descriptor.setSize(1);
+        m_descriptor.setNumberOfBins(256);
+        m_descriptor.setHistogramRange(0, 0);
+
+        URL url = getClass().getClassLoader().getResource("2009-08-01_15.44_003.gif");
+        ImageProcessor ip = new Opener().openURL(url.toString()).getProcessor();
+        m_descriptor.run(ip);
+        m_descriptor.getFeatures();
     }
 
     @Test
