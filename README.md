@@ -15,6 +15,9 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 Changelog
 =======
+* 1.6.0:
+      - added LocalBinaryPatterns, MeanIntensityLocalBinaryPatterns, MeanPatchIntensityHistogram (Pull Request #21).
+        Thanks Sebastian Pölsterl.
 * 1.5.3:
        - Omit "save file" dialog when using SIFT. Fixes #19. Thanks Johannes Niedermayer
 * 1.5.2:

@@ -21,11 +21,10 @@
  * Hints how to cite the projects can be found at
  * https://code.google.com/p/jfeaturelib/wiki/Citation
  */
-package de.lmu.ifi.dbs.jfeaturelib.features.lbp;
+package de.lmu.ifi.dbs.jfeaturelib.features;
 
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
-import de.lmu.ifi.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
 import de.lmu.ifi.dbs.jfeaturelib.utils.Histogram;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;

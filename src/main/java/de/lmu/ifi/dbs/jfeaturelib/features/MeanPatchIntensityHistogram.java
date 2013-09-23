@@ -21,12 +21,11 @@
  * Hints how to cite the projects can be found at
  * https://code.google.com/p/jfeaturelib/wiki/Citation
  */
-package de.lmu.ifi.dbs.jfeaturelib.features.lbp;
+package de.lmu.ifi.dbs.jfeaturelib.features;
 
 import de.lmu.ifi.dbs.jfeaturelib.utils.Histogram;
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.Progress;
-import de.lmu.ifi.dbs.jfeaturelib.features.AbstractFeatureDescriptor;
 import de.lmu.ifi.dbs.jfeaturelib.utils.IntegralImage;
 import ij.measure.Measurements;
 import ij.process.ByteProcessor;
@@ -37,12 +36,12 @@ import java.io.IOException;
 import java.util.EnumSet;
 
 /**
- * This descriptor calculates a histogram of mean intensities of specified
- * neighborhood size.
+ * This descriptor calculates a histogram of mean intensities of specified neighborhood size.
  * <p>
- * For each pixel in the image, a patch of size <code>1 + 2 * size</code> is
- * extracted, where <code>size</code> is determined by {@link #setSize(int)}.
- * Mean intensities of all patches are summarized in a histogram.
+ * For each pixel in the image, a patch of size
+ * <code>1 + 2 * size</code> is extracted, where
+ * <code>size</code> is determined by {@link #setSize(int)}. Mean intensities of all patches are summarized in a
+ * histogram.
  * </p><p>
  * Mean intensities are computed efficiently by using {@link IntegralImage}.
  * </p>
@@ -102,11 +101,11 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
 
         Histogram hist = new Histogram(m_bins, m_histMin, m_histMax);
 
-        for (int y=yStart; y<yEnd; y++) {
-            for (int x=xStart; x<xEnd; x++) {
+        for (int y = yStart; y < yEnd; y++) {
+            for (int x = xStart; x < xEnd; x++) {
                 hist.add(getMeanIntensity(x, y));
             }
-            int p = (int)(y / (double) yEnd * 100);
+            int p = (int) (y / (double) yEnd * 100);
             firePropertyChange(new Progress(p));
         }
 
@@ -139,14 +138,16 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
     /**
      * Set size of neighborhood which determines the patch size.
      * <p>
-     * The outer most <tt>size</tt> pixels will not be considered because
-     * they have incomplete neighborhoods.
+     * The outer most <tt>size</tt> pixels will not be considered because they have incomplete neighborhoods.
      * </p>
+     *
+     * @param size
      * @throws IllegalArgumentException if <code>size <= 0</code>
      */
     public void setSize(int size) {
-        if (size <= 0)
+        if (size <= 0) {
             throw new IllegalArgumentException("size must be greater zero, but got " + size);
+        }
         m_size = size;
         m_patchSize = 1 + 2 * size;
         m_patchArea = m_patchSize * m_patchSize;
@@ -159,11 +160,13 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
     /**
      * Set the number of bins of the histogram.
      *
+     * @param bins
      * @throws IllegalArgumentException if <code>bins <= 0</code>
      */
     public void setNumberOfBins(int bins) {
-        if (bins <= 0)
+        if (bins <= 0) {
             throw new IllegalArgumentException("number of bins must be greater zero, but got " + bins);
+        }
         m_bins = bins;
     }
 
@@ -180,11 +183,15 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
      * <p>
      * If both min and max are set to zero (default), limits are retrieved from data.
      * </p>
+     *
+     * @param min
+     * @param max
      * @throws IllegalArgumentException if <code>min > max</code>
      */
     public void setHistogramRange(double min, double max) {
-        if (min > max)
+        if (min > max) {
             throw new IllegalArgumentException("min must be smaller than or equal to max");
+        }
         m_histMin = min;
         m_histMax = max;
     }
