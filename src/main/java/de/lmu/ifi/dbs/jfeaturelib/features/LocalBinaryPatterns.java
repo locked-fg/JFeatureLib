@@ -40,8 +40,11 @@ import java.util.EnumSet;
  * intensities of the central pixel to <tt>N</tt> neighboring pixels ({@link #setNumPoints(int)})
  * on a circle of radius <tt>r</tt> ({@link #setRadius(double)}). Interpolation
  * is used to retrieve the intensity of neighboring pixels.
- * </p>
- * <p>
+ * </p><p>
+ * The first two features represent the x and y coordinates of the pixel, the
+ * remaining features the histogram of local binary patterns
+ * (see {@link #setNumberOfHistogramBins(int)}).
+ * </p><p>
  * In comparison to {@link MeanIntensityLocalBinaryPatterns}, this class computes
  * one histogram of each pixel and computes local binary patterns from neighbors
  * lying on a circle around the central pixel.
@@ -175,7 +178,13 @@ public class LocalBinaryPatterns extends AbstractFeatureDescriptor {
             }
         }
 
-        return hist.getHistogramm();
+        double[] histarr = hist.getHistogramm();
+        double[] data = new double[histarr.length + 2];
+        data[0] = x;
+        data[1] = y;
+        System.arraycopy(histarr, 0, data, 2, histarr.length);
+
+        return data;
     }
 
     protected int getBinaryPattern(final int x, final int y) {
