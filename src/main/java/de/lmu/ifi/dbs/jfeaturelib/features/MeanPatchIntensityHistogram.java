@@ -97,6 +97,9 @@ public class MeanPatchIntensityHistogram extends AbstractFeatureDescriptor {
 
         if (m_histMin == 0 && m_histMax == 0) {
             retrieveMinAndMaxFromImage(ip);
+            // Histogram class excludes the maximum value,
+            // therefore increase it by 1
+            m_histMax++;
         }
 
         Histogram hist = new Histogram(m_bins, m_histMin, m_histMax);
