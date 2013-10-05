@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.lmu.ifi.dbs.jfeaturelib</groupId>
     <artifactId>JFeatureLib</artifactId>
-    <version>1.6.0-BETA</version>
+    <version>1.6.0</version>
     <packaging>jar</packaging>
     <name>JFeaturelib</name>
     <description>A free library that provides implementations
@@ -82,6 +82,11 @@
             <id>nseiler</id>
             <name>Nepomuk Seiler</name>
             <email>nepomuk.seiler@gmail.com</email>
+        </developer>
+        <developer>
+            <id>sebp</id>
+            <name>Sebastian Pölsterl</name>
+            <url>https://github.com/sebp</url>
         </developer>
     </developers>
     
