@@ -318,17 +318,20 @@ public class Haralick extends AbstractFeatureDescriptor {
      * @return array{mean, variance}
      */
     private double[] meanVar(double[] a) {
-        // VAR(X) = E(X^2) - E(X)^2
-        double ex = 0, ex2 = 0; // E(X), E(X^2)
-        for (int i = 0; i < NUM_GRAY_VALUES; i++) {
-            ex += a[i];
-            ex2 += a[i] * a[i];
-        }
-        ex /= a.length;
-        ex2 /= a.length;
-        double var = ex2 - ex * ex;
+      // two-pass is numerically stable.
+      // don't use E(X)^2-E(X^2)!
+      double ex = 0;
+      for (int i = 0; i < NUM_GRAY_VALUES; i++) {
+          ex += a[i];
+      }
+      ex /= a.length;
+      double ex2 = 0;
+      for (int i = 0; i < NUM_GRAY_VALUES; i++) {
+          ex2 += (a[i] - ex) * (a[i] - ex);
+      }
+      ex2 /= (a.length - 1);
 
-        return new double[]{ex, var};
+      return new double[]{ex, ex2};
     }
 
     /**
