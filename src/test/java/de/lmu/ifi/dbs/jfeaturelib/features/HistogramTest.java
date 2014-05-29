@@ -107,9 +107,9 @@ public class HistogramTest {
         histogram.run(cp);
         List<double[]> features = histogram.getFeatures();
         assertEquals(features.get(0).length, 3);
-        assertEquals(3, features.get(0)[0], 0.001);
-        assertEquals(3, features.get(0)[1], 0.001);
-        assertEquals(3, features.get(0)[2], 0.001);
+        assertEquals(1., features.get(0)[0], 0.001);
+        assertEquals(1., features.get(0)[1], 0.001);
+        assertEquals(1., features.get(0)[2], 0.001);
     }
 
     @Test
@@ -126,8 +126,8 @@ public class HistogramTest {
         histogram.run(blackRed);
         List<double[]> features = histogram.getFeatures();
         assertEquals(features.get(0).length, 2);
-        assertEquals(50, features.get(0)[0], 0.001);
-        assertEquals(50, features.get(0)[1], 0.001);
+        assertEquals(.5, features.get(0)[0], 0.001);
+        assertEquals(.5, features.get(0)[1], 0.001);
     }
 
     @Test
@@ -148,10 +148,10 @@ public class HistogramTest {
         histogram.run(blackRed);
         double[] features = histogram.getFeatures().get(0);
         assertEquals(features.length, 2);
-        assertEquals(9, features[0], 0.001);
-        assertEquals(1, features[1], 0.001);
+        assertEquals(.9, features[0], 0.001);
+        assertEquals(.1, features[1], 0.001);
 
-        // Controll without mask
+        // Control without mask
         blackRed.setMask(null);
         histogram = new Histogram();
         histogram.type = Histogram.TYPE.Red;
@@ -159,8 +159,8 @@ public class HistogramTest {
         histogram.run(blackRed);
         features = histogram.getFeatures().get(0);
         assertEquals(features.length, 2);
-        assertEquals(90, features[0], 0.001);
-        assertEquals(10, features[1], 0.001);
+        assertEquals(.9, features[0], 0.001);
+        assertEquals(.1, features[1], 0.001);
     }
 
     /**

@@ -53,6 +53,11 @@ public class Histogram extends AbstractFeatureDescriptor {
     public Histogram() {
     }
 
+    public Histogram(TYPE type, int bins) {
+    	this.type = type;
+    	this.bins = bins;
+    }
+
     @Override
     public void setProperties(LibProperties properties) {
         type = TYPE.valueOf(properties.getString(LibProperties.HISTOGRAMS_TYPE));
@@ -68,11 +73,13 @@ public class Histogram extends AbstractFeatureDescriptor {
     public void run(ImageProcessor ip) {
         firePropertyChange(Progress.START);
 
+        double norm = 1.;
         InnerHistogram histogram = null;
         if (type == TYPE.Gray) {
             histogram = new Gray();
         } else if (type == TYPE.RGB) {
             histogram = new RGB();
+            norm = 3.;
         } else if (type == TYPE.Red) {
             histogram = new RgbMix(1, 0, 0);
         } else if (type == TYPE.Green) {
@@ -81,6 +88,7 @@ public class Histogram extends AbstractFeatureDescriptor {
             histogram = new RgbMix(0, 0, 1);
         } else if (type == TYPE.HSB) {
             histogram = new HSB();
+            norm = 3.;
         } else if (type == TYPE.Hue || type == TYPE.Saturation || type == TYPE.Brightness) {
             histogram = new HsbMix(type);
         } else {
@@ -90,6 +98,8 @@ public class Histogram extends AbstractFeatureDescriptor {
         setMask(ip);
         int[] hist = histogram.run(ip);
         double[] features = Arrays2.convertToDouble(hist);
+        // Normalize for desired size:
+        Arrays2.mul(features, norm/Arrays2.sum(features));
         features = scale(features, bins);
 
         addData(features);
