@@ -15,6 +15,9 @@ https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeatureli
 
 Changelog
 =======
+* 1.6.1: 
+      - changed the LIRE dependency and added some help how to get LIRE working (Use my fork: https://github.com/locked-fg/LIRE)
+      - added numerically stable variance calculation for Haralick (Issue #20). Thanks Erich Schubert
 * 1.6.0:
       - added LocalBinaryPatterns, MeanIntensityLocalBinaryPatterns, MeanPatchIntensityHistogram (Pull Request #21).
         Thanks Sebastian Pölsterl.

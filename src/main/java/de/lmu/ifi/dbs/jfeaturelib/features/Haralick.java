@@ -45,10 +45,14 @@ import java.util.EnumSet;
  * number={6}, pages={610--621}, year={1973}, publisher={IEEE} }
  * </pre>
  *
- * The feature descriptor is composed of the following features: <ol> <li>Angular 2nd moment</li> <li>Contrast</li>
- * <li>Correlation</li> <li>variance</li> <li>Inverse Difference Moment</li> <li>Sum Average</li> <li>Sum Variance</li>
- * <li>Sum Entropy</li> <li>Entropy</li> <li>Difference Variance</li> <li>Difference Entropy</li> <li>Information
- * Measures of Correlation</li> <li>Information Measures of Correlation</li> <li>Maximum Correlation COefficient</li>
+ * The feature descriptor is composed of the following features: <ol>
+ * <li>Angular 2nd moment</li> <li>Contrast</li>
+ * <li>Correlation</li> <li>variance</li> <li>Inverse Difference Moment</li>
+ * <li>Sum Average</li> <li>Sum Variance</li>
+ * <li>Sum Entropy</li> <li>Entropy</li> <li>Difference Variance</li>
+ * <li>Difference Entropy</li> <li>Information Measures of Correlation</li>
+ * <li>Information Measures of Correlation</li> <li>Maximum Correlation
+ * COefficient</li>
  * </ol>
  *
  * @author graf
@@ -319,14 +323,26 @@ public class Haralick extends AbstractFeatureDescriptor {
      */
     private double[] meanVar(double[] a) {
         // VAR(X) = E(X^2) - E(X)^2
-        double ex = 0, ex2 = 0; // E(X), E(X^2)
+//        double ex = 0, ex2 = 0; // E(X), E(X^2)
+//        for (int i = 0; i < NUM_GRAY_VALUES; i++) {
+//            ex += a[i];
+//            ex2 += a[i] * a[i];
+//        }
+//        ex /= a.length;
+//        ex2 /= a.length;
+//        double var = ex2 - ex * ex;
+
+        // two-pass is numerically stable.
+        double ex = 0;
         for (int i = 0; i < NUM_GRAY_VALUES; i++) {
             ex += a[i];
-            ex2 += a[i] * a[i];
         }
         ex /= a.length;
-        ex2 /= a.length;
-        double var = ex2 - ex * ex;
+        double var = 0;
+        for (int i = 0; i < NUM_GRAY_VALUES; i++) {
+            var += (a[i] - ex) * (a[i] - ex);
+        }
+        var /= (a.length - 1);
 
         return new double[]{ex, var};
     }
@@ -348,7 +364,8 @@ public class Haralick extends AbstractFeatureDescriptor {
     }
 
     /**
-     * Normalizes the array by the given sum. by dividing each 2nd dimension array componentwise by the sum.
+     * Normalizes the array by the given sum. by dividing each 2nd dimension
+     * array componentwise by the sum.
      *
      * @param A
      * @param sum
@@ -407,8 +424,9 @@ public class Haralick extends AbstractFeatureDescriptor {
         /**
          * Quantized gray values of each pixel of the image.
          *
-         * Use int instead of byte as there is no unsigned byte in Java. Otherwise you'll have a hard time using white =
-         * 255. Alternative: replace with ImageJ ByteProcessor.
+         * Use int instead of byte as there is no unsigned byte in Java.
+         * Otherwise you'll have a hard time using white = 255. Alternative:
+         * replace with ImageJ ByteProcessor.
          */
         private final int[] grayValue;
         /**
@@ -495,7 +513,8 @@ public class Haralick extends AbstractFeatureDescriptor {
         }
 
         /**
-         * Incremets the coocurrence matrix at the specified positions (g1,g2) and (g2,g1) if g1 and g2 are in range.
+         * Incremets the coocurrence matrix at the specified positions (g1,g2)
+         * and (g2,g1) if g1 and g2 are in range.
          *
          * @param g1 the gray value of the first pixel
          * @param g2 the gray value of the second pixel
