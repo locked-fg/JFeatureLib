@@ -1,5 +1,3 @@
-[![Build Status](https://secure.travis-ci.org/locked-fg/JFeatureLib.png?branch=v1.0.0)](https://travis-ci.org/locked-fg/JFeatureLib)
-
 JFeatureLib
 ===========
 
