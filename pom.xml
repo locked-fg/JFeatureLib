@@ -85,7 +85,7 @@
         </developer>
         <developer>
             <id>sebp</id>
-            <name>Sebastian Pölsterl</name>
+            <name>Sebastian P�lsterl</name>
             <url>https://github.com/sebp</url>
         </developer>
     </developers>
@@ -156,8 +156,6 @@
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
                             <version>2.9</version>
-                            <configuration>
-                            </configuration>
                         </plugin>
                     </reportPlugins>
                 </configuration>
@@ -201,6 +199,10 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <!-- don't be too strict with javadocs -->
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -328,19 +330,19 @@
             <type>jar</type>
         </dependency>
 
-        <!-- local libs-->
-        <dependency>
-            <groupId>at.lux</groupId>
-            <artifactId>imageanalysis</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        
+        <!-- 
+            Okay this one's ugly as you have to install this one locally:
+            Clone the forked repo from GitHub:
+            > git clone https://github.com/locked-fg/lire-localMaven.git
+            Install the lib into your local repo:
+            > mvn -Prelease install -DskipTests=true -Dgpg.skip=true
+        -->
         <dependency>
             <groupId>net.semanticmetadata</groupId>
             <artifactId>lire</artifactId>
-            <version>0.9.4-beta-1</version>
+            <version>0.9.4-SNAPSHOT</version>
             <type>jar</type>
-        </dependency>
+        </dependency> 
     </dependencies>
     
     <profiles>
