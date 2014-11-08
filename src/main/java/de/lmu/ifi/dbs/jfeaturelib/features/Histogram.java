@@ -194,14 +194,13 @@ public class Histogram extends AbstractFeatureDescriptor {
             throw new IllegalArgumentException("Mask size != ROI size");
         }
         int width = ip.getWidth();
-        byte[] mpixels = (byte[]) mask.getPixels();
         int c, r, g, b, v;
         int[] histogram = new int[256];
         for (int y = roiY, my = 0; y < (roiY + roiHeight); y++, my++) {
             int i = y * width + roiX;
             int mi = my * roiWidth;
             for (int x = roiX; x < (roiX + roiWidth); x++) {
-                if (mpixels[mi++] != 0) {
+                if(mask.get(mi++) != 0) {
                     c = ip.get(i);
                     // c = pixels[i];
                     r = (c & 0xff0000) >> 16;

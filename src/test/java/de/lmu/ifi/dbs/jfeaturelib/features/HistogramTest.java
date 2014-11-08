@@ -1,5 +1,7 @@
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
+import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.gui.Roi;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
@@ -8,8 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +161,32 @@ public class HistogramTest {
         assertEquals(features.length, 2);
         assertEquals(90, features[0], 0.001);
         assertEquals(10, features[1], 0.001);
+    }
+    
+    @Test
+    public void testWithMasking_nonBinaryMask() throws IOException {
+        ColorProcessor image = new ColorProcessor(10, 10);
+        image.setColor(Color.red);
+        image.fill(new Roi(0, 0, 10, 1));
+
+        ColorProcessor mask = new ColorProcessor(10, 10);
+        mask.setColor(Color.white);
+        mask.fill(new Roi(0, 0, 1, 10));
+
+        image.setMask(mask);
+
+        LibProperties prop = LibProperties.get();
+        prop.setProperty(LibProperties.HISTOGRAMS_BINS, 2);
+        prop.setProperty(LibProperties.HISTOGRAMS_TYPE, "Red");
+        
+        Histogram descriptor1 = new Histogram();
+        descriptor1.setProperties(prop);
+        descriptor1.run(image);
+
+        List<double[]> features = descriptor1.getFeatures();
+        assertNotNull(features);
+        assertEquals("one feature vector is expected", 1, features.size());
+        assertEquals("2 bins are expected", 2, features.get(0).length);
     }
 
     /**
