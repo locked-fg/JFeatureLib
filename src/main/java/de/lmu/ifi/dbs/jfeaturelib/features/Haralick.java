@@ -66,11 +66,11 @@ public class Haralick extends AbstractFeatureDescriptor {
     /**
      * p_(x+y) statistics
      */
-    private double[] p_x_plus_y = new double[2 * NUM_GRAY_VALUES - 1];
+    private final double[] p_x_plus_y = new double[2 * NUM_GRAY_VALUES - 1];
     /**
      * p_(x-y) statistics
      */
-    private double[] p_x_minus_y = new double[NUM_GRAY_VALUES];
+    private final double[] p_x_minus_y = new double[NUM_GRAY_VALUES];
     /**
      * row mean value
      */
@@ -106,11 +106,11 @@ public class Haralick extends AbstractFeatureDescriptor {
     /**
      * p_x statistics
      */
-    private double[] p_x = new double[NUM_GRAY_VALUES];
+    private final double[] p_x = new double[NUM_GRAY_VALUES];
     /**
      * p_y statistics
      */
-    private double[] p_y = new double[NUM_GRAY_VALUES];
+    private final double[] p_y = new double[NUM_GRAY_VALUES];
     // -
     private int haralickDist;
     double[] features = null;
@@ -134,6 +134,7 @@ public class Haralick extends AbstractFeatureDescriptor {
     /**
      * Defines the capability of the algorithm.
      *
+     * @return set of supported Features
      * @see PlugInFilter
      * @see #supports()
      */
@@ -170,6 +171,9 @@ public class Haralick extends AbstractFeatureDescriptor {
 
     /**
      * Returns information about the getFeature
+     * 
+     * @return String description of the feature
+     * @see FeatureDescriptor#getDescription() 
      */
     @Override
     public String getDescription() {
@@ -268,7 +272,6 @@ public class Haralick extends AbstractFeatureDescriptor {
         }
 
         features[7] *= -1;
-
     }
 
     /**
