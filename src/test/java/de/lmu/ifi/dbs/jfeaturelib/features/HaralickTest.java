@@ -4,16 +4,10 @@ import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.gui.Roi;
 import ij.process.ByteProcessor;
-import ij.process.ColorProcessor;
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-import javax.imageio.ImageIO;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  * @author graf
