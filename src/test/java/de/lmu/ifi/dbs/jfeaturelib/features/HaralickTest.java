@@ -41,37 +41,51 @@ public class HaralickTest {
     }
 
     @Test
-    public void testMeanGray1() {
+    public void testCoocurrenceMeanGrayValue1() {
         Haralick.Coocurrence m;
         ByteProcessor ip = new ByteProcessor(10, 10);
 
         ip.setColor(Color.WHITE);
         ip.fill();
-        m = new Haralick.Coocurrence(ip, 255, 2);
+        m = new Haralick.Coocurrence(ip, 256, 2);
         m.calculate();
         assertEquals(255, m.getMeanGrayValue(), 0.0001);
 
         ip.setColor(Color.BLACK);
         ip.fill();
-        m = new Haralick.Coocurrence(ip, 255, 2);
+        m = new Haralick.Coocurrence(ip, 256, 2);
         m.calculate();
         assertEquals(0, m.getMeanGrayValue(), 0.0001);
 
         ip.setColor(128); // mixed
         ip.fill();
-        m = new Haralick.Coocurrence(ip, 255, 2);
+        m = new Haralick.Coocurrence(ip, 256, 2);
         m.calculate();
         assertEquals(128, m.getMeanGrayValue(), 0.0001);
 
+        // fill half of the image with 200, the other with 0
         ip.setColor(200);
         ip.fill();
         ip.setColor(0);
         ip.fill(new Roi(0, 0, 5, 10));
-        m = new Haralick.Coocurrence(ip, 255, 2);
+        m = new Haralick.Coocurrence(ip, 256, 2);
         m.calculate();
         assertEquals(100, m.getMeanGrayValue(), 0.0001);
     }
 
+    @Test 
+    public void testCoocurrenceMeanGrayValue2(){
+        Haralick.Coocurrence m;
+        ByteProcessor ip = new ByteProcessor(10, 10);
+        for (int i = 0; i < 255; i++) {
+            ip.setColor(new Color(i, i, i));
+            ip.fill();
+            m = new Haralick.Coocurrence(ip, 8, 2); // 256/8 = 32 step size
+            m.calculate();
+            assertEquals("value "+i, (i/32)*32, m.getMeanGrayValue(), 0.0001);
+        }
+    }
+    
     @Test
     public void testMatrix() {
         ByteProcessor ip = new ByteProcessor(4, 4, new byte[]{

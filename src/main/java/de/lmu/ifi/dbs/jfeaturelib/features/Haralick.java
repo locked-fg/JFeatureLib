@@ -326,15 +326,6 @@ public class Haralick extends AbstractFeatureDescriptor {
      */
     private double[] meanVar(double[] a) {
         // VAR(X) = E(X^2) - E(X)^2
-//        double ex = 0, ex2 = 0; // E(X), E(X^2)
-//        for (int i = 0; i < NUM_GRAY_VALUES; i++) {
-//            ex += a[i];
-//            ex2 += a[i] * a[i];
-//        }
-//        ex /= a.length;
-//        ex2 /= a.length;
-//        double var = ex2 - ex * ex;
-
         // two-pass is numerically stable.
         double ex = 0;
         for (int i = 0; i < NUM_GRAY_VALUES; i++) {
@@ -505,14 +496,13 @@ public class Haralick extends AbstractFeatureDescriptor {
             double graySum = 0;
             for (int pos = 0; pos < size; pos++) {
                 int gray = image.get(pos);
-                int quantized = (int) (gray / GRAY_SCALE);
                 graySum += gray;
-                grayValue[pos] = quantized;  // quantized for texture analysis
+                grayValue[pos] = (int) (gray / GRAY_SCALE);  // quantized for texture analysis
                 assert grayValue[pos] >= 0 : grayValue[pos] + " > 0 violated";
                 grayHistogram[gray]++;
             }
             Arrays2.div(grayHistogram, size);
-            meanGrayValue = graySum / size;
+            meanGrayValue = Math.floor(graySum / size / GRAY_SCALE)*GRAY_SCALE;
         }
 
         /**
