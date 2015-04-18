@@ -7,8 +7,9 @@ ComputerVision.
 
 [Refer to the Wiki for further information](wiki)
 
-Current releases can also be found at maven:
-https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
+Releases can also be found at:
+    - Maven: https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
+    - Bintray: https://dl.bintray.com/locked-fg/JFeatureLib/
 
 
 Changelog
