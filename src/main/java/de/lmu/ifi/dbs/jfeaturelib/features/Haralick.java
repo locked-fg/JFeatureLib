@@ -45,14 +45,21 @@ import java.util.EnumSet;
  * number={6}, pages={610--621}, year={1973}, publisher={IEEE} }
  * </pre>
  *
- * The feature descriptor is composed of the following features: <ol>
- * <li>Angular 2nd moment</li> <li>Contrast</li>
- * <li>Correlation</li> <li>variance</li> <li>Inverse Difference Moment</li>
- * <li>Sum Average</li> <li>Sum Variance</li>
- * <li>Sum Entropy</li> <li>Entropy</li> <li>Difference Variance</li>
- * <li>Difference Entropy</li> <li>Information Measures of Correlation</li>
- * <li>Information Measures of Correlation</li> <li>Maximum Correlation
- * COefficient</li>
+ * The feature descriptor is composed of the following features: 
+ * <ol>
+ * <li>Angular 2nd moment</li> 
+ * <li>Contrast</li>
+ * <li>Correlation</li> 
+ * <li>variance</li> 
+ * <li>Inverse Difference Moment</li>
+ * <li>Sum Average</li> 
+ * <li>Sum Variance</li>
+ * <li>Sum Entropy</li> 
+ * <li>Entropy</li> 
+ * <li>Difference Variance</li>
+ * <li>Difference Entropy</li> 
+ * <li>Information Measures of Correlation</li>
+ * <li>Maximum Correlation Coefficient</li>
  * </ol>
  *
  * @author graf
