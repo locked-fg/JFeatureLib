@@ -11,12 +11,24 @@ Releases can also be found at:
     - Maven: https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
     - Bintray: https://dl.bintray.com/locked-fg/JFeatureLib/
 
+Install
+======
+JFeatureLib's dependencies are all but one in MavenCentral. 
+To get LIRE into the maven environment as well and compile JFeatureLib, just use the following commands:
+```
+git clone https://github.com/locked-fg/JFeatureLib.git
+git clone https://github.com/locked-fg/LIRE.git
+cd LIRE 
+mvn install -Dmaven.test.skip=true
+
+cd ../JFeatureLib
+mvn compile 
+```
 
 Changelog
 =======
-* 1.6.3: 
-        - Haralick Bug fixed (Issue #26)
 * 1.6.2: 
+        - Haralick Bug fixed (Fixes Issue #26)
         - Histogram descriptor crashed with non binary masks
 * 1.6.1: 
         - changed the LIRE dependency and added some help how to get LIRE working (Use my fork: https://github.com/locked-fg/LIRE)
