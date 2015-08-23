@@ -17,11 +17,7 @@ JFeatureLib's dependencies are all but one in MavenCentral.
 To get LIRE into the maven environment as well and compile JFeatureLib, just use the following commands:
 ```
 git clone https://github.com/locked-fg/JFeatureLib.git
-git clone https://github.com/locked-fg/LIRE.git
-cd LIRE 
-mvn install -Dmaven.test.skip=true
-
-cd ../JFeatureLib
+cd JFeatureLib
 mvn compile 
 ```
 
