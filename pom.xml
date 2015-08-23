@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.lmu.ifi.dbs.jfeaturelib</groupId>
     <artifactId>JFeatureLib</artifactId>
-    <version>1.6.2</version>
+    <version>1.6.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>JFeaturelib</name>
     <description>A free library that provides implementations
@@ -108,6 +108,10 @@
                 <enabled>false</enabled>
             </snapshots>
             <url>file://${project.basedir}/lib</url>
+        </repository>
+        <repository>
+            <id>imagej.public</id>
+            <url>http://maven.imagej.net/content/groups/public</url>
         </repository>
     </repositories>
 
@@ -348,17 +352,10 @@
             <type>jar</type>
         </dependency>
 
-        <!-- 
-            Okay this one's ugly as you have to install the lib locally:
-            Clone the forked repo from GitHub:
-            > git clone https://github.com/locked-fg/LIRE.git
-            Install the lib into your local repo:
-            > mvn -Prelease install -DskipTests=true -Dgpg.skip=true
-        -->
         <dependency>
-            <groupId>net.semanticmetadata</groupId>
+            <groupId>com.github.kzwang</groupId>
             <artifactId>lire</artifactId>
-            <version>0.9.4-SNAPSHOT</version>
+            <version>0.9.4-kzwang-beta1</version>
             <type>jar</type>
         </dependency> 
     </dependencies>
