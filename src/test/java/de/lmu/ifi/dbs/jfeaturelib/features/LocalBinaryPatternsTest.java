@@ -23,14 +23,16 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
-import de.lmu.ifi.dbs.jfeaturelib.features.LocalBinaryPatterns;
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
+import java.io.File;
+import javax.imageio.ImageIO;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- *
  * @author sebp
  */
 public class LocalBinaryPatternsTest {
@@ -56,6 +58,28 @@ public class LocalBinaryPatternsTest {
         assertEquals(0, m_lbp.getBinaryPattern(1, 1));
         assertEquals(255, m_lbp.getBinaryPattern(2, 1));
         assertEquals(0b00000100, m_lbp.getBinaryPattern(3, 1));
+    }
+
+    @Test
+    public void smallRadiuslargeNeighbours2() throws Exception {
+        ColorProcessor ip = new ColorProcessor(ImageIO.read(
+                                new File(LocalBinaryPatternsTest.class.getResource("/test.jpg").toURI())));
+        LocalBinaryPatterns lbp = new LocalBinaryPatterns();
+        lbp.setNumPoints(30);
+        lbp.setRadius(1);
+        lbp.setNumberOfHistogramBins(32);
+        lbp.run(ip);
+        assertNotNull(lbp.getFeatures());
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void smallRadiuslargeNeighboursTooLarge() throws Exception {
+        new LocalBinaryPatterns().setNumPoints(31);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void smallRadiuslargeNeighboursTooLarge2() throws Exception {
+        new LocalBinaryPatterns().setNumPoints(0);
     }
 
 }

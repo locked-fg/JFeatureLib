@@ -33,23 +33,23 @@ import java.util.EnumSet;
 
 /**
  * Constructs a histogram of local binary patterns (LBP) for each pixel.
- * <p>
+ * 
  * For each pixel a histogram of LBP is constructed from all pixels in the region
  * specified by {@link #setNeighborhoodSize(int)}. In this region the LBP is
  * calculated for every pixel. The LBP is calculated by comparing the pixel
  * intensities of the central pixel to <tt>N</tt> neighboring pixels ({@link #setNumPoints(int)})
  * on a circle of radius <tt>r</tt> ({@link #setRadius(double)}). Interpolation
  * is used to retrieve the intensity of neighboring pixels.
- * </p><p>
+ * 
  * The first two features represent the x and y coordinates of the pixel, the
  * remaining features the histogram of local binary patterns
  * (see {@link #setNumberOfHistogramBins(int)}).
- * </p><p>
+ * 
  * In comparison to {@link MeanIntensityLocalBinaryPatterns}, this class computes
  * one histogram of each pixel and computes local binary patterns from neighbors
  * lying on a circle around the central pixel.
- * </p>
- * <p>References:
+ * 
+ * References:
  * <pre>
  * @article{Heikkla2006,
  *   author = {Heikklä, Marko and Pietikäinen, Matti},
@@ -61,7 +61,6 @@ import java.util.EnumSet;
  *   pages = {657--62}
  * }
  * </pre>
- * </p>
  *
  * @author sebp
  * @see MeanIntensityLocalBinaryPatterns
@@ -150,7 +149,7 @@ public class LocalBinaryPatterns extends AbstractFeatureDescriptor {
     }
 
     /**
-     * Calculates relative offsets in x and y direction of neighors with
+     * Calculates relative offsets in x and y direction of neighbors with
      * respect to central pixel.
      */
     protected void calculateOffsets() {
@@ -189,7 +188,7 @@ public class LocalBinaryPatterns extends AbstractFeatureDescriptor {
 
     protected int getBinaryPattern(final int x, final int y) {
         final float centerPixel = m_ip.getf(x, y);
-        short pattern = 0;
+        int pattern = 0;
         for (int i = 0; i < m_numPoints; i++) {
             double xi = x + m_offsets[i * 2];
             double yi = y + m_offsets[i * 2 + 1];
@@ -201,23 +200,21 @@ public class LocalBinaryPatterns extends AbstractFeatureDescriptor {
                 pattern |= 1 << i;
             }
         }
-
         return pattern;
     }
 
     /**
      * Number of neighbors to consider.
-     * <p>
+     * 
      * All neighbors lie equally spaced on a circle determined by {@link #setRadius(double)}.
-     * </p>
-     * @param numPoints
+     * 
+     * @param numPoints [1,30]
      */
     public void setNumPoints(int numPoints) {
-        if (numPoints >= 32)
+        if (numPoints > 30 || numPoints < 1)
             throw new IllegalArgumentException(
-                    "numPoints must be smaller 32, but is " + numPoints);
+                    "numPoints must be in [1,30], but is " + numPoints);
         m_numPoints = numPoints;
-
         m_angle = 2.0 * Math.PI / numPoints;
     }
 
