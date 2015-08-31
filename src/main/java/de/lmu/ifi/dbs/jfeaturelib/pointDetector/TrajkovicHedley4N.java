@@ -1,5 +1,5 @@
 /*
- * This file is part of the JFeatureLib project: http://jfeaturelib.googlecode.com
+ * This file is part of the JFeatureLib project: https://github.com/locked-fg/JFeatureLib
  * JFeatureLib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -19,7 +19,7 @@
  * JFeatureLib project itself.
  * 
  * Hints how to cite the projects can be found at 
- * https://code.google.com/p/jfeaturelib/wiki/Citation
+ * https://github.com/locked-fg/JFeatureLib/wiki/Citation
  */
 package de.lmu.ifi.dbs.jfeaturelib.pointDetector;
 
