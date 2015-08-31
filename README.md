@@ -23,7 +23,7 @@ mvn compile
 
 Changelog
 =======
-* 1.6.3:
+* 1.6.3-Snapshot:
   - replaced LIRE Dependency with a maven repo
   - extended LocalBinary patterns so that it can hold more than 14 neighbours
 * 1.6.2: 
