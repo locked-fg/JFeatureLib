@@ -23,9 +23,9 @@ mvn compile
 
 Changelog
 =======
-* 1.6.3-Snapshot:
+* 1.6.3:
   - replaced LIRE Dependency with a maven repo
-  - extended LocalBinary patterns so that it can hold more than 14 neighbours
+  - extended LocalBinary patterns so that it can hold more than 14 neighbours.
 * 1.6.2: 
   - Haralick Bug fixed (Fixes Issue #26)
   - Histogram descriptor crashed with non binary masks
