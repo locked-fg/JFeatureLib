@@ -10,7 +10,7 @@
         for several kinds of image features and also several point/region detectors used 
         mainly in the research field of ComputerVision.
     </description>
-    <url>http://code.google.com/p/jfeaturelib/</url>
+    <url>https://github.com/locked-fg/JFeatureLib</url>
     
     <properties>
         <skipSigning>true</skipSigning>
