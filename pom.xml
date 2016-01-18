@@ -10,7 +10,7 @@
         for several kinds of image features and also several point/region detectors used 
         mainly in the research field of ComputerVision.
     </description>
-    <url>http://code.google.com/p/jfeaturelib/</url>
+    <url>https://github.com/locked-fg/JFeatureLib</url>
     
     <properties>
         <skipSigning>true</skipSigning>
@@ -28,13 +28,13 @@
     </licenses>
 
     <scm>
-        <url>https://code.google.com/p/jfeaturelib/</url>
-        <connection>scm:git:https://code.google.com/p/jfeaturelib/</connection>
+        <url>https://github.com/locked-fg/JFeatureLib</url>
+        <connection>scm:git:https://github.com/locked-fg/JFeatureLib</connection>
     </scm>
 
     <issueManagement>
-        <system>GoogleCode</system>
-        <url>http://code.google.com/p/jfeaturelib/issues/list</url>
+        <system>GitHub</system>
+        <url>https://github.com/locked-fg/JFeatureLib/issues</url>
     </issueManagement>
 
     <mailingLists>
