@@ -11,6 +11,8 @@ ComputerVision.
 
 Releases can also be found at Maven Central: https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
 
+The API can be found here: http://jfeaturelib-api.locked.de
+
 Install
 ======
 JFeatureLib's dependencies are all but one in MavenCentral. 
