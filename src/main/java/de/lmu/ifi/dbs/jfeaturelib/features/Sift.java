@@ -77,6 +77,7 @@ public class Sift extends AbstractFeatureDescriptor {
      * called by a java process that wraps the call and parses the output.
      *
      * @param siftBinary
+     * @throws java.io.IOException if sift binary cannot be executed
      */
     public Sift(File siftBinary) throws IOException {
         if (!siftBinary.canExecute()) {

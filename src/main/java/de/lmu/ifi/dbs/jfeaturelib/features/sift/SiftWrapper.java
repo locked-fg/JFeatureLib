@@ -29,6 +29,7 @@ import ij.process.ImageProcessor;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 /**
@@ -39,20 +40,18 @@ import org.apache.log4j.Logger;
  * List<double[]> features = t.getFeatures(new File("c:\\temp\\ant-sample.pgm"));
  * </code>
  *
- * An image passed to this class is first saved as a .pgm in the systems temp directory. This file is passed to the sift
- * binary and deleted afterwards.
+ * An image passed to this class is first saved as a .pgm in the systems temp directory. This file is passed
+ * to the sift binary and deleted afterwards.
  *
  * @author Franz Graf
  */
 public class SiftWrapper {
 
+    private static final int MAX_SIFT_TIMEOUT = 5;
     private static final int NUMBER_OF_GRADIENTS = 128;
     private static final String PREFIX = "JFeatureLib-SiftWrapper";
     private static final String SUFFIX = ".pgm";
     private static final Logger log = Logger.getLogger(SiftWrapper.class.getName());
-    /**
-     * process starting the executable
-     */
     private final ProcessBuilder processBuilder;
 
     /**
@@ -66,8 +65,14 @@ public class SiftWrapper {
             throw new IOException("Sift Binary not executable: " + siftBinary);
         }
         processBuilder = new ProcessBuilder(new String[]{siftBinary.getAbsolutePath()});
-        // Todo redirect error stream to logger?
-        processBuilder.redirectErrorStream(false);
+        processBuilder.redirectErrorStream(true);
+    }
+
+    /**
+     * Package private constructor for tests
+     */
+    SiftWrapper() {
+        this.processBuilder = null;
     }
 
     public List<double[]> getFeatures(ImageProcessor ip) throws IOException,
@@ -95,50 +100,37 @@ public class SiftWrapper {
      */
     public List<double[]> getFeatures(File f) throws IOException,
             InterruptedException {
-        // primitive PGM check
         if (!f.getName().toLowerCase().endsWith(SUFFIX)) {
             log.warn("File does not have a .pgm extension. Sure it is a PGM file? " + f.getAbsolutePath());
         }
 
-        try (FileInputStream fis = new FileInputStream(f)) {
-            return convertToArray(getFeatures(fis));
+        processBuilder.redirectInput(ProcessBuilder.Redirect.from(f));
+        Process p = processBuilder.start();
+        String siftOutput = getOutput(p);
+        p.waitFor(MAX_SIFT_TIMEOUT, TimeUnit.SECONDS);
+        return siftToArray(extractFeatures(siftOutput));
+    }
+
+    private String getOutput(Process p) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedInputStream is = new BufferedInputStream(p.getInputStream())) {
+            int x;
+            while ((x = is.read()) != -1) {
+                sb.append((char) x);
+            }
         }
+        return sb.toString();
     }
 
     /**
      * Converts a list of Sift Feature Vectors into a list of plain arrays
      */
-    private List<double[]> convertToArray(List<SiftFeatureVector> sifts) {
+    private List<double[]> siftToArray(List<SiftFeatureVector> sifts) {
         List<double[]> arrays = new ArrayList<>(sifts.size());
         for (SiftFeatureVector vector : sifts) {
             arrays.add(vector.asArray());
         }
         return arrays;
-    }
-
-    /**
-     * Extracts the features from the text input stream which is created by the sift binary.
-     *
-     * @param textInput
-     * @return list of feature vectors
-     * @throws InterruptedException
-     * @throws IOException
-     */
-    private List<SiftFeatureVector> getFeatures(InputStream textInput)
-            throws InterruptedException, IOException {
-        Process process = processBuilder.start();
-        dataToProcess(process.getOutputStream(), textInput);
-
-        List<SiftFeatureVector> v = extractFeatures(new InputStreamReader(
-                process.getInputStream()));
-
-        // let the process finish and close all streams
-        process.getErrorStream().close();
-        process.getInputStream().close();
-        process.getOutputStream().close();
-        process.waitFor();
-
-        return v;
     }
 
     /**
@@ -148,33 +140,28 @@ public class SiftWrapper {
      * @return array of {@link SiftFeatureVector}s (may be empty)
      * @throws IOException
      */
-    List<SiftFeatureVector> extractFeatures(InputStreamReader isr)
+    List<SiftFeatureVector> extractFeatures(String siftOutput)
             throws IOException {
-        List<SiftFeatureVector> vectors = new ArrayList<>(100);
+        final String[] lines = siftOutput.split("\n");
+        final int features = Integer.parseInt(lines[0].split(" ")[0]);
+        final List<SiftFeatureVector> vectors = new ArrayList<>(features);
 
-        BufferedReader inR = new BufferedReader(isr);
-        String inLine = null;
         SiftFeatureVector currentVector = null;
-
-        // parse stream
-        int linecount = 0;
-        ArrayList<Double> dataList = new ArrayList<>(NUMBER_OF_GRADIENTS);
-
-        while (null != (inLine = inR.readLine())) {
-            linecount++;
+        List<Double> dataList = new ArrayList<>(NUMBER_OF_GRADIENTS);
+        boolean allow = true;
+        for (int linecount = 1; allow && linecount < lines.length; linecount++) { // line 0 is just a comment line
+            String inLine = lines[linecount];
 
             if (log.isTraceEnabled()) {
                 log.trace(inLine);
             }
-            // line 1 is just a comment line
-            if (linecount == 1) {
-                continue;
-            }
 
             // Each NEW vector begins with a non-space-char.
             // Vector data then follows with a space at the beginning of
-            // each line
-            if (inLine.charAt(0) != ' ') {
+            // each line. The end is some comments.
+            if (inLine.startsWith("Finding")) {
+                allow = false;
+            } else if (inLine.charAt(0) != ' ') {
                 // create new vector and add header info
                 String[] split = inLine.split(" ");
                 double y = new Double(split[0]);
@@ -207,28 +194,9 @@ public class SiftWrapper {
                     dataList.clear();
                 }
             }
-        }// while
+        }
 
         return vectors;
     }
 
-    /**
-     * writes the data to the process in order to analyze this data
-     *
-     * @param os destination
-     * @param in source
-     * @throws IOException
-     */
-    private void dataToProcess(OutputStream os, InputStream in)
-            throws IOException {
-        BufferedInputStream inS;
-        try (BufferedOutputStream outS = new BufferedOutputStream(os)) {
-            inS = new BufferedInputStream(in);
-            int data;
-            while ((data = inS.read()) != -1) {
-                outS.write(data);
-            }
-        }
-        inS.close();
-    }
 }

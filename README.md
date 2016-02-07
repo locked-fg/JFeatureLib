@@ -7,9 +7,7 @@ ComputerVision.
 
 [Refer to the Wiki for further information](wiki)
 
-Releases can also be found at:
-    - Maven: https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
-    - Bintray: https://dl.bintray.com/locked-fg/JFeatureLib/
+Releases can also be found at Maven Central: https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
 
 Install
 ======
@@ -23,6 +21,8 @@ mvn compile
 
 Changelog
 =======
+* 1.6.4: 
+  - fixed SIFT Wrapper
 * 1.6.3:
   - replaced LIRE Dependency with a maven repo
   - extended LocalBinary patterns so that it can hold more than 14 neighbours.
