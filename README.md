@@ -23,6 +23,16 @@ cd JFeatureLib
 mvn compile 
 ```
 
+Include JFeatureLib in your program:
+```
+<dependency>
+    <groupId>de.lmu.ifi.dbs.jfeaturelib</groupId>
+    <artifactId>JFeatureLib</artifactId>
+    <version>1.6.4</version>
+    <type>jar</type>
+</dependency>
+```
+
 Changelog
 =======
 * 1.6.4: 
