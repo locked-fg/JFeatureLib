@@ -13,14 +13,19 @@ Releases can also be found at Maven Central: https://oss.sonatype.org/content/re
 
 The API can be found here: http://jfeaturelib-api.locked.de
 
-Install
+Build & Install
 ======
 JFeatureLib's dependencies are all but one in MavenCentral. 
 To get LIRE into the maven environment as well and compile JFeatureLib, just use the following commands:
 ```
+git clone https://github.com/locked-fg/LIRE.git
+cd LIRE
+mvn -Prelease install -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true
+
+cd ..
 git clone https://github.com/locked-fg/JFeatureLib.git
 cd JFeatureLib
-mvn compile 
+mvn clean install 
 ```
 
 Include JFeatureLib in your program:
