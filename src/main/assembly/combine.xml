@@ -13,9 +13,9 @@
       <unpack>true</unpack>
       <unpackOptions>
           <includes>
-              <include>at/lux/*</include>
-              <include>net/semanticmetadata/*</include>
-              <include>**/jfeaturelib/*</include>
+              <include>at/lux/**</include>
+              <include>net/semanticmetadata/**</include>
+              <include>**/jfeaturelib/**</include>
           </includes>
       </unpackOptions>
       <scope>runtime</scope>
