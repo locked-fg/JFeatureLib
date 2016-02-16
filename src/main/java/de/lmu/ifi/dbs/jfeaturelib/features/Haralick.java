@@ -38,11 +38,18 @@ import java.util.EnumSet;
  * Haralick texture features
  *
  * http://makseq.com/materials/lib/Articles-Books/Filters/Texture/Co-occurence/haralick73.pdf
- * <pre>
  *
- * @article{haralick1973textural, title={Textural features for image classification}, author={Haralick, R.M. and
- * Shanmugam, K. and Dinstein, I.}, journal={Systems, Man and Cybernetics, IEEE Transactions on}, volume={3},
- * number={6}, pages={610--621}, year={1973}, publisher={IEEE} }
+ * <pre>
+ * &#64;article{haralick1973textural, 
+ *  title={Textural features for image classification}, 
+ *  author={Haralick, R.M. and Shanmugam, K. and Dinstein, I.}, 
+ *  journal={Systems, Man and Cybernetics, IEEE Transactions on}, 
+ *  volume={3},
+ *  number={6}, 
+ *  pages={610--621}, 
+ *  year={1973}, 
+ *  publisher={IEEE} 
+ * }
  * </pre>
  *
  * The feature descriptor is composed of the following features: 

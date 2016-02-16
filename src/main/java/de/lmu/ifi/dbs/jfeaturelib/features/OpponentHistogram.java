@@ -32,7 +32,7 @@ import net.semanticmetadata.lire.imageanalysis.LireFeature;
  * "Evaluating Color Descriptors for Object and Scene Recognition", IEEE PAMI:
  *
  * <pre>
- * @ARTICLE{Sande2010,
+ * &#64;ARTICLE{Sande2010,
  *   author={van de Sande, K.E.A. and Gevers, T. and Snoek, C.G.M.},
  *   journal={Pattern Analysis and Machine Intelligence, IEEE Transactions on},
  *   title={Evaluating Color Descriptors for Object and Scene Recognition},
@@ -47,7 +47,7 @@ import net.semanticmetadata.lire.imageanalysis.LireFeature;
  * </pre>
  * 
  * @author Franz
- * @see http://staff.science.uva.nl/~ksande/pub/vandesande-cvpr2008.pdf
+ * @see <a href="http://staff.science.uva.nl/~ksande/pub/vandesande-cvpr2008.pdf">original paper</a>
  * @since 1.4.0
  */
 public class OpponentHistogram extends LireWrapper{

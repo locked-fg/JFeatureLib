@@ -98,7 +98,7 @@ public interface Descriptor {
      *
      * This is also the case even if only ImageProcessor.snapshot() is used.
      *
-     * @param ip
+     * @param ip the imageprocessor (which MIGHT be changed) from which features will be extracted
      */
     public void run(ImageProcessor ip);
 
@@ -107,7 +107,7 @@ public interface Descriptor {
      * status change events which can be used to track the progress. Keep in
      * mind that no implementation is forced to fire any events at all.
      *
-     * @param listener
+     * @param listener Listenerobject that will be informed about the progress
      */
     public void addPropertyChangeListener(PropertyChangeListener listener);
 }

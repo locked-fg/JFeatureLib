@@ -62,7 +62,7 @@ import java.util.EnumSet;
  * <p>
  * References:
  * <pre>
- * @inproceedings{
+ * &#64;inproceedings{
  *   author = {Ojala, Timo and Pietikäinen, Matti and Harwood, David},
  *   title = {Performance Evaluation of Texture Measures with Classification
  *       Based on Kullback Disrimination of Distributions},
@@ -75,7 +75,6 @@ import java.util.EnumSet;
  * </p>
  *
  * @author sebp
- * @see MeanPatchIntensityDescriptor
  */
 public class MeanIntensityLocalBinaryPatterns extends AbstractFeatureDescriptor {
 

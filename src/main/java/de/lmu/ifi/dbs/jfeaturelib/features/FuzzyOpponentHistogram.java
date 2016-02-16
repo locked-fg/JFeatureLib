@@ -23,13 +23,11 @@
  */
 package de.lmu.ifi.dbs.jfeaturelib.features;
 
-import net.semanticmetadata.lire.imageanalysis.LireFeature;
-
 /**
  * Wrapper for the according LIRE class.
  * 
  * <pre>
- * @ARTICLE{Sande2010,
+ * &#64;ARTICLE{Sande2010,
  *  author={van de Sande, K.E.A. and Gevers, T. and Snoek, C.G.M.},
  *   journal={Pattern Analysis and Machine Intelligence, IEEE Transactions on},
  *   title={Evaluating Color Descriptors for Object and Scene Recognition},

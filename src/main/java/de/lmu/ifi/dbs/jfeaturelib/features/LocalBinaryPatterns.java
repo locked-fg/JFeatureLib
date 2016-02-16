@@ -51,7 +51,7 @@ import java.util.EnumSet;
  * 
  * References:
  * <pre>
- * @article{Heikkla2006,
+ * &#64;article{Heikkla2006,
  *   author = {Heikklä, Marko and Pietikäinen, Matti},
  *   title = {A texture-based method for modeling the background and detecting moving objects.},
  *   journal = {IEEE transactions on pattern analysis and machine intelligence},

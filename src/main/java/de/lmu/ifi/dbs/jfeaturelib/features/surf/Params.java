@@ -207,7 +207,7 @@ public class Params {
      * 
      * The order and types of fields do affect
      * the method Params#getSurfParamsFromDialog(GenericDialog). Bounds
-     * description depends on bounds check in constructor {@link Params#Params(int, int, float, int, boolean, boolean, int)}.
+     * description depends on bounds check in constructor {@link Params#Params(int, int, float, int, boolean, boolean, boolean, int, boolean)}.
      */
     public static void addSurfParamsToDialog(GenericDialog gd) {
         Params p = new Params();

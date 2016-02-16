@@ -179,8 +179,7 @@ public abstract class AbstractFeatureDescriptor implements FeatureDescriptor {
     }
 
     /**
-     * returns the current mask
-     * @return 
+     * @return the current mask
      */
     public ImageProcessor getMask() {
         return mask;
