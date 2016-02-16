@@ -353,9 +353,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.kzwang</groupId>
+            <groupId>net.semanticmetadata</groupId>
             <artifactId>lire</artifactId>
-            <version>0.9.4-kzwang-beta1</version>
+            <version>0.9.4-fg-SNAPSHOT</version>
             <type>jar</type>
         </dependency> 
     </dependencies>
