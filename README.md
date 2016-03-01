@@ -42,6 +42,7 @@ Changelog
 =======
 * 1.6.4: 
   - fixed SIFT Wrapper
+  - raised compiler level to Java 8
 * 1.6.3:
   - replaced LIRE Dependency with a maven repo
   - extended LocalBinary patterns so that it can hold more than 14 neighbours.
