@@ -33,14 +33,14 @@ Include JFeatureLib in your program:
 <dependency>
     <groupId>de.lmu.ifi.dbs.jfeaturelib</groupId>
     <artifactId>JFeatureLib</artifactId>
-    <version>1.6.4</version>
+    <version>1.6.5</version>
     <type>jar</type>
 </dependency>
 ```
 
 Changelog
 =======
-* 1.6.5 (upcoming)
+* 1.6.5
   - raised compiler level to Java 8
   - fixed dependencies
 * 1.6.4: 
