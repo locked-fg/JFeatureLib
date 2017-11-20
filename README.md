@@ -7,7 +7,7 @@ JFeatureLib is a free library that provides implementations for several kinds of
 and also several point/region detectors used mainly in the research field of 
 ComputerVision.
 
-[Refer to the Wiki for further information](wiki)
+[Refer to the Wiki for further information](https://github.com/locked-fg/JFeatureLib/wiki)
 
 Releases can also be found at Maven Central: https://oss.sonatype.org/content/repositories/releases/de/lmu/ifi/dbs/jfeaturelib/JFeatureLib/
 
