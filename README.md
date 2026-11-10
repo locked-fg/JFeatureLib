@@ -40,6 +40,11 @@ Include JFeatureLib in your program:
 
 Changelog
 =======
+* 1.6.6:
+  - upgraded vulnerable dependencies to resolve all open Dependabot security alerts:
+    replaced log4j 1.2.17 with reload4j 1.2.25 (drop-in replacement),
+    commons-io 2.4 -> 2.14.0, guava 14.0.1 -> 33.7.2-jre,
+    commons-lang3 3.1 -> 3.18.0, junit 4.10 -> 4.13.2
 * 1.6.5
   - raised compiler level to Java 8
   - fixed dependencies
