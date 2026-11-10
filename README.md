@@ -33,7 +33,7 @@ Include JFeatureLib in your program:
 <dependency>
     <groupId>de.lmu.ifi.dbs.jfeaturelib</groupId>
     <artifactId>JFeatureLib</artifactId>
-    <version>1.6.5</version>
+    <version>1.6.6</version>
     <type>jar</type>
 </dependency>
 ```
